@@ -27,6 +27,8 @@
 		03FE4ED41B2FA1210020F06F /* Scenes in CopyFiles */ = {isa = PBXBuildFile; fileRef = 03FE4ED21B2FA1010020F06F /* Scenes */; };
 		03FE4ED51B2FA1210020F06F /* Shaders in CopyFiles */ = {isa = PBXBuildFile; fileRef = 03FE4ED31B2FA1010020F06F /* Shaders */; };
 		03FE4ED81B2FA9830020F06F /* Animation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 03FE4ED61B2FA9830020F06F /* Animation.cpp */; };
+		D0C44A4222EABDB0001DD3E3 /* BSplineCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0C44A4022EABDB0001DD3E3 /* BSplineCamera.cpp */; };
+		D0C44A4522EABE4C001DD3E3 /* BSpline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0C44A4422EABE4C001DD3E3 /* BSpline.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -77,6 +79,10 @@
 		03FE4ED31B2FA1010020F06F /* Shaders */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Shaders; path = ../Assets/Shaders; sourceTree = "<group>"; };
 		03FE4ED61B2FA9830020F06F /* Animation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Animation.cpp; sourceTree = "<group>"; };
 		03FE4ED71B2FA9830020F06F /* Animation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Animation.h; sourceTree = "<group>"; };
+		D0C44A4022EABDB0001DD3E3 /* BSplineCamera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BSplineCamera.cpp; sourceTree = "<group>"; };
+		D0C44A4122EABDB0001DD3E3 /* BSplineCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSplineCamera.h; sourceTree = "<group>"; };
+		D0C44A4322EABE4B001DD3E3 /* BSpline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSpline.h; sourceTree = "<group>"; };
+		D0C44A4422EABE4C001DD3E3 /* BSpline.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BSpline.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -151,9 +157,13 @@
 				03FE4E991B2F8D990020F06F /* EventManager.cpp */,
 				03FE4E9A1B2F8D990020F06F /* EventManager.h */,
 				03FE4E9B1B2F8D990020F06F /* FirstPersonCamera.cpp */,
+				D0C44A4422EABE4C001DD3E3 /* BSpline.cpp */,
+				D0C44A4322EABE4B001DD3E3 /* BSpline.h */,
 				03FE4E9C1B2F8D990020F06F /* FirstPersonCamera.h */,
 				03FE4E9D1B2F8D990020F06F /* main.cpp */,
 				03FE4E9E1B2F8D990020F06F /* Model.cpp */,
+				D0C44A4022EABDB0001DD3E3 /* BSplineCamera.cpp */,
+				D0C44A4122EABDB0001DD3E3 /* BSplineCamera.h */,
 				03FE4E9F1B2F8D990020F06F /* Model.h */,
 				03FE4EA01B2F8D990020F06F /* ParsingHelper.h */,
 				03FE4EA31B2F8D990020F06F /* Renderer.cpp */,
@@ -203,7 +213,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 0371ABC61A6EAF2E00029CF8 /* Build configuration list for PBXProject "COMP371_Framework" */;
+			buildConfigurationList = 0371ABC61A6EAF2E00029CF8 /* Build configuration list for PBXProject "Area51" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -230,9 +240,11 @@
 				03FE4EAD1B2F8D990020F06F /* EventManager.cpp in Sources */,
 				03FE4EB31B2F8D990020F06F /* SphereModel.cpp in Sources */,
 				03FE4EAC1B2F8D990020F06F /* CubeModel.cpp in Sources */,
+				D0C44A4222EABDB0001DD3E3 /* BSplineCamera.cpp in Sources */,
 				03FE4EAE1B2F8D990020F06F /* FirstPersonCamera.cpp in Sources */,
 				03FE4EB51B2F8D990020F06F /* World.cpp in Sources */,
 				03FE4EB21B2F8D990020F06F /* Renderer.cpp in Sources */,
+				D0C44A4522EABE4C001DD3E3 /* BSpline.cpp in Sources */,
 				03FE4EB01B2F8D990020F06F /* Model.cpp in Sources */,
 				03FE4EAF1B2F8D990020F06F /* main.cpp in Sources */,
 				03FE4EAB1B2F8D990020F06F /* Camera.cpp in Sources */,
@@ -393,7 +405,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0371ABC61A6EAF2E00029CF8 /* Build configuration list for PBXProject "COMP371_Framework" */ = {
+		0371ABC61A6EAF2E00029CF8 /* Build configuration list for PBXProject "Area51" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0371ABD01A6EAF2E00029CF8 /* Debug */,

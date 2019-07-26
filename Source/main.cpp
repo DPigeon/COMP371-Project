@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
 	{
 		// Alternate different scenes from here
 #if defined(PLATFORM_OSX)
-//		world.LoadScene("Scenes/AnimatedScene.scene");
+		world.LoadScene("Scenes/AnimatedScene.scene");
 //		world.LoadScene("Scenes/StaticScene.scene");
 //		world.LoadScene("Scenes/CoordinateSystem.scene");
 #else
