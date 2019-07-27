@@ -1,0 +1,19 @@
+﻿  Animation.cpp
+  BSpline.cpp
+d:\documents\university\concordia engineering\semesters\6. summer 2019\second semester\comp371\project\files\source\bspline.cpp(150): warning C4018: '<': signed/unsigned mismatch
+  BSplineCamera.cpp
+  Camera.cpp
+  CubeModel.cpp
+  EventManager.cpp
+  FirstPersonCamera.cpp
+  main.cpp
+  Model.cpp
+  Renderer.cpp
+  SphereModel.cpp
+  StaticCamera.cpp
+  World.cpp
+  Generating Code...
+LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+glew32s.lib(glew.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'glew32s.lib(glew.obj)' or at 'D:\Documents\University\Concordia Engineering\Semesters\6. Summer 2019\Second Semester\COMP371\Project\Files\Bin\vc120.pdb'; linking object as if no debug info
+  Assignment1.vcxproj -> D:\Documents\University\Concordia Engineering\Semesters\6. Summer 2019\Second Semester\COMP371\Project\Files\VS2017\/../Bin/Project-Debug.exe
