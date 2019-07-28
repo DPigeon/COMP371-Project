@@ -14,6 +14,7 @@
 #include <GL/glew.h>
 
 using namespace glm;
+using namespace std;
 
 BSpline::BSpline() : Model()
 {
@@ -65,7 +66,6 @@ void BSpline::Update(float dt)
 
 void BSpline::Draw()
 {
-
 	// The Model View Projection transforms are computed in the Vertex Shader
 	glBindVertexArray(mVAO);
 
@@ -119,7 +119,7 @@ glm::vec3 BSpline::GetPosition(float t) const
 	int p2 = (p1 + 1)  % mControlPoints.size();
 	int p3 = (p2 + 1)  % mControlPoints.size();
 	int p4 = (p3 + 1)  % mControlPoints.size();
-
+	
 	return vec3(GetWorldMatrix() * vec4(BSpline::GetPosition(t - (int) t, mControlPoints[p1], mControlPoints[p2], mControlPoints[p3], mControlPoints[p4]), 1.0f));
 }
 

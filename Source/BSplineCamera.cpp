@@ -17,6 +17,7 @@
 #include <algorithm>
 
 using namespace glm;
+using namespace std;
 
 BSplineCamera::BSplineCamera(BSpline *spline, float speed)
     : Camera(), mpSpline(spline), mSpeed(speed), mSplineParameterT(0.0f)
@@ -42,6 +43,7 @@ void BSplineCamera::Update(float dt)
 
     mSplineParameterT += dt;
     mPosition = mpSpline->GetPosition(mSplineParameterT);
+	cout << "X: "<<mPosition.x <<" Y:"<< mPosition.y <<" Z:"<< mPosition.z << endl;
 }
 
 glm::mat4 BSplineCamera::GetViewMatrix() const
