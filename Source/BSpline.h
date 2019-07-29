@@ -39,6 +39,8 @@ public:
     // @TODO - Implement methods returning the tangent vector on the spline
     glm::vec3 GetTangent(float t) const;
     static glm::vec3 GetTangent(float t, const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3, const glm::vec3& p4);
+
+	void ConstructTracks();
     
     
 protected:

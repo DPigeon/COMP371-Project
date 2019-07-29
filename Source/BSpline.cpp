@@ -66,6 +66,7 @@ void BSpline::Update(float dt)
 
 void BSpline::Draw()
 {
+	//cout << mSamplePoints.size() << endl;
 	// The Model View Projection transforms are computed in the Vertex Shader
 	glBindVertexArray(mVAO);
 
@@ -73,7 +74,7 @@ void BSpline::Draw()
 	glUniformMatrix4fv(WorldMatrixLocation, 1, GL_FALSE, &GetWorldMatrix()[0][0]);
 
 	// Draw the triangles !
-	glDrawArrays(GL_LINE_LOOP, 0, mSamplePoints.size());
+	glDrawArrays(GL_LINE_LOOP, 0, mSamplePoints.size()); // Draws the line (we want to replace it by tracks)
 }
 
 bool BSpline::ParseLine(const std::vector<ci_string> &token)
@@ -147,7 +148,7 @@ void BSpline::GenerateSamplePoints()
 	const int numPointsPerSegment = 10;
 	float increment = 1.0f / numPointsPerSegment;
 
-	for (int i=0; i < mControlPoints.size(); ++i)
+	for (int i = 0; i < mControlPoints.size(); ++i)
 	{
         float t = 0.0f;
         
@@ -182,4 +183,23 @@ glm::vec3 BSpline::GetTangent(float t, const vec3& p1, const vec3& p2, const vec
 	vec4 product = (1.0f / 6.0f) * params * coefficients;
 
 	return vec3(vec4(product.x * p1 + product.y * p2 + product.z * p3 + product.w * p4, 1.0f));
+}
+
+void BSpline::ConstructTracks() {
+	 /* Extract the points from spline, get them inside a vector 
+	  * (use mSamplePoints as we are interpolation 10 points per control point which is good)
+	  * Draw 2 pallel lines for edge of track
+	  * Draw 2 perpendicular lines inside those 2 tracks
+	  */
+	float width = 10.0f; // Track width
+	float size = 10.0f; // Track size
+	// Will have to test those values out to see what is right for the tracks
+	float offsetX = 0.0f; 
+	float offsetY = 0.0f;
+	float offsetZ = 0.0f;
+
+	for (size_t i = 0; i < mSamplePoints.size() - 1; i++) {
+		// Creating a forward vector (very small, in direction of all the sampled points)
+		vec3 directionVector = vec3(mSamplePoints[i + 1].x - mSamplePoints[i].x, mSamplePoints[i + 1].y - mSamplePoints[i].y, mSamplePoints[i + 1].z - mSamplePoints[i].z);
+	}
 }
