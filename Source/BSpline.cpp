@@ -4,7 +4,7 @@
 // Created by Nicolas Bergeron on 8/7/14.
 // Updated by Gary Chang on 24/1/15
 //
-// Copyright (c) 2014-2015 Concordia University. All rights reserved.
+// CopyrightVector (c) 2014-2015 Concordia University. All rightVectors reserved.
 //
 
 #include "BSpline.h"
@@ -74,7 +74,8 @@ void BSpline::Draw()
 	glUniformMatrix4fv(WorldMatrixLocation, 1, GL_FALSE, &GetWorldMatrix()[0][0]);
 
 	// Draw the triangles !
-	glDrawArrays(GL_LINE_LOOP, 0, mSamplePoints.size()); // Draws the line (we want to replace it by tracks)
+	glDrawArrays(GL_LINE_STRIP, 0, mSamplePoints.size());
+	BSpline::ConstructTracks();
 }
 
 bool BSpline::ParseLine(const std::vector<ci_string> &token)
@@ -186,20 +187,15 @@ glm::vec3 BSpline::GetTangent(float t, const vec3& p1, const vec3& p2, const vec
 }
 
 void BSpline::ConstructTracks() {
-	 /* Extract the points from spline, get them inside a vector 
-	  * (use mSamplePoints as we are interpolation 10 points per control point which is good)
-	  * Draw 2 pallel lines for edge of track
-	  * Draw 2 perpendicular lines inside those 2 tracks
-	  */
-	float width = 10.0f; // Track width
-	float size = 10.0f; // Track size
-	// Will have to test those values out to see what is right for the tracks
-	float offsetX = 0.0f; 
-	float offsetY = 0.0f;
-	float offsetZ = 0.0f;
+	/* Extract the points from spline, get them inside a vector
+	 * (use mSamplePoints as we are interpolation 10 points per control point which is good)
+	 * Draw 2 pallel lines for edge of track
+	 * Draw 2 perpendicular lines inside those 2 tracks
+	 */
 
-	for (size_t i = 0; i < mSamplePoints.size() - 1; i++) {
-		// Creating a forward vector (very small, in direction of all the sampled points)
-		vec3 directionVector = vec3(mSamplePoints[i + 1].x - mSamplePoints[i].x, mSamplePoints[i + 1].y - mSamplePoints[i].y, mSamplePoints[i + 1].z - mSamplePoints[i].z);
-	}
+	double PI = 3.1415926535897932384626433832795;
+	float radius = 1.25f;
+	float halfLength = 5.0f;
+	int slices = 8; // slices for the circle
+
 }
