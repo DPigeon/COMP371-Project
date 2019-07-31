@@ -95,6 +95,17 @@ bool BSpline::ParseLine(const std::vector<ci_string> &token)
 		AddControlPoint(glm::vec3(x, y, z));
 		return true;
 	}
+	else if (token[0] == "spoint")
+	{
+		assert(token.size() > 4);
+		assert(token[1] == "=");
+
+		float x = static_cast<float>(atof(token[2].c_str()));
+		float y = static_cast<float>(atof(token[3].c_str()));
+		float z = static_cast<float>(atof(token[4].c_str()));
+		AddSplinePoint(glm::vec3(x, y, z));
+		return true;
+	}
     else
     {
         return Model::ParseLine(token);
@@ -104,6 +115,11 @@ bool BSpline::ParseLine(const std::vector<ci_string> &token)
 void BSpline::AddControlPoint(glm::vec3 point)
 {
 	mControlPoints.push_back(point);
+}
+
+void BSpline::AddSplinePoint(glm::vec3 point)
+{
+	mSplinePoints.push_back(point);
 }
 
 void BSpline::ClearControlPoints()

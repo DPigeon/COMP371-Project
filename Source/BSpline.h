@@ -29,6 +29,7 @@ public:
     virtual void Draw();
 
     void AddControlPoint(glm::vec3 waypoint);
+	void AddSplinePoint(glm::vec3 point);
     void ClearControlPoints();
 
 	// t from 0 to 1 is the first segment, from 1 to 2 is the second, etc...
@@ -61,6 +62,8 @@ private:
 
     // Sample points along the curve, used for drawing
     std::vector<glm::vec3> mSamplePoints;
+
+	std::vector<glm::vec3> mSplinePoints;
 
     void GenerateSamplePoints();
 };
