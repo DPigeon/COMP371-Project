@@ -47,11 +47,12 @@ void BSplineCamera::Update(float dt)
     mPosition = mpSpline->GetPosition(mSplineParameterT);
 	cout<< "X: " << mPosition.x << " Y:" << mPosition.y << " Z:" << mPosition.z << endl;
 
-	ofstream extrapolatePoints;
+	/* Used to extrapolate points for scene file, uncomment if needed */
+	/*ofstream extrapolatePoints;
 	extrapolatePoints.open("SplinePoints.txt", ios::app); // App for append at end of file
 	extrapolatePoints <<"sPoint = "<< mPosition.x << " " << mPosition.y << " " << mPosition.z;
 	extrapolatePoints << endl;
-	extrapolatePoints.close();
+	extrapolatePoints.close();*/
 }
 
 glm::mat4 BSplineCamera::GetViewMatrix() const
