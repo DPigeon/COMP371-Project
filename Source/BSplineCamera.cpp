@@ -45,7 +45,6 @@ void BSplineCamera::Update(float dt)
 
     mSplineParameterT += dt;
     mPosition = mpSpline->GetPosition(mSplineParameterT);
-	//cout<< "X: " << mPosition.x << " Y:" << mPosition.y << " Z:" << mPosition.z << endl;
 
 	/* Used to extrapolate points for scene file, uncomment if needed */
 	/*ofstream extrapolatePoints;
@@ -53,6 +52,8 @@ void BSplineCamera::Update(float dt)
 	extrapolatePoints <<"sPoint = "<< mPosition.x << " " << mPosition.y << " " << mPosition.z;
 	extrapolatePoints << endl;
 	extrapolatePoints.close();*/
+
+	//cout<< "X: " << mPosition.x << " Y:" << mPosition.y << " Z:" << mPosition.z << endl;
 }
 
 glm::mat4 BSplineCamera::GetViewMatrix() const

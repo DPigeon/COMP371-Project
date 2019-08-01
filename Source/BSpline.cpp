@@ -204,38 +204,52 @@ glm::vec3 BSpline::GetTangent(float t, const vec3& p1, const vec3& p2, const vec
 
 void BSpline::ConstructTracks() {
 	/* Extract the points from spline, get them inside a vector
-	 * (use mSamplePoints as we are interpolation 10 points per control point which is good)
-	 * Draw 2 pallel lines for edge of track
+	 * Begin with drawing cylinder on the spline
+	 * Then draw 2 pallel lines for edge of track
 	 * Draw 2 perpendicular lines inside those 2 tracks
 	 */
 
 	double PI = 3.1415926535897932384626433832795;
-	float radius = 0.2;
-	int slices = 10; // slices for the circle, increases precision
+	float radius = 0.09;
+	int slices = 8; // slices for the circle, increases precision
+	float offset = 0.5;
 
 	for (size_t i = 0; i < mSplinePoints.size() - 1; i++) {
+		float posX = mSplinePoints[i].x;
+		float posY = mSplinePoints[i].y;
+		float posZ = mSplinePoints[i].z;
+		float nextPosX = mSplinePoints[i + 1].x;
+		float nextPosY = mSplinePoints[i + 1].y;
+		float nextPosZ = mSplinePoints[i + 1].z;
+
 		for (int j = 0; j < slices; j++) {
 			double angle = (2.0 * PI * j) / slices;
 			double angle2 = (2.0 * PI * (j + 1)) / slices;
 			float pieAngle = (float)angle;
 			float nextPieAngle = (float)angle2;
 
+			/* Left Track Cylinder */
 			glBegin(GL_TRIANGLE_STRIP);
 
 			/* Vertex in middle of the end of cylinder (point 2) */
-			glVertex3f(mSplinePoints[i + 1].x, mSplinePoints[i + 1].y, mSplinePoints[i + 1].z);
+			glVertex3f(nextPosX, nextPosY, nextPosZ);
 
 			/* Vertices at edges of circle to make a pie slice (point 2) */
-			glVertex3f(radius * cos(pieAngle) + mSplinePoints[i + 1].x, radius * sin(pieAngle) + mSplinePoints[i + 1].y, mSplinePoints[i + 1].z);
-			glVertex3f(radius * cos(nextPieAngle) + mSplinePoints[i + 1].x, radius * sin(nextPieAngle) + mSplinePoints[i + 1].y, mSplinePoints[i + 1].z);
+			glVertex3f(radius * cos(pieAngle) + nextPosX, radius * sin(pieAngle) + nextPosY, nextPosZ);
+			glVertex3f(radius * cos(nextPieAngle) + nextPosX, radius * sin(nextPieAngle) + nextPosY, nextPosZ);
 
 			/* Vertices at edges of other circle to make a pie slice (point 1) */
-			glVertex3f(radius * cos(nextPieAngle) + mSplinePoints[i].x, radius * sin(nextPieAngle) + mSplinePoints[i].y, mSplinePoints[i].z);
-			glVertex3f(radius * cos(pieAngle) + mSplinePoints[i].x, radius * sin(pieAngle) + mSplinePoints[i].y, mSplinePoints[i].z);
+			glVertex3f(radius * cos(nextPieAngle) + posX, radius * sin(nextPieAngle) + posY, posZ);
+			glVertex3f(radius * cos(pieAngle) + posX, radius * sin(pieAngle) + posY, posZ);
 
 			/* Vertex in middle of first circle (point 1) */
-			glVertex3f(mSplinePoints[i].x, mSplinePoints[i].y, mSplinePoints[i].z);
+			glVertex3f(posX, posY, posZ);
 			glEnd();
+
+		   /* Next steps: 
+			* Generate 2 offset cylinders on the sides (parallel to spline)
+			* Generate two more cylinders inside those 2 cylinders perpendicular to spline
+			*/
 		}
 	}
 }
