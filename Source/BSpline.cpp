@@ -12,6 +12,7 @@
 
 // Include GLEW - OpenGL Extension Wrangler
 #include <GL/glew.h>
+#include <GL/gl.h>
 
 using namespace glm;
 using namespace std;
@@ -75,7 +76,6 @@ void BSpline::Draw()
 
 	// Draw the triangles !
 	glDrawArrays(GL_LINE_STRIP, 0, mSamplePoints.size());
-	BSpline::ConstructTracks();
 }
 
 bool BSpline::ParseLine(const std::vector<ci_string> &token)
@@ -165,7 +165,7 @@ void BSpline::GenerateSamplePoints()
 	const int numPointsPerSegment = 10;
 	float increment = 1.0f / numPointsPerSegment;
 
-	for (int i = 0; i < mControlPoints.size(); ++i)
+	for (size_t i = 0; i < mControlPoints.size(); ++i)
 	{
         float t = 0.0f;
         
@@ -210,8 +210,32 @@ void BSpline::ConstructTracks() {
 	 */
 
 	double PI = 3.1415926535897932384626433832795;
-	float radius = 1.25f;
-	float halfLength = 5.0f;
+	float radius = 0.001f;
 	int slices = 8; // slices for the circle
 
+	for (size_t i = 0; i < mSplinePoints.size() - 1; i++) {
+		for (int j = 0; j < slices; j++) {
+			double angle = (2.0 * PI * j) / slices;
+			double angle2 = (2.0 * PI * (j + 1)) / slices;
+			float pieAngle = (float)angle;
+			float nextPieAngle = (float)angle2;
+
+			glBegin(GL_TRIANGLE_STRIP);
+
+			/* Vertex in middle of the end of cylinder (point 2) */
+			glVertex3f(mSplinePoints[i + 1].x, mSplinePoints[i + 1].y, mSplinePoints[i + 1].z);
+
+			/* Vertices at edges of circle to make a pie slice (point 2) */
+			glVertex3f(radius * cos(pieAngle), radius * sin(pieAngle), mSplinePoints[i + 1].z);
+			glVertex3f(radius * cos(nextPieAngle), radius * sin(nextPieAngle), mSplinePoints[i + 1].z);
+
+			/* Vertices at edges of other circle to make a pie slice (point 1) */
+			glVertex3f(radius * cos(nextPieAngle), radius * sin(nextPieAngle), mSplinePoints[i].z);
+			glVertex3f(radius * cos(pieAngle), radius * sin(pieAngle), mSplinePoints[i].z);
+
+			/* Vertex in middle of first circle (point 1) */
+			glVertex3f(mSplinePoints[i].x, -mSplinePoints[i].y, mSplinePoints[i].z);
+			glEnd();
+		}
+	}
 }

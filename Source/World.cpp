@@ -191,6 +191,7 @@ void World::Draw()
             
             glUniform4f(MaterialID, ka, kd, ks, n);
         }
+		//(*it)->ConstructTracks();
         (*it)->Draw();
     }
     
