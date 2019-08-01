@@ -210,7 +210,7 @@ void BSpline::ConstructTracks() {
 	 */
 
 	double PI = 3.1415926535897932384626433832795;
-	float radius = 0.001f;
+	float radius = 0.01;
 	int slices = 8; // slices for the circle
 
 	for (size_t i = 0; i < mSplinePoints.size() - 1; i++) {
@@ -226,15 +226,15 @@ void BSpline::ConstructTracks() {
 			glVertex3f(mSplinePoints[i + 1].x, mSplinePoints[i + 1].y, mSplinePoints[i + 1].z);
 
 			/* Vertices at edges of circle to make a pie slice (point 2) */
-			glVertex3f(radius * cos(pieAngle), radius * sin(pieAngle), mSplinePoints[i + 1].z);
-			glVertex3f(radius * cos(nextPieAngle), radius * sin(nextPieAngle), mSplinePoints[i + 1].z);
+			glVertex3f(radius * cos(pieAngle) + mSplinePoints[i + 1].x, radius * sin(pieAngle) + mSplinePoints[i + 1].y, mSplinePoints[i + 1].z);
+			glVertex3f(radius * cos(nextPieAngle) + mSplinePoints[i + 1].x, radius * sin(nextPieAngle) + mSplinePoints[i + 1].y, mSplinePoints[i + 1].z);
 
 			/* Vertices at edges of other circle to make a pie slice (point 1) */
-			glVertex3f(radius * cos(nextPieAngle), radius * sin(nextPieAngle), mSplinePoints[i].z);
-			glVertex3f(radius * cos(pieAngle), radius * sin(pieAngle), mSplinePoints[i].z);
+			glVertex3f(radius * cos(nextPieAngle) + mSplinePoints[i + 1].x, radius * sin(nextPieAngle) + mSplinePoints[i + 1].y, mSplinePoints[i].z);
+			glVertex3f(radius * cos(pieAngle) + mSplinePoints[i + 1].x, radius * sin(pieAngle) + mSplinePoints[i + 1].y, mSplinePoints[i].z);
 
 			/* Vertex in middle of first circle (point 1) */
-			glVertex3f(mSplinePoints[i].x, -mSplinePoints[i].y, mSplinePoints[i].z);
+			glVertex3f(mSplinePoints[i].x, mSplinePoints[i].y, mSplinePoints[i].z);
 			glEnd();
 		}
 	}
