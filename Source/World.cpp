@@ -14,12 +14,15 @@
 #include "StaticCamera.h"
 #include "FirstPersonCamera.h"
 
+
 #include "CubeModel.h"
 #include "SphereModel.h"
 #include "Animation.h"
 #include <GLFW/glfw3.h>
 #include "EventManager.h"
 
+#include "BSpline.h"
+#include "BSplineCamera.h"
 
 using namespace std;
 using namespace glm;
@@ -101,7 +104,7 @@ void World::Update(float dt)
     {
         if (mCamera.size() > 2)
         {
-            mCurrentCamera = 2;
+            mCurrentCamera = 3;
         }
     }
     
@@ -202,6 +205,10 @@ void World::Draw()
 
     planetTour.CreateVertexBuffer();
     planetTour.Draw();
+    
+    // Add camera to traverse the spline
+    mCamera.push_back(new BSplineCamera(&planetTour, 1.0f));
+
 
     Renderer::CheckForErrors();
     
@@ -274,12 +281,6 @@ void World::LoadScene(const char * scene_path)
             else if ( result.empty() == false && result[0] == '#')
             {
                 // this is a comment line
-            }
-            else
-            {
-                fprintf(stderr, "Error loading scene file... !");
-                getchar();
-                exit(-1);
             }
         }
     }
