@@ -11,11 +11,11 @@
 
 #include "Model.h"
 
-class SphereModel : public Model
+class PlanetModel : public Model
 {
 public:
-	SphereModel(glm::vec3 size = glm::vec3(1.0f, 1.0f, 1.0f));
-    virtual ~SphereModel(void);
+	PlanetModel(glm::vec3 size = glm::vec3(1.0f, 1.0f, 1.0f));
+    virtual ~PlanetModel(void);
 
     virtual void Update(float dt);
     virtual void Draw();

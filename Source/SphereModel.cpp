@@ -12,7 +12,7 @@
 
 using namespace glm;
 
-SphereModel::SphereModel(vec3 size) : Model()
+PlanetModel::PlanetModel(vec3 size) : Model()
 {
     Vertex vertexBuffer[] = {
         // position,                                    normal,                              color
@@ -1320,22 +1320,22 @@ SphereModel::SphereModel(vec3 size) : Model()
     glEnableVertexAttribArray(2);
 }
 
-SphereModel::~SphereModel()
+PlanetModel::~PlanetModel()
 {
     glDeleteBuffers(1, &mVBO);
     glDeleteVertexArrays(1, &mVAO);
 }
 
 
-void SphereModel::Update(float dt)
+void PlanetModel::Update(float dt)
 {
     Model::Update(dt);
 }
 
-void SphereModel::Draw()
+void PlanetModel::Draw()
 {
     // Draw the Vertex Buffer
-    // Note this draws a Sphere
+    // Note this draws a Planet
     // The Model View Projection transforms are computed in the Vertex Shader
     glBindVertexArray(mVAO);
     glBindBuffer(GL_ARRAY_BUFFER, mVBO);
@@ -1347,7 +1347,7 @@ void SphereModel::Draw()
     glDrawArrays(GL_TRIANGLE_STRIP, 0, numOfVertices);
 }
 
-bool SphereModel::ParseLine(const std::vector<ci_string> &token)
+bool PlanetModel::ParseLine(const std::vector<ci_string> &token)
 {
     if (token.empty())
     {
