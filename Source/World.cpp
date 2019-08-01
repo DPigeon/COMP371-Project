@@ -20,56 +20,61 @@
 #include <GLFW/glfw3.h>
 #include "EventManager.h"
 
-#include "BSpline.h"
-#include "BSplineCamera.h"
 
 using namespace std;
 using namespace glm;
 
 World* World::instance;
 
+// Light Coefficients
+const vec3 lightColor(1.0f, 1.0f, 1.0f);
+const float lightKc = 0.05f;
+const float lightKl = 0.02f;
+const float lightKq = 0.002f;
+const vec4 lightPosition(3.0f, 5.0f, 20.0f,0.0f);
+
 
 World::World()
 {
     instance = this;
-
-	// Setup Camera
-	mCamera.push_back(new FirstPersonCamera(vec3(3.0f, 5.0f, 20.0f)));
-	mCamera.push_back(new StaticCamera(vec3(3.0f, 30.0f, 5.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f)));
-	mCamera.push_back(new StaticCamera(vec3(0.5f,  0.5f, 5.0f), vec3(0.0f, 0.5f, 0.0f), vec3(0.0f, 1.0f, 0.0f)));
-	mCurrentCamera = 0;
+    
+    // Setup Camera
+    mCamera.push_back(new FirstPersonCamera(vec3(3.0f, 5.0f, 20.0f)));
+    mCamera.push_back(new StaticCamera(vec3(3.0f, 30.0f, 5.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f)));
+    mCamera.push_back(new StaticCamera(vec3(0.5f,  0.5f, 5.0f), vec3(0.0f, 0.5f, 0.0f), vec3(0.0f, 1.0f, 0.0f)));
+    mCurrentCamera = 0;
 }
 
 World::~World()
 {
-	// Models
-	for (vector<Model*>::iterator it = mModel.begin(); it < mModel.end(); ++it)
-	{
-		delete *it;
-	}
-
-	mModel.clear();
-
-	for (vector<Animation*>::iterator it = mAnimation.begin(); it < mAnimation.end(); ++it)
-	{
-		delete *it;
-	}
-
-	mAnimation.clear();
-
-	for (vector<AnimationKey*>::iterator it = mAnimationKey.begin(); it < mAnimationKey.end(); ++it)
-	{
-		delete *it;
-	}
-
-	mAnimationKey.clear();
-
-	// Camera
-	for (vector<Camera*>::iterator it = mCamera.begin(); it < mCamera.end(); ++it)
-	{
-		delete *it;
-	}
-	mCamera.clear();
+    // Models
+    for (vector<Model*>::iterator it = mModel.begin(); it < mModel.end(); ++it)
+    {
+        delete *it;
+    }
+    
+    mModel.clear();
+    
+    for (vector<Animation*>::iterator it = mAnimation.begin(); it < mAnimation.end(); ++it)
+    {
+        delete *it;
+    }
+    
+    mAnimation.clear();
+    
+    for (vector<AnimationKey*>::iterator it = mAnimationKey.begin(); it < mAnimationKey.end(); ++it)
+    {
+        delete *it;
+    }
+    
+    mAnimationKey.clear();
+    
+    // Camera
+    for (vector<Camera*>::iterator it = mCamera.begin(); it < mCamera.end(); ++it)
+    {
+        delete *it;
+    }
+    mCamera.clear();
 }
 
 World* World::GetInstance()
@@ -79,37 +84,37 @@ World* World::GetInstance()
 
 void World::Update(float dt)
 {
-	// User Inputs
-	// 0 1 2 to change the Camera
-	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_1 ) == GLFW_PRESS)
-	{
-		mCurrentCamera = 0;
-	}
-	else if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_2 ) == GLFW_PRESS)
-	{
-		if (mCamera.size() > 1)
-		{
-			mCurrentCamera = 1;
-		}
-	}
-	else if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_3 ) == GLFW_PRESS)
-	{
-		if (mCamera.size() > 2)
-		{
-			mCurrentCamera = 2;
-		}
-	}
-
-	// Spacebar to change the shader
-	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_0 ) == GLFW_PRESS)
-	{
-		Renderer::SetShader(SHADER_SOLID_COLOR);
-	}
-	else if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_9 ) == GLFW_PRESS)
-	{
-		Renderer::SetShader(SHADER_BLUE);
-	}
-
+    // User Inputs
+    // 0 1 2 to change the Camera
+    if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_1 ) == GLFW_PRESS)
+    {
+        mCurrentCamera = 0;
+    }
+    else if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_2 ) == GLFW_PRESS)
+    {
+        if (mCamera.size() > 1)
+        {
+            mCurrentCamera = 1;
+        }
+    }
+    else if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_3 ) == GLFW_PRESS)
+    {
+        if (mCamera.size() > 2)
+        {
+            mCurrentCamera = 2;
+        }
+    }
+    
+    // Spacebar to change the shader
+    if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_0 ) == GLFW_PRESS)
+    {
+        Renderer::SetShader(SHADER_PHONG);
+    }
+    else if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_9 ) == GLFW_PRESS)
+    {
+        Renderer::SetShader(SHADER_SOLID_COLOR);
+    }
+    
     // Update animation and keys
     for (vector<Animation*>::iterator it = mAnimation.begin(); it < mAnimation.end(); ++it)
     {
@@ -120,154 +125,182 @@ void World::Update(float dt)
     {
         (*it)->Update(dt);
     }
-
-
-	// Update current Camera
-	mCamera[mCurrentCamera]->Update(dt);
-
-	// Update models
-	for (vector<Model*>::iterator it = mModel.begin(); it < mModel.end(); ++it)
-	{
-		(*it)->Update(dt);
-	}
+    
+    
+    // Update current Camera
+    mCamera[mCurrentCamera]->Update(dt);
+    
+    // Update models
+    for (vector<Model*>::iterator it = mModel.begin(); it < mModel.end(); ++it)
+    {
+        (*it)->Update(dt);
+    }
+    
 }
 
 void World::Draw()
 {
-	Renderer::BeginFrame();
-	
-	// Set shader to use
-	glUseProgram(Renderer::GetShaderProgramID());
-
-	// This looks for the MVP Uniform variable in the Vertex Program
-	GLuint VPMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "ViewProjectionTransform");
-
-	// Send the view projection constants to the shader
-	mat4 VP = mCamera[mCurrentCamera]->GetViewProjectionMatrix();
-	glUniformMatrix4fv(VPMatrixLocation, 1, GL_FALSE, &VP[0][0]);
-
-	// Draw models
-	for (vector<Model*>::iterator it = mModel.begin(); it < mModel.end(); ++it)
-	{
-		(*it)->Draw();
-	}
-
-	// Draw Path Lines
-	
-	// Set Shader for path lines
-	unsigned int prevShader = Renderer::GetCurrentShader();
-	Renderer::SetShader(SHADER_PATH_LINES);
-	glUseProgram(Renderer::GetShaderProgramID());
+    Renderer::BeginFrame();
     
-
-	// Send the view projection constants to the shader
-	VPMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "ViewProjectionTransform");
-	glUniformMatrix4fv(VPMatrixLocation, 1, GL_FALSE, &VP[0][0]);
-
-    for (vector<BSpline*>::iterator it = mSpline.begin(); it < mSpline.end(); ++it)
+    glUseProgram(Renderer::GetShaderProgramID());
+    
+    // Everything we need to send to the GPU
+    
+    GLuint WorldMatrixID = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldTransform");
+    GLuint ViewMatrixID = glGetUniformLocation(Renderer::GetShaderProgramID(), "ViewTransform");
+    GLuint ProjMatrixID = glGetUniformLocation(Renderer::GetShaderProgramID(), "ProjectonTransform");
+    GLuint ViewProjMatrixID = glGetUniformLocation(Renderer::GetShaderProgramID(), "ViewProjectionTransform");
+    
+    // Get a handle for Light Attributes uniform
+    GLuint LightPositionID = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldLightPosition");
+    GLuint LightColorID = glGetUniformLocation(Renderer::GetShaderProgramID(), "lightColor");
+    GLuint LightAttenuationID = glGetUniformLocation(Renderer::GetShaderProgramID(), "lightAttenuation");
+    
+    GLuint MaterialID = glGetUniformLocation(Renderer::GetShaderProgramID(), "materialCoefficients");
+    
+    // Draw the Vertex Buffer
+    // Note this draws a unit Sphere
+    // The Model View Projection transforms are computed in the Vertex Shader
+    
+    // Set shader constants
+    glUniform4f(LightPositionID, lightPosition.x, lightPosition.y, lightPosition.z, lightPosition.w);
+    glUniform3f(LightColorID, lightColor.r, lightColor.g, lightColor.b);
+    glUniform3f(LightAttenuationID, lightKc, lightKl, lightKq);
+    
+    // Send the view projection constants to the shader
+    mat4 View = mCamera[mCurrentCamera]->GetViewMatrix();
+    glUniformMatrix4fv(ViewMatrixID,  1, GL_FALSE,  &View[0][0]);
+    
+    mat4 Projection = mCamera[mCurrentCamera]->GetProjectionMatrix();
+    glUniformMatrix4fv(ProjMatrixID,  1, GL_FALSE, &Projection[0][0]);
+    
+    mat4 ViewProjection = mCamera[mCurrentCamera]->GetViewProjectionMatrix();
+    glUniformMatrix4fv(ViewProjMatrixID,  1, GL_FALSE, &ViewProjection[0][0]);
+    
+    // Draw models
+    for (vector<Model*>::iterator it = mModel.begin(); it < mModel.end(); ++it)
     {
+        if ((*it)->GetMaterialCoefficients().length() > 0){
+            MaterialID = glGetUniformLocation(Renderer::GetShaderProgramID(), "materialCoefficients");
+            
+            glUniformMatrix4fv(WorldMatrixID, 1, GL_FALSE, &((*it)->GetWorldMatrix())[0][0]);
+            float ka = 0.9;
+            float kd = 0.5;
+            float ks = 1.0;
+            float n = 50;
+            
+            glUniform4f(MaterialID, ka, kd, ks, n);
+        }
         (*it)->Draw();
     }
     
-	for (vector<Animation*>::iterator it = mAnimation.begin(); it < mAnimation.end(); ++it)
-	{
-		(*it)->Draw();
-	}
-
-	for (vector<AnimationKey*>::iterator it = mAnimationKey.begin(); it < mAnimationKey.end(); ++it)
-	{
-		mat4 VP = mCamera[mCurrentCamera]->GetViewProjectionMatrix();
-		glUniformMatrix4fv(VPMatrixLocation, 1, GL_FALSE, &VP[0][0]);
-
-		(*it)->Draw();
-	}
-    
     Renderer::CheckForErrors();
     
-	// Restore previous shader
-	Renderer::SetShader((ShaderType) prevShader);
-
-	Renderer::EndFrame();
+    // Draw Billboards
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glDisable(GL_BLEND);
+    
+    Renderer::EndFrame();
 }
 
 void World::LoadScene(const char * scene_path)
 {
-	// Using case-insensitive strings and streams for easier parsing
-	ci_ifstream input;
-	input.open(scene_path, ios::in);
-
-	// Invalid file
-	if(input.fail() )
-	{	 
-		fprintf(stderr, "Error loading file: %s\n", scene_path);
-		getchar();
-		exit(-1);
-	}
-
-	ci_string item;
-	while( std::getline( input, item, '[' ) )   
-	{
+    // Using case-insensitive strings and streams for easier parsing
+    ci_ifstream input;
+    input.open(scene_path, ios::in);
+    
+    // Invalid file
+    if(input.fail() )
+    {
+        fprintf(stderr, "Error loading file: %s\n", scene_path);
+        getchar();
+        exit(-1);
+    }
+    
+    std::vector<Model*> planets = generatePlanets();
+    mModel.insert(mModel.begin(), planets.begin(),planets.end());
+    
+    ci_string item;
+    while( std::getline( input, item, '[' ) )
+    {
         ci_istringstream iss( item );
-
-		ci_string result;
-		if( std::getline( iss, result, ']') )
-		{
-			if( result == "cube" )
-			{
-				// Box attributes
-				CubeModel* cube = new CubeModel();
-				cube->Load(iss);
-				mModel.push_back(cube);
-			}
+        
+        ci_string result;
+        if( std::getline( iss, result, ']') )
+        {
+            if( result == "cube" )
+            {
+                // Box attributes
+                CubeModel* cube = new CubeModel();
+                cube->Load(iss);
+                mModel.push_back(cube);
+            }
             else if( result == "sphere" )
             {
-                SphereModel* sphere = new SphereModel();
+                PlanetModel* sphere = new PlanetModel();
                 sphere->Load(iss);
                 mModel.push_back(sphere);
             }
-			else if ( result == "animationkey" )
-			{
-				AnimationKey* key = new AnimationKey();
-				key->Load(iss);
-				mAnimationKey.push_back(key);
-			}
-			else if (result == "animation")
-			{
-				Animation* anim = new Animation();
-				anim->Load(iss);
-				mAnimation.push_back(anim);
-			}
-            else if (result == "spline")
+            else if ( result == "animationkey" )
             {
-                BSpline* spline = new BSpline();
-                spline->Load(iss);
-                spline->CreateVertexBuffer();
-                
-                // FIXME: This is hardcoded: replace last camera with spline camera
-                mSpline.push_back(spline);
-                mCamera.pop_back();
-                mCamera.push_back(new BSplineCamera(spline, 10.0f));
+                AnimationKey* key = new AnimationKey();
+                key->Load(iss);
+                mAnimationKey.push_back(key);
             }
-			else if ( result.empty() == false && result[0] == '#')
-			{
-				// this is a comment line
-			}
-			else
-			{
-				fprintf(stderr, "Error loading scene file... !");
-				getchar();
-				exit(-1);
-			}
-	    }
-	}
-	input.close();
+            else if (result == "animation")
+            {
+                Animation* anim = new Animation();
+                anim->Load(iss);
+                mAnimation.push_back(anim);
+            }
+            else if ( result.empty() == false && result[0] == '#')
+            {
+                // this is a comment line
+            }
+            else
+            {
+                fprintf(stderr, "Error loading scene file... !");
+                getchar();
+                exit(-1);
+            }
+        }
+    }
+    input.close();
+    
+    // Set Animation vertex buffers
+    for (vector<Animation*>::iterator it = mAnimation.begin(); it < mAnimation.end(); ++it)
+    {
+        // Draw model
+        (*it)->CreateVertexBuffer();
+    }
+}
 
-	// Set Animation vertex buffers
-	for (vector<Animation*>::iterator it = mAnimation.begin(); it < mAnimation.end(); ++it)
-	{
-		// Draw model
-		(*it)->CreateVertexBuffer();
-	}
+std::vector<Model*> World::generatePlanets(){
+    std::vector<Model*> planetList;
+    //Temporary number here
+    for (int i=0; i < 8; i ++){
+        PlanetModel* randomSphere = new PlanetModel();
+        randomSphere->SetPosition(vec3(randomFloat(0,100.0f),randomFloat(10.0f,100.0f),randomFloat(0.0f,100.0f)));
+        float planetScalingConstant = randomFloat(0.5f,4.0f);
+        randomSphere->SetScaling(vec3(planetScalingConstant,planetScalingConstant,planetScalingConstant));
+        planetList.push_back(randomSphere);
+    }
+    return planetList;
+}
+
+
+float randomFloat(float min, float max)
+{
+    // this  function assumes max > min, you may want
+    // more robust error checking for a non-debug build
+    assert(max > min);
+    float random = ((float) rand()) / (float) RAND_MAX;
+    
+    // generate (in your case) a float between 0 and (4.5-.78)
+    // then add .78, giving you a float between .78 and 4.5
+    float range = max - min;
+    return (random*range) + min;
 }
 
 Animation* World::FindAnimation(ci_string animName)
@@ -296,5 +329,5 @@ AnimationKey* World::FindAnimationKey(ci_string keyName)
 
 const Camera* World::GetCurrentCamera() const
 {
-     return mCamera[mCurrentCamera];
+    return mCamera[mCurrentCamera];
 }

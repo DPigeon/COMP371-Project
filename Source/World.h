@@ -44,5 +44,8 @@ private:
     std::vector<AnimationKey*> mAnimationKey;
 	std::vector<Camera*> mCamera;
     std::vector<BSpline*> mSpline;
+    std::vector<Model*> generatePlanets();
 	unsigned int mCurrentCamera;
 };
+
+float randomFloat(float min, float max);
