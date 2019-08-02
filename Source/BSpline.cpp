@@ -4,7 +4,7 @@
 // Created by Nicolas Bergeron on 8/7/14.
 // Updated by Gary Chang on 24/1/15
 //
-// Copyright (c) 2014-2015 Concordia University. All rights reserved.
+// CopyrightVector (c) 2014-2015 Concordia University. All rightVectors reserved.
 //
 
 #include "BSpline.h"
@@ -12,8 +12,10 @@
 
 // Include GLEW - OpenGL Extension Wrangler
 #include <GL/glew.h>
+#include <GL/gl.h>
 
 using namespace glm;
+using namespace std;
 
 BSpline::BSpline() : Model()
 {
@@ -65,7 +67,6 @@ void BSpline::Update(float dt)
 
 void BSpline::Draw()
 {
-
 	// The Model View Projection transforms are computed in the Vertex Shader
 	glBindVertexArray(mVAO);
 
@@ -73,7 +74,7 @@ void BSpline::Draw()
 	glUniformMatrix4fv(WorldMatrixLocation, 1, GL_FALSE, &GetWorldMatrix()[0][0]);
 
 	// Draw the triangles !
-	glDrawArrays(GL_LINE_LOOP, 0, mSamplePoints.size());
+	ConstructTracks();
 }
 
 bool BSpline::ParseLine(const std::vector<ci_string> &token)
@@ -93,6 +94,17 @@ bool BSpline::ParseLine(const std::vector<ci_string> &token)
 		AddControlPoint(glm::vec3(x, y, z));
 		return true;
 	}
+	else if (token[0] == "spoint")
+	{
+		assert(token.size() > 4);
+		assert(token[1] == "=");
+
+		float x = static_cast<float>(atof(token[2].c_str()));
+		float y = static_cast<float>(atof(token[3].c_str()));
+		float z = static_cast<float>(atof(token[4].c_str()));
+		AddSplinePoint(glm::vec3(x, y, z));
+		return true;
+	}
     else
     {
         return Model::ParseLine(token);
@@ -102,6 +114,11 @@ bool BSpline::ParseLine(const std::vector<ci_string> &token)
 void BSpline::AddControlPoint(glm::vec3 point)
 {
 	mControlPoints.push_back(point);
+}
+
+void BSpline::AddSplinePoint(glm::vec3 point)
+{
+	mSplinePoints.push_back(point);
 }
 
 void BSpline::ClearControlPoints()
@@ -119,7 +136,7 @@ glm::vec3 BSpline::GetPosition(float t) const
 	int p2 = (p1 + 1)  % mControlPoints.size();
 	int p3 = (p2 + 1)  % mControlPoints.size();
 	int p4 = (p3 + 1)  % mControlPoints.size();
-
+	
 	return vec3(GetWorldMatrix() * vec4(BSpline::GetPosition(t - (int) t, mControlPoints[p1], mControlPoints[p2], mControlPoints[p3], mControlPoints[p4]), 1.0f));
 }
 
@@ -134,8 +151,6 @@ glm::vec3 BSpline::GetPosition(float t, const vec3& p1, const vec3& p2, const ve
     return vec3(vec4(product.x * p1 + product.y * p2 + product.z * p3 + product.w * p4, 1.0f) );
 }
 
-
-
 void BSpline::GenerateSamplePoints()
 {
     if(mControlPoints.size() == 0)
@@ -147,7 +162,7 @@ void BSpline::GenerateSamplePoints()
 	const int numPointsPerSegment = 10;
 	float increment = 1.0f / numPointsPerSegment;
 
-	for (int i=0; i < mControlPoints.size(); ++i)
+	for (size_t i = 0; i < mControlPoints.size(); ++i)
 	{
         float t = 0.0f;
         
@@ -182,4 +197,56 @@ glm::vec3 BSpline::GetTangent(float t, const vec3& p1, const vec3& p2, const vec
 	vec4 product = (1.0f / 6.0f) * params * coefficients;
 
 	return vec3(vec4(product.x * p1 + product.y * p2 + product.z * p3 + product.w * p4, 1.0f));
+}
+
+void BSpline::ConstructTracks() {
+	/* Extract the points from spline, get them inside a vector
+	 * Begin with drawing cylinder on the spline
+	 * Then draw 2 pallel lines for edge of track
+	 * Draw 2 perpendicular lines inside those 2 tracks
+	 */
+
+	double PI = 3.1415926535897932384626433832795;
+	float radius = 0.5;
+	int slices = 8; // slices for the circle, increases precision
+	float offset = 0.5;
+
+	for (size_t i = 0; i < mSplinePoints.size() - 1; i++) {
+		float posX = mSplinePoints[i].x;
+		float posY = mSplinePoints[i].y;
+		float posZ = mSplinePoints[i].z;
+		float nextPosX = mSplinePoints[i + 1].x;
+		float nextPosY = mSplinePoints[i + 1].y;
+		float nextPosZ = mSplinePoints[i + 1].z;
+
+		for (int j = 0; j < slices; j++) {
+			double angle = (2.0 * PI * j) / slices;
+			double angle2 = (2.0 * PI * (j + 1)) / slices;
+			float pieAngle = (float)angle;
+			float nextPieAngle = (float)angle2;
+
+			/* Left Track Cylinder */
+			glBegin(GL_TRIANGLE_STRIP);
+
+			/* Vertex in middle of the end of cylinder (point 2) */
+			glVertex3f(nextPosX, nextPosY, nextPosZ);
+
+			/* Vertices at edges of circle to make a pie slice (point 2) */
+			glVertex3f(radius * cos(pieAngle) + nextPosX, radius * sin(pieAngle) + nextPosY, nextPosZ);
+			glVertex3f(radius * cos(nextPieAngle) + nextPosX, radius * sin(nextPieAngle) + nextPosY, nextPosZ);
+
+			/* Vertices at edges of other circle to make a pie slice (point 1) */
+			glVertex3f(radius * cos(nextPieAngle) + posX, radius * sin(nextPieAngle) + posY, posZ);
+			glVertex3f(radius * cos(pieAngle) + posX, radius * sin(pieAngle) + posY, posZ);
+
+			/* Vertex in middle of first circle (point 1) */
+			glVertex3f(posX, posY, posZ);
+			glEnd();
+
+		   /* Next steps: 
+			* Generate 2 offset cylinders on the sides (parallel to spline)
+			* Generate two more cylinders inside those 2 cylinders perpendicular to spline
+			*/
+		}
+	}
 }
