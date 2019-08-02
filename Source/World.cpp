@@ -14,6 +14,7 @@
 #include "StaticCamera.h"
 #include "FirstPersonCamera.h"
 
+
 #include "CubeModel.h"
 #include "SphereModel.h"
 #include "Animation.h"
@@ -22,7 +23,6 @@
 
 #include "BSpline.h"
 #include "BSplineCamera.h"
-
 
 using namespace std;
 using namespace glm;
@@ -104,7 +104,7 @@ void World::Update(float dt)
     {
         if (mCamera.size() > 2)
         {
-            mCurrentCamera = 2;
+            mCurrentCamera = 3;
         }
     }
     
@@ -202,14 +202,31 @@ void World::Draw()
 		(*it)->Draw();
 	}
     
+    unsigned int prevShader = Renderer::GetCurrentShader();
+    Renderer::SetShader(SHADER_PATH_LINES);
+    glUseProgram(Renderer::GetShaderProgramID());
+    
+    //Draw the BSpline between all the planets here
+
+    planetTour.CreateVertexBuffer();
+    planetTour.Draw();
+    
+    // Add camera to traverse the spline
+    mCamera.push_back(new BSplineCamera(&planetTour, 1.0f));
+
+
     Renderer::CheckForErrors();
     
     // Draw Billboards
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glDisable(GL_BLEND);
+    // Restore previous shader
+    Renderer::SetShader((ShaderType) prevShader);
     
     Renderer::EndFrame();
+    
+    Renderer::CheckForErrors();
 }
 
 void World::LoadScene(const char * scene_path)
@@ -228,6 +245,10 @@ void World::LoadScene(const char * scene_path)
     
     std::vector<Model*> planets = generatePlanets();
     mModel.insert(mModel.begin(), planets.begin(),planets.end());
+    
+    for (std::vector<Model*>::iterator it = planets.begin(); it < planets.end(); ++it){
+        planetTour.AddControlPoint(glm::vec3((*it)->GetPosition()));
+    }
     
     ci_string item;
     while( std::getline( input, item, '[' ) )

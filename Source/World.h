@@ -12,6 +12,7 @@
 
 #include "ParsingHelper.h"
 #include <vector>
+#include "BSpline.h"
 
 class Camera;
 class Model;
@@ -44,6 +45,7 @@ private:
     std::vector<AnimationKey*> mAnimationKey;
 	std::vector<Camera*> mCamera;
     std::vector<BSpline*> mSpline;
+    BSpline planetTour;
     std::vector<Model*> generatePlanets();
 	unsigned int mCurrentCamera;
 };
