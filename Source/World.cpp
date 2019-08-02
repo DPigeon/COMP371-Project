@@ -197,10 +197,10 @@ void World::Draw()
         (*it)->Draw();
     }
 
-	for (vector<BSpline*>::iterator it = mSpline.begin(); it < mSpline.end(); ++it)
+	/*for (vector<BSpline*>::iterator it = mSpline.begin(); it < mSpline.end(); ++it)
 	{
 		(*it)->Draw();
-	}
+	}*/
     
     unsigned int prevShader = Renderer::GetCurrentShader();
     Renderer::SetShader(SHADER_PATH_LINES);
