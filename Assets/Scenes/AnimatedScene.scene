@@ -65,26 +65,6 @@ key      = "KeyCycle7"  time = 6.0f
 key      = "KeyCycle8"  time = 7.0f
 key      = "KeyCycle1"  time = 8.0f
 
-
-[Cube]
-name     = "Ground"
-scaling  = 100.0 1.0 100.0
-position = 0.0 -0.5 0.0
-rotation = 0.0 0.0 1.0 0.0
-
-
-[Cube]
-name     = "Cube"
-scaling  = 1.0 1.0 1.0
-position = 0.0 1.0 0.0
-rotation = 0.0 0.0 1.0 180
-animation = "BackAndForth"
-
-[Sphere]
-name     = "Sphere"
-position = 10.0 2.0 0.0
-animation = "CycleAnim"
-
 [Spline]
 name     = "RollerCoaster"
 position = 0.0 5 0.0
