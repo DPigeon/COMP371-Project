@@ -107,6 +107,8 @@
     <None Include="..\Assets\Shaders\BlueColor.fragmentshader" />
     <None Include="..\Assets\Shaders\PathLines.fragmentshader" />
     <None Include="..\Assets\Shaders\PathLines.vertexshader" />
+    <None Include="..\Assets\Shaders\Phong.fragmentshader" />
+    <None Include="..\Assets\Shaders\Phong.vertexshader" />
     <None Include="..\Assets\Shaders\SolidColor.fragmentshader" />
     <None Include="..\Assets\Shaders\SolidColor.vertexshader" />
     <None Include="..\Assets\Shaders\Texture.fragmentshader" />

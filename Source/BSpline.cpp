@@ -67,7 +67,6 @@ void BSpline::Update(float dt)
 
 void BSpline::Draw()
 {
-	//cout << mSamplePoints.size() << endl;
 	// The Model View Projection transforms are computed in the Vertex Shader
 	glBindVertexArray(mVAO);
 
@@ -75,7 +74,7 @@ void BSpline::Draw()
 	glUniformMatrix4fv(WorldMatrixLocation, 1, GL_FALSE, &GetWorldMatrix()[0][0]);
 
 	// Draw the triangles !
-	glDrawArrays(GL_LINE_STRIP, 0, mSamplePoints.size());
+	ConstructTracks();
 }
 
 bool BSpline::ParseLine(const std::vector<ci_string> &token)
@@ -152,8 +151,6 @@ glm::vec3 BSpline::GetPosition(float t, const vec3& p1, const vec3& p2, const ve
     return vec3(vec4(product.x * p1 + product.y * p2 + product.z * p3 + product.w * p4, 1.0f) );
 }
 
-
-
 void BSpline::GenerateSamplePoints()
 {
     if(mControlPoints.size() == 0)
@@ -210,7 +207,7 @@ void BSpline::ConstructTracks() {
 	 */
 
 	double PI = 3.1415926535897932384626433832795;
-	float radius = 0.09;
+	float radius = 0.5;
 	int slices = 8; // slices for the circle, increases precision
 	float offset = 0.5;
 
