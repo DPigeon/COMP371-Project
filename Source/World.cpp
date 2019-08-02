@@ -34,7 +34,7 @@ const vec3 lightColor(1.0f, 1.0f, 1.0f);
 const float lightKc = 0.05f;
 const float lightKl = 0.02f;
 const float lightKq = 0.002f;
-const vec4 lightPosition(3.0f, 5.0f, 20.0f,0.0f);
+const vec4 lightPosition(3.0f, 0.0f, 20.0f, 1.0f);
 
 
 World::World()
@@ -196,6 +196,11 @@ void World::Draw()
         }
         (*it)->Draw();
     }
+
+	for (vector<BSpline*>::iterator it = mSpline.begin(); it < mSpline.end(); ++it)
+	{
+		(*it)->Draw();
+	}
     
     unsigned int prevShader = Renderer::GetCurrentShader();
     Renderer::SetShader(SHADER_PATH_LINES);
@@ -278,6 +283,17 @@ void World::LoadScene(const char * scene_path)
                 anim->Load(iss);
                 mAnimation.push_back(anim);
             }
+			else if (result == "spline")
+			{
+				BSpline* spline = new BSpline();
+				spline->Load(iss);
+				spline->CreateVertexBuffer();
+
+				// FIXME: This is hardcoded: replace last camera with spline camera
+				mSpline.push_back(spline);
+				mCamera.pop_back();
+				mCamera.push_back(new BSplineCamera(spline, 10.0f));
+			}
             else if ( result.empty() == false && result[0] == '#')
             {
                 // this is a comment line

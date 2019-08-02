@@ -10,6 +10,8 @@
 #include "BSplineCamera.h"
 #include "EventManager.h"
 #include "World.h"
+#include <iostream>
+#include <fstream>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -17,6 +19,7 @@
 #include <algorithm>
 
 using namespace glm;
+using namespace std;
 
 BSplineCamera::BSplineCamera(BSpline *spline, float speed)
     : Camera(), mpSpline(spline), mSpeed(speed), mSplineParameterT(0.0f)
@@ -42,6 +45,15 @@ void BSplineCamera::Update(float dt)
 
     mSplineParameterT += dt;
     mPosition = mpSpline->GetPosition(mSplineParameterT);
+
+	/* Used to extrapolate points for scene file, uncomment if needed */
+	/*ofstream extrapolatePoints;
+	extrapolatePoints.open("SplinePoints.txt", ios::app); // App for append at end of file
+	extrapolatePoints <<"sPoint = "<< mPosition.x << " " << mPosition.y << " " << mPosition.z;
+	extrapolatePoints << endl;
+	extrapolatePoints.close();*/
+
+	//cout<< "X: " << mPosition.x << " Y:" << mPosition.y << " Z:" << mPosition.z << endl;
 }
 
 glm::mat4 BSplineCamera::GetViewMatrix() const
