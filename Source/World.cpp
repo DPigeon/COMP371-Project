@@ -104,7 +104,7 @@ void World::Update(float dt)
     {
         if (mCamera.size() > 2)
         {
-            mCurrentCamera = 3;
+            mCurrentCamera = 2;
         }
     }
     
@@ -128,9 +128,7 @@ void World::Update(float dt)
     {
         (*it)->Update(dt);
     }
-    
-    
-    // Update current Camera
+
     mCamera[mCurrentCamera]->Update(dt);
     
     // Update models
@@ -202,16 +200,9 @@ void World::Draw()
     glUseProgram(Renderer::GetShaderProgramID());
     
     //Draw the BSpline between all the planets here
-
-    planetTour.CreateVertexBuffer();
-    planetTour.Draw();
-
-    // Add camera to traverse the spline
-	BSplineCamera* SplineCamera = new BSplineCamera(&planetTour, 1.0f);
-    mCamera.push_back(SplineCamera);
-
-
-	planetTour.ConstructTracks(SplineCamera->GetExtrapolatedPoints());
+	for (vector<BSpline*>::iterator it = mSpline.begin(); it < mSpline.end(); ++it) {
+		(*it)->ConstructTracks(mSplineCamera.front()->GetExtrapolatedPoints());
+	}
 
     Renderer::CheckForErrors();
     
@@ -239,13 +230,6 @@ void World::LoadScene(const char * scene_path)
         fprintf(stderr, "Error loading file: %s\n", scene_path);
         getchar();
         exit(-1);
-    }
-    
-    std::vector<Model*> planets = generatePlanets();
-    mModel.insert(mModel.begin(), planets.begin(),planets.end());
-    
-    for (std::vector<Model*>::iterator it = planets.begin(); it < planets.end(); ++it){
-        planetTour.AddControlPoint(glm::vec3((*it)->GetPosition()));
     }
     
     ci_string item;
@@ -283,14 +267,25 @@ void World::LoadScene(const char * scene_path)
             }
 			else if (result == "spline")
 			{
-				BSpline* spline = new BSpline();
-				spline->Load(iss);
-				spline->CreateVertexBuffer();
+				BSpline* planetTour = new BSpline();
+
+				std::vector<Model*> planets = generatePlanets();
+				mModel.insert(mModel.begin(), planets.begin(), planets.end());
+
+				for (std::vector<Model*>::iterator it = planets.begin(); it < planets.end(); ++it) {
+					planetTour->AddControlPoint(glm::vec3((*it)->GetPosition()));
+				}
+
+				planetTour->CreateVertexBuffer();
 
 				// FIXME: This is hardcoded: replace last camera with spline camera
-				mSpline.push_back(spline);
+				mSpline.push_back(planetTour);
 				mCamera.pop_back();
-				mCamera.push_back(new BSplineCamera(spline, 10.0f));
+
+				// Add camera to traverse the spline
+				BSplineCamera* SplineCamera = new BSplineCamera(planetTour, 1.0f); // 10.0 before
+				mCamera.push_back(SplineCamera);
+				mSplineCamera.push_back(SplineCamera);
 			}
             else if ( result.empty() == false && result[0] == '#')
             {

@@ -203,6 +203,12 @@ void BSpline::ConstructTracks(vector<vec3> points) {
 	 * Draw 2 perpendicular lines inside those 2 tracks
 	 */
 
+	 // The Model View Projection transforms are computed in the Vertex Shader
+	glBindVertexArray(mVAO);
+
+	GLuint WorldMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldTransform");
+	glUniformMatrix4fv(WorldMatrixLocation, 1, GL_FALSE, &GetWorldMatrix()[0][0]);
+
 	double PI = 3.1415926535897932384626433832795;
 	float radius = 0.5;
 	int slices = 8; // slices for the circle, increases precision
