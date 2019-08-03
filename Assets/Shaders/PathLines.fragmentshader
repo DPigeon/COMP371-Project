@@ -1,6 +1,7 @@
 #version 330 core
 
 // Ouput data
+in vec4 v_color;
 out vec3 color;
 
 void main()

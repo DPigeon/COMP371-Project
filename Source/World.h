@@ -19,6 +19,7 @@ class Model;
 class Animation;
 class AnimationKey;
 class BSpline;
+class BSplineCamera;
 
 class World
 {
@@ -45,7 +46,7 @@ private:
     std::vector<AnimationKey*> mAnimationKey;
 	std::vector<Camera*> mCamera;
     std::vector<BSpline*> mSpline;
-    BSpline planetTour;
+	std::vector<BSplineCamera*> mSplineCamera;
     std::vector<Model*> generatePlanets();
 	unsigned int mCurrentCamera;
 };

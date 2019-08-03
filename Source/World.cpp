@@ -104,8 +104,9 @@ void World::Update(float dt)
     {
         if (mCamera.size() > 2)
         {
-            mCurrentCamera = 3;
+            mCurrentCamera = 2;
         }
+		Renderer::SetShader(SHADER_PHONG);
     }
     
     // Spacebar to change the shader
@@ -128,9 +129,7 @@ void World::Update(float dt)
     {
         (*it)->Update(dt);
     }
-    
-    
-    // Update current Camera
+
     mCamera[mCurrentCamera]->Update(dt);
     
     // Update models
@@ -151,7 +150,7 @@ void World::Draw()
     
     GLuint WorldMatrixID = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldTransform");
     GLuint ViewMatrixID = glGetUniformLocation(Renderer::GetShaderProgramID(), "ViewTransform");
-    GLuint ProjMatrixID = glGetUniformLocation(Renderer::GetShaderProgramID(), "ProjectonTransform");
+    GLuint ProjMatrixID = glGetUniformLocation(Renderer::GetShaderProgramID(), "ProjectionTransform");
     GLuint ViewProjMatrixID = glGetUniformLocation(Renderer::GetShaderProgramID(), "ViewProjectionTransform");
     
     // Get a handle for Light Attributes uniform
@@ -187,46 +186,40 @@ void World::Draw()
             MaterialID = glGetUniformLocation(Renderer::GetShaderProgramID(), "materialCoefficients");
             
             glUniformMatrix4fv(WorldMatrixID, 1, GL_FALSE, &((*it)->GetWorldMatrix())[0][0]);
-            float ka = 0.9;
-            float kd = 0.5;
-            float ks = 1.0;
-            float n = 50;
+            float ka = 0.9f;
+            float kd = 0.5f;
+            float ks = 1.0f;
+            float n = 50.0f;
             
             glUniform4f(MaterialID, ka, kd, ks, n);
         }
         (*it)->Draw();
     }
-
-	/*for (vector<BSpline*>::iterator it = mSpline.begin(); it < mSpline.end(); ++it)
-	{
-		(*it)->Draw();
-	}*/
     
     unsigned int prevShader = Renderer::GetCurrentShader();
-    Renderer::SetShader(SHADER_PATH_LINES);
+	Renderer::SetShader(SHADER_PHONG);
     glUseProgram(Renderer::GetShaderProgramID());
     
     //Draw the BSpline between all the planets here
+	for (vector<BSpline*>::iterator it = mSpline.begin(); it < mSpline.end(); ++it) {
+		MaterialID = glGetUniformLocation(Renderer::GetShaderProgramID(), "materialCoefficients");
 
-    planetTour.CreateVertexBuffer();
-    planetTour.Draw();
-    
-    // Add camera to traverse the spline
-    mCamera.push_back(new BSplineCamera(&planetTour, 1.0f));
+		glUniformMatrix4fv(WorldMatrixID, 1, GL_FALSE, &((*it)->GetWorldMatrix())[0][0]);
+		float ka = 0.9f;
+		float kd = 0.5f;
+		float ks = 1.0f;
+		float n = 50.0f;
 
+		glUniform4f(MaterialID, ka, kd, ks, n);
+		(*it)->ConstructTracks(mSplineCamera.front()->GetExtrapolatedPoints());
+	}
 
     Renderer::CheckForErrors();
     
-    // Draw Billboards
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glDisable(GL_BLEND);
     // Restore previous shader
     Renderer::SetShader((ShaderType) prevShader);
     
     Renderer::EndFrame();
-    
-    Renderer::CheckForErrors();
 }
 
 void World::LoadScene(const char * scene_path)
@@ -241,13 +234,6 @@ void World::LoadScene(const char * scene_path)
         fprintf(stderr, "Error loading file: %s\n", scene_path);
         getchar();
         exit(-1);
-    }
-    
-    std::vector<Model*> planets = generatePlanets();
-    mModel.insert(mModel.begin(), planets.begin(),planets.end());
-    
-    for (std::vector<Model*>::iterator it = planets.begin(); it < planets.end(); ++it){
-        planetTour.AddControlPoint(glm::vec3((*it)->GetPosition()));
     }
     
     ci_string item;
@@ -285,14 +271,24 @@ void World::LoadScene(const char * scene_path)
             }
 			else if (result == "spline")
 			{
-				BSpline* spline = new BSpline();
-				spline->Load(iss);
-				spline->CreateVertexBuffer();
+				BSpline* planetTour = new BSpline();
+				std::vector<Model*> planets = generatePlanets();
+				mModel.insert(mModel.begin(), planets.begin(), planets.end());
+
+				for (std::vector<Model*>::iterator it = planets.begin(); it < planets.end(); ++it) {
+					planetTour->AddControlPoint(glm::vec3((*it)->GetPosition()));
+				}
+
+				planetTour->CreateVertexBuffer();
 
 				// FIXME: This is hardcoded: replace last camera with spline camera
-				mSpline.push_back(spline);
+				mSpline.push_back(planetTour);
 				mCamera.pop_back();
-				mCamera.push_back(new BSplineCamera(spline, 10.0f));
+
+				// Add camera to traverse the spline
+				BSplineCamera* SplineCamera = new BSplineCamera(planetTour, 1.0f); // 10.0 before
+				mCamera.push_back(SplineCamera);
+				mSplineCamera.push_back(SplineCamera);
 			}
             else if ( result.empty() == false && result[0] == '#')
             {
@@ -313,10 +309,10 @@ void World::LoadScene(const char * scene_path)
 std::vector<Model*> World::generatePlanets(){
     std::vector<Model*> planetList;
     //Temporary number here
-    for (int i=0; i < 8; i ++){
+    for (int i = 0; i < 8; i++) {
         PlanetModel* randomSphere = new PlanetModel();
-        randomSphere->SetPosition(vec3(randomFloat(0,100.0f),randomFloat(10.0f,100.0f),randomFloat(0.0f,100.0f)));
-        float planetScalingConstant = randomFloat(0.5f,4.0f);
+        randomSphere->SetPosition(vec3(randomFloat(0, 100.0f),randomFloat(10.0f, 100.0f),randomFloat(0.0f, 100.0f)));
+        float planetScalingConstant = randomFloat(0.5f, 4.0f);
         randomSphere->SetScaling(vec3(planetScalingConstant,planetScalingConstant,planetScalingConstant));
         planetList.push_back(randomSphere);
     }

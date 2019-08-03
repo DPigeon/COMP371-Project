@@ -33,6 +33,8 @@ BSplineCamera::BSplineCamera(BSpline *spline, float speed)
 
 BSplineCamera::~BSplineCamera()
 {
+	// Delete Spline points
+	mExtrapolatedPoints.clear();
 }
 
 void BSplineCamera::Update(float dt)
@@ -46,14 +48,60 @@ void BSplineCamera::Update(float dt)
     mSplineParameterT += dt;
     mPosition = mpSpline->GetPosition(mSplineParameterT);
 
-	/* Used to extrapolate points for scene file, uncomment if needed */
+	ExtrapolatePoints(mPosition);
+}
+
+void BSplineCamera::ExtrapolatePoints(vec3 mPosition) {
+	/* 
+     * Will be done on loading screen at beginning (need a way to traverse the points once at beginning of the tour)
+	 * Then we look at first point [0] and compare it with all points to find the same one (means we found the end of spline)
+	 */
+
+	if (!ComparePoints(mExtrapolatedPoints)) {
+		mExtrapolatedPoints.push_back(mPosition);
+	}
+	else {
+		// Draw tracks here once all points loaded
+	}
+
+	/* Used for extrapolation, uncommnt if needed */
 	/*ofstream extrapolatePoints;
-	extrapolatePoints.open("SplinePoints.txt", ios::app); // App for append at end of file
-	extrapolatePoints <<"sPoint = "<< mPosition.x << " " << mPosition.y << " " << mPosition.z;
+	extrapolatePoints.open("../Assets/Scenes/BSplineScene.scene", ios::app);
+	extrapolatePoints << "sPoint = " << point.x << " " << point.y << " " << point.z;
 	extrapolatePoints << endl;
 	extrapolatePoints.close();*/
 
 	//cout<< "X: " << mPosition.x << " Y:" << mPosition.y << " Z:" << mPosition.z << endl;
+}
+
+bool BSplineCamera::ComparePoints(vector<vec3> points) {
+	size_t skipPoints = 500; // We skip n anout of points because we know that the smallest distance is not at the beginning
+	if (!points.empty() && points.size() > skipPoints) {
+		vec3 initialPoint = points[0];
+		vec3 nextPoint = points[points.size() - 1];
+
+		if (!GetSmallestDistance(initialPoint, nextPoint)) {
+			return false; // Continue
+		}
+		else {
+			return true; // Stop
+		} 
+	}
+	return false; // Continue
+}
+
+bool BSplineCamera::GetSmallestDistance(vec3 point, vec3 nextPoint) { // Look if the smallest distance is the closest to a set precision
+	float precision = 0.1f; // This is enough to see the end point
+	float distanceX = point.x - nextPoint.x;
+	float distanceY = point.y - nextPoint.y;
+	float distanceZ = point.z - nextPoint.z;
+	if (abs(distanceX) <= precision && abs(distanceY) <= precision && abs(distanceZ) <= precision)  
+		return true;
+	return false;
+}
+
+vector<vec3> BSplineCamera::GetExtrapolatedPoints() {
+	return mExtrapolatedPoints;
 }
 
 glm::mat4 BSplineCamera::GetViewMatrix() const

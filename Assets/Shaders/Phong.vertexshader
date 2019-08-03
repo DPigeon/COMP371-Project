@@ -17,7 +17,7 @@ out vec4 lightVector;     // Vector from the vertex to the Light in View Space
 // Values that stay constant for the whole mesh.
 uniform mat4 WorldTransform;
 uniform mat4 ViewTransform;
-uniform mat4 ProjectonTransform;
+uniform mat4 ProjectionTransform;
 
 // light position
 uniform vec4 WorldLightPosition; // if w = 1: Point light, if w = 0: directional light
@@ -26,17 +26,18 @@ uniform vec4 WorldLightPosition; // if w = 1: Point light, if w = 0: directional
 void main()
 {
     mat4 MV = ViewTransform * WorldTransform;
-    mat4 MVP = ProjectonTransform * MV;
+    mat4 MVP = ProjectionTransform * MV;
 
     // Output position of the vertex, in clip space : MVP * position
-    gl_Position =  MVP * vec4(vertexPosition_modelspace,1);
+    gl_Position =  MVP * vec4(vertexPosition_modelspace, 1);
     v_color = vertexColor;
 
-    vec3 cameraPosition = vec3(ViewTransform[0][3],ViewTransform[1][3],ViewTransform[2][3]);
+    mat4 viewTransformTranspose = transpose(ViewTransform);
+	vec3 cameraPosition = vec3(viewTransformTranspose[2]);
 
     normal = mat3(transpose(inverse(MV)))*vertexNormal_modelspace;
 
-    eyeVector = vec3(normalize(vec4(cameraPosition,1) - MV*vec4(vertexPosition_modelspace,1)));
+    eyeVector = vec3(normalize(vec4(cameraPosition, 1) - MV*vec4(vertexPosition_modelspace, 1)));
 
     lightVector = MV*WorldLightPosition;
 
