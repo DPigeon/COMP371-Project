@@ -33,6 +33,8 @@ BSplineCamera::BSplineCamera(BSpline *spline, float speed)
 
 BSplineCamera::~BSplineCamera()
 {
+	// Delete Spline points
+	mExtrapolatedPoints.clear();
 }
 
 void BSplineCamera::Update(float dt)
@@ -50,13 +52,20 @@ void BSplineCamera::Update(float dt)
 }
 
 void BSplineCamera::ExtrapolatePoints(vec3 mPosition) {
-	/* Used to extrapolate points
+	/* 
      * Will be done on loading screen at beginning (need a way to traverse the points once at beginning of the tour)
 	 * Then we look at first point [0] and compare it with all points to find the same one (means we found the end of spline)
 	 */
 
 	if (!ComparePoints(mExtrapolatedPoints)) {
 		mExtrapolatedPoints.push_back(mPosition);
+
+		/* Used to extrapolate points in a file to test, uncomment if needed */
+		/*ofstream extrapolatePoints;
+		extrapolatePoints.open("SplinePoints.txt", ios::app); // App for append at end of file
+		extrapolatePoints <<"sPoint = "<< mPosition.x << " " << mPosition.y << " " << mPosition.z;
+		extrapolatePoints << endl;
+		extrapolatePoints.close();*/
 	}
 
 	//cout<< "X: " << mPosition.x << " Y:" << mPosition.y << " Z:" << mPosition.z << endl;
@@ -69,21 +78,18 @@ bool BSplineCamera::ComparePoints(vector<vec3> points) {
 		vec3 nextPoint = points[points.size() - 1];
 
 		if (!GetSmallestDistance(initialPoint, nextPoint)) {
-			cout << "continuing..." << endl;
 			return false; // Continue
 		}
 		else {
-			cout << "stopping !" << endl;
 			return true; // Stop
 		} 
 	}
-	cout << "continuing..." << endl;
 	return false; // Continue
 }
 
 // Error that we have to look into: we sometimes get GL_OUT_OF_MEMORY so we should decrease the randomFloat of points so that we do not leak memory
 bool BSplineCamera::GetSmallestDistance(vec3 point, vec3 nextPoint) { // Look if the smallest distance is the closest to a set precision
-	float precision = 0.01f;
+	float precision = 0.1f; // This is enough to see the end point
 	float distanceX = point.x - nextPoint.x;
 	float distanceY = point.y - nextPoint.y;
 	float distanceZ = point.z - nextPoint.z;
