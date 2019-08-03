@@ -187,10 +187,10 @@ void World::Draw()
             MaterialID = glGetUniformLocation(Renderer::GetShaderProgramID(), "materialCoefficients");
             
             glUniformMatrix4fv(WorldMatrixID, 1, GL_FALSE, &((*it)->GetWorldMatrix())[0][0]);
-            float ka = 0.9;
-            float kd = 0.5;
-            float ks = 1.0;
-            float n = 50;
+            float ka = 0.9f;
+            float kd = 0.5f;
+            float ks = 1.0f;
+            float n = 50.0f;
             
             glUniform4f(MaterialID, ka, kd, ks, n);
         }
