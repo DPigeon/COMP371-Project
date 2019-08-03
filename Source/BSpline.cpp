@@ -231,6 +231,9 @@ void BSpline::ConstructTracks(vector<vec3> points) {
 				float nextPieAngle = (float)angle2;
 
 				/* Left Track Cylinder */
+
+				glDisable(GL_LIGHTING);
+				glColor3f(0.0f, 0.9f, 0.3f); // colors not working anymore ? supposed to be green
 				glBegin(GL_TRIANGLE_STRIP);
 
 				/* Vertex in middle of the end of cylinder (point 2) */

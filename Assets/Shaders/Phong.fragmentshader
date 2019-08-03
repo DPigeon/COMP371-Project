@@ -49,5 +49,5 @@ void main()
     float RV = pow(max(dot(normalize(R),eyeVector),0.0),nShiny);
     vec3 specular = RV * Ks * fAttenuation * lightColor;
 	
-	color = v_color * (ambient + diffuse + specular);
+	color = (ambient + diffuse + specular) *  v_color;
 }

@@ -196,7 +196,7 @@ void World::Draw()
     }
     
     unsigned int prevShader = Renderer::GetCurrentShader();
-    Renderer::SetShader(SHADER_PATH_LINES);
+	//Renderer::SetShader(SHADER_PATH_LINES);
     glUseProgram(Renderer::GetShaderProgramID());
     
     //Draw the BSpline between all the planets here
@@ -206,16 +206,10 @@ void World::Draw()
 
     Renderer::CheckForErrors();
     
-    // Draw Billboards
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glDisable(GL_BLEND);
     // Restore previous shader
     Renderer::SetShader((ShaderType) prevShader);
     
     Renderer::EndFrame();
-    
-    Renderer::CheckForErrors();
 }
 
 void World::LoadScene(const char * scene_path)
@@ -268,7 +262,6 @@ void World::LoadScene(const char * scene_path)
 			else if (result == "spline")
 			{
 				BSpline* planetTour = new BSpline();
-
 				std::vector<Model*> planets = generatePlanets();
 				mModel.insert(mModel.begin(), planets.begin(), planets.end());
 
