@@ -68,10 +68,7 @@ void BSpline::Update(float dt)
 void BSpline::Draw()
 {
 	// The Model View Projection transforms are computed in the Vertex Shader
-	glBindVertexArray(mVAO);
-
-	GLuint WorldMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldTransform");
-	glUniformMatrix4fv(WorldMatrixLocation, 1, GL_FALSE, &GetWorldMatrix()[0][0]);
+	
 }
 
 bool BSpline::ParseLine(const std::vector<ci_string> &token)
@@ -203,8 +200,8 @@ void BSpline::ConstructTracks(vector<vec3> points) {
 	 * Draw 2 perpendicular lines inside those 2 tracks
 	 */
 
-	 // The Model View Projection transforms are computed in the Vertex Shader
 	glBindVertexArray(mVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, mVBO);
 
 	GLuint WorldMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldTransform");
 	glUniformMatrix4fv(WorldMatrixLocation, 1, GL_FALSE, &GetWorldMatrix()[0][0]);
@@ -232,22 +229,28 @@ void BSpline::ConstructTracks(vector<vec3> points) {
 
 				/* Left Track Cylinder */
 
-				glDisable(GL_LIGHTING);
+				//glDisable(GL_LIGHTING);
 				glColor3f(0.0f, 0.9f, 0.3f); // colors not working anymore ? supposed to be green
 				glBegin(GL_TRIANGLE_STRIP);
 
 				/* Vertex in middle of the end of cylinder (point 2) */
+				glColor3f(0.0f, 0.9f, 0.3f);
 				glVertex3f(nextPosX, nextPosY, nextPosZ);
 
 				/* Vertices at edges of circle to make a pie slice (point 2) */
+				glColor3f(0.0f, 0.9f, 0.3f);
 				glVertex3f(radius * cos(pieAngle) + nextPosX, radius * sin(pieAngle) + nextPosY, nextPosZ);
+				glColor3f(0.0f, 0.9f, 0.3f);
 				glVertex3f(radius * cos(nextPieAngle) + nextPosX, radius * sin(nextPieAngle) + nextPosY, nextPosZ);
 
 				/* Vertices at edges of other circle to make a pie slice (point 1) */
+				glColor3f(0.0f, 0.9f, 0.3f);
 				glVertex3f(radius * cos(nextPieAngle) + posX, radius * sin(nextPieAngle) + posY, posZ);
+				glColor3f(0.0f, 0.9f, 0.3f);
 				glVertex3f(radius * cos(pieAngle) + posX, radius * sin(pieAngle) + posY, posZ);
 
 				/* Vertex in middle of first circle (point 1) */
+				glColor3f(0.0f, 0.9f, 0.3f);
 				glVertex3f(posX, posY, posZ);
 				glEnd();
 

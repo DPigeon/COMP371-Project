@@ -106,6 +106,7 @@ void World::Update(float dt)
         {
             mCurrentCamera = 2;
         }
+		Renderer::SetShader(SHADER_PHONG);
     }
     
     // Spacebar to change the shader
@@ -149,7 +150,7 @@ void World::Draw()
     
     GLuint WorldMatrixID = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldTransform");
     GLuint ViewMatrixID = glGetUniformLocation(Renderer::GetShaderProgramID(), "ViewTransform");
-    GLuint ProjMatrixID = glGetUniformLocation(Renderer::GetShaderProgramID(), "ProjectonTransform");
+    GLuint ProjMatrixID = glGetUniformLocation(Renderer::GetShaderProgramID(), "ProjectionTransform");
     GLuint ViewProjMatrixID = glGetUniformLocation(Renderer::GetShaderProgramID(), "ViewProjectionTransform");
     
     // Get a handle for Light Attributes uniform
@@ -196,11 +197,20 @@ void World::Draw()
     }
     
     unsigned int prevShader = Renderer::GetCurrentShader();
-	//Renderer::SetShader(SHADER_PATH_LINES);
+	Renderer::SetShader(SHADER_PHONG);
     glUseProgram(Renderer::GetShaderProgramID());
     
     //Draw the BSpline between all the planets here
 	for (vector<BSpline*>::iterator it = mSpline.begin(); it < mSpline.end(); ++it) {
+		MaterialID = glGetUniformLocation(Renderer::GetShaderProgramID(), "materialCoefficients");
+
+		glUniformMatrix4fv(WorldMatrixID, 1, GL_FALSE, &((*it)->GetWorldMatrix())[0][0]);
+		float ka = 0.9f;
+		float kd = 0.5f;
+		float ks = 1.0f;
+		float n = 50.0f;
+
+		glUniform4f(MaterialID, ka, kd, ks, n);
 		(*it)->ConstructTracks(mSplineCamera.front()->GetExtrapolatedPoints());
 	}
 

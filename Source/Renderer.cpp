@@ -87,8 +87,8 @@ void Renderer::Initialize()
                             shaderPathPrefix + "BlueColor.fragmentshader")
                                );
     sShaderProgramID.push_back(
-                               LoadShaders(shaderPathPrefix + "Phong.vertexshader",
-                                           shaderPathPrefix + "Phong.fragmentshader")
+                LoadShaders(shaderPathPrefix + "Phong.vertexshader",
+                            shaderPathPrefix + "Phong.fragmentshader")
                                );
     
 	sCurrentShader = 0;
