@@ -12,7 +12,6 @@
 
 // Include GLEW - OpenGL Extension Wrangler
 #include <GL/glew.h>
-#include <GL/gl.h>
 
 using namespace glm;
 using namespace std;
