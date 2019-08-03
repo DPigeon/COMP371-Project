@@ -41,7 +41,7 @@ public:
     glm::vec3 GetTangent(float t) const;
     static glm::vec3 GetTangent(float t, const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3, const glm::vec3& p4);
 
-	void ConstructTracks();
+	void ConstructTracks(std::vector<glm::vec3> points);
     
     
 protected:

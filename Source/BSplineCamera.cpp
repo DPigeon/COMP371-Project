@@ -59,20 +59,23 @@ void BSplineCamera::ExtrapolatePoints(vec3 mPosition) {
 
 	if (!ComparePoints(mExtrapolatedPoints)) {
 		mExtrapolatedPoints.push_back(mPosition);
-
-		/* Used to extrapolate points in a file to test, uncomment if needed */
-		/*ofstream extrapolatePoints;
-		extrapolatePoints.open("SplinePoints.txt", ios::app); // App for append at end of file
-		extrapolatePoints <<"sPoint = "<< mPosition.x << " " << mPosition.y << " " << mPosition.z;
-		extrapolatePoints << endl;
-		extrapolatePoints.close();*/
 	}
+	else {
+		// Draw tracks here once all points loaded
+	}
+
+	/* Used for extrapolation, uncommnt if needed */
+	/*ofstream extrapolatePoints;
+	extrapolatePoints.open("../Assets/Scenes/BSplineScene.scene", ios::app);
+	extrapolatePoints << "sPoint = " << point.x << " " << point.y << " " << point.z;
+	extrapolatePoints << endl;
+	extrapolatePoints.close();*/
 
 	//cout<< "X: " << mPosition.x << " Y:" << mPosition.y << " Z:" << mPosition.z << endl;
 }
 
 bool BSplineCamera::ComparePoints(vector<vec3> points) {
-	int skipPoints = 500; // We skip n anout of points because we know that the smallest distance is not at the beginning
+	size_t skipPoints = 500; // We skip n anout of points because we know that the smallest distance is not at the beginning
 	if (!points.empty() && points.size() > skipPoints) {
 		vec3 initialPoint = points[0];
 		vec3 nextPoint = points[points.size() - 1];
@@ -87,7 +90,6 @@ bool BSplineCamera::ComparePoints(vector<vec3> points) {
 	return false; // Continue
 }
 
-// Error that we have to look into: we sometimes get GL_OUT_OF_MEMORY so we should decrease the randomFloat of points so that we do not leak memory
 bool BSplineCamera::GetSmallestDistance(vec3 point, vec3 nextPoint) { // Look if the smallest distance is the closest to a set precision
 	float precision = 0.1f; // This is enough to see the end point
 	float distanceX = point.x - nextPoint.x;
@@ -98,7 +100,7 @@ bool BSplineCamera::GetSmallestDistance(vec3 point, vec3 nextPoint) { // Look if
 	return false;
 }
 
-vector<vec3> BSplineCamera::getExtrapolatedPoints() {
+vector<vec3> BSplineCamera::GetExtrapolatedPoints() {
 	return mExtrapolatedPoints;
 }
 

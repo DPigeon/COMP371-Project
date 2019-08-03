@@ -205,10 +205,13 @@ void World::Draw()
 
     planetTour.CreateVertexBuffer();
     planetTour.Draw();
-    
-    // Add camera to traverse the spline
-    mCamera.push_back(new BSplineCamera(&planetTour, 1.0f));
 
+    // Add camera to traverse the spline
+	BSplineCamera* SplineCamera = new BSplineCamera(&planetTour, 1.0f);
+    mCamera.push_back(SplineCamera);
+
+
+	planetTour.ConstructTracks(SplineCamera->GetExtrapolatedPoints());
 
     Renderer::CheckForErrors();
     
@@ -308,10 +311,10 @@ void World::LoadScene(const char * scene_path)
 std::vector<Model*> World::generatePlanets(){
     std::vector<Model*> planetList;
     //Temporary number here
-    for (int i=0; i < 8; i ++){
+    for (int i = 0; i < 8; i++) {
         PlanetModel* randomSphere = new PlanetModel();
-        randomSphere->SetPosition(vec3(randomFloat(0,100.0f),randomFloat(10.0f,100.0f),randomFloat(0.0f,100.0f)));
-        float planetScalingConstant = randomFloat(0.5f,4.0f);
+        randomSphere->SetPosition(vec3(randomFloat(0, 100.0f),randomFloat(10.0f, 100.0f),randomFloat(0.0f, 100.0f)));
+        float planetScalingConstant = randomFloat(0.5f, 4.0f);
         randomSphere->SetScaling(vec3(planetScalingConstant,planetScalingConstant,planetScalingConstant));
         planetList.push_back(randomSphere);
     }
