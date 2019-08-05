@@ -333,6 +333,58 @@ std::vector<Model*> World::generatePlanets(){
     return planetList;
 }
 
+//Creates many random points within a cubic area
+GLuint randVAO(int& vertexCount, std::vector<float>& angles)
+{
+    float areaWidth = 50.0f;
+    
+    std::vector<glm::vec3> vertPos;
+    std::vector<float> vertRot;
+    
+    std::default_random_engine rando;
+    for (int i = 0; i != vertexCount; ++i) {
+        //Create a random position
+        glm::vec3 randomPosition((float)rando(), (float)rando(), (float)rando());
+        randomPosition /= (rando.max() / areaWidth);
+        randomPosition -= glm::vec3(areaWidth / 2.0f, areaWidth / 2.0f, 0.0f);
+        randomPosition.z *= -1.0f;
+        
+        //Create a random angle
+        float randomAngle = rando() / (rando.max() / 360.0f);
+        angles.push_back(randomAngle);
+        randomAngle = glm::radians(randomAngle);
+        
+        
+        vertPos.push_back(randomPosition);
+        vertRot.push_back(randomAngle);
+    }
+    
+    vertexCount = vertPos.size();
+    
+    GLuint VAO;
+    glGenVertexArrays(1, &VAO);
+    glBindVertexArray(VAO); //Becomes active VAO
+    // Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s).
+    
+    //Vertex VBO setup
+    GLuint vertices_VBO;
+    glGenBuffers(1, &vertices_VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, vertices_VBO);
+    glBufferData(GL_ARRAY_BUFFER, vertPos.size() * sizeof(glm::vec3), &vertPos.front(), GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+    glEnableVertexAttribArray(0);
+    
+    //Angle VBO setup
+    GLuint angles_VBO;
+    glGenBuffers(1, &angles_VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, angles_VBO);
+    glBufferData(GL_ARRAY_BUFFER, vertRot.size() * sizeof(float), &vertRot.front(), GL_STATIC_DRAW);
+    glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, 0, NULL);
+    glEnableVertexAttribArray(1);
+    
+    return VAO;
+}
+
 
 float randomFloat(float min, float max)
 {
