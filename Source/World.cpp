@@ -7,6 +7,21 @@
 // Copyright (c) 2014-2019 Concordia University. All rights reserved.
 //
 
+#include <stdlib.h>
+#include <math.h>
+
+#define GLEW_STATIC 1   // This allows linking with Static Library on Windows, without DLL
+#include <GL/glew.h>    // Include GLEW - OpenGL Extension Wrangler
+// GLFW provides a cross-platform interface for creating a graphical context,
+// initializing OpenGL and binding inputs
+
+#include <glm/glm.hpp>  // GLM is an optimized math library with syntax to similar to OpenGL Shading Language
+#include <glm/gtc/matrix_transform.hpp> // include this to create transformation matrices
+#include <glm/common.hpp>
+#include <GLFW/glfw3.h> // GLFW provides a cross-platform interface for creating a graphical context,
+#include <random>
+
+
 #include "World.h"
 #include "Renderer.h"
 #include "ParsingHelper.h"
@@ -184,7 +199,6 @@ void World::Draw()
     {
         if ((*it)->GetMaterialCoefficients().length() > 0){
             MaterialID = glGetUniformLocation(Renderer::GetShaderProgramID(), "materialCoefficients");
-            
             glUniformMatrix4fv(WorldMatrixID, 1, GL_FALSE, &((*it)->GetWorldMatrix())[0][0]);
             float ka = 0.9f;
             float kd = 0.5f;
