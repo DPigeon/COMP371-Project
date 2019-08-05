@@ -48,6 +48,7 @@ private:
     std::vector<BSpline*> mSpline;
 	std::vector<BSplineCamera*> mSplineCamera;
     std::vector<Model*> generatePlanets();
+    bool planetHasSpace(glm::vec3 planetRandomPoint, std::vector<glm::vec3> planetPositions);
 	unsigned int mCurrentCamera;
 };
 
