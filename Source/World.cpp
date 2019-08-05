@@ -17,6 +17,7 @@
 
 #include "CubeModel.h"
 #include "SphereModel.h"
+#include "SunModel.h"
 #include "Animation.h"
 #include <GLFW/glfw3.h>
 #include "EventManager.h"
@@ -251,11 +252,17 @@ void World::LoadScene(const char * scene_path)
                 cube->Load(iss);
                 mModel.push_back(cube);
             }
-            else if( result == "sphere" )
-            {
-                PlanetModel* sphere = new PlanetModel();
-                sphere->Load(iss);
-                mModel.push_back(sphere);
+			else if (result == "sphere")
+			{
+				PlanetModel* sphere = new PlanetModel();
+				sphere->Load(iss);
+				mModel.push_back(sphere);
+			}
+			else if (result == "sun")
+			{
+				SunModel* sphere = new SunModel();
+				sphere->Load(iss);
+				mModel.push_back(sphere);
             }
             else if ( result == "animationkey" )
             {
@@ -314,8 +321,14 @@ std::vector<Model*> World::generatePlanets(){
         randomSphere->SetPosition(vec3(randomFloat(0, 100.0f),randomFloat(10.0f, 100.0f),randomFloat(0.0f, 100.0f)));
         float planetScalingConstant = randomFloat(0.5f, 4.0f);
         randomSphere->SetScaling(vec3(planetScalingConstant,planetScalingConstant,planetScalingConstant));
-        planetList.push_back(randomSphere);
+		planetList.push_back(randomSphere);
     }
+
+	SunModel* sun = new SunModel();
+	sun->SetPosition(vec3(lightPosition));
+	sun->SetScaling(vec3(10.0f,10.0f,10.0f));
+	planetList.push_back(sun);
+
     return planetList;
 }
 
