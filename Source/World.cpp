@@ -37,7 +37,7 @@ const float lightKq = 0.002f;
 const vec4 lightPosition(3.0f, 0.0f, 20.0f, 1.0f);
 
 // TODO: These should be parameters set in the menu
-const int NUMBER_OF_PLANETS = 400;
+const int NUMBER_OF_PLANETS = 42;
 const int PLANET_SCALING_MAX_SIZE = 4.0f;
 
 World::World()
