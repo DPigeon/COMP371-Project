@@ -14,7 +14,7 @@
 class SunModel : public Model
 {
 public:
-	SunModel(glm::vec3 size = glm::vec3(1.0f, 1.0f, 1.0f));
+    SunModel(glm::vec3 size = glm::vec3(1.0f, 1.0f, 1.0f));
     virtual ~SunModel(void);
 
     virtual void Update(float dt);

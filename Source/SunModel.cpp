@@ -1343,8 +1343,8 @@ void SunModel::Draw()
     GLuint WorldMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldTransform"); 
     glUniformMatrix4fv(WorldMatrixLocation, 1, GL_FALSE, &GetWorldMatrix()[0][0]);
     
-	// Sun is unaffected by lighting
-	SetMaterialCoefficients(vec4(1.0f, 0.0f, 0.0f, 1.0f));
+    // Sun is unaffected by lighting
+    SetMaterialCoefficients(vec4(1.0f, 0.0f, 0.0f, 1.0f));
 
     // Draw the triangles !
     glDrawArrays(GL_TRIANGLE_STRIP, 0, numOfVertices);

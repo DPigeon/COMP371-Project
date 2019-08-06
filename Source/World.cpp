@@ -189,12 +189,12 @@ void World::Draw()
             MaterialID = glGetUniformLocation(Renderer::GetShaderProgramID(), "materialCoefficients");
             
             glUniformMatrix4fv(WorldMatrixID, 1, GL_FALSE, &((*it)->GetWorldMatrix())[0][0]);
-            
-			// Get material coefficients set in the model
-			float ka = (*it)->GetMaterialCoefficients().x;
-			float kd = (*it)->GetMaterialCoefficients().y;
-			float ks = (*it)->GetMaterialCoefficients().z;
-			float n = (*it)->GetMaterialCoefficients().w;
+
+            // Get material coefficients set in the model
+            float ka = (*it)->GetMaterialCoefficients().x;
+            float kd = (*it)->GetMaterialCoefficients().y;
+            float ks = (*it)->GetMaterialCoefficients().z;
+            float n = (*it)->GetMaterialCoefficients().w;
             
             glUniform4f(MaterialID, ka, kd, ks, n);
         }
@@ -256,17 +256,17 @@ void World::LoadScene(const char * scene_path)
                 cube->Load(iss);
                 mModel.push_back(cube);
             }
-			else if (result == "sphere")
-			{
-				PlanetModel* sphere = new PlanetModel();
-				sphere->Load(iss);
-				mModel.push_back(sphere);
-			}
-			else if (result == "sun")
-			{
-				SunModel* sphere = new SunModel();
-				sphere->Load(iss);
-				mModel.push_back(sphere);
+            else if (result == "sphere")
+            {
+                PlanetModel* sphere = new PlanetModel();
+                sphere->Load(iss);
+                mModel.push_back(sphere);
+            }
+            else if (result == "sun")
+            {
+                SunModel* sphere = new SunModel();
+                sphere->Load(iss);
+                mModel.push_back(sphere);
             }
             else if ( result == "animationkey" )
             {
@@ -325,13 +325,13 @@ std::vector<Model*> World::generatePlanets(){
         randomSphere->SetPosition(vec3(randomFloat(0, 100.0f),randomFloat(10.0f, 100.0f),randomFloat(0.0f, 100.0f)));
         float planetScalingConstant = randomFloat(0.5f, 4.0f);
         randomSphere->SetScaling(vec3(planetScalingConstant,planetScalingConstant,planetScalingConstant));
-		planetList.push_back(randomSphere);
+        planetList.push_back(randomSphere);
     }
 
-	SunModel* sun = new SunModel();
-	sun->SetPosition(vec3(0.0f, 0.0f, 0.0f)); // Sun placed on origin
-	sun->SetScaling(vec3(10.0f,10.0f,10.0f));
-	planetList.push_back(sun);
+    SunModel* sun = new SunModel();
+    sun->SetPosition(vec3(0.0f, 0.0f, 0.0f)); // Sun placed on origin
+    sun->SetScaling(vec3(10.0f,10.0f,10.0f));
+    planetList.push_back(sun);
 
     return planetList;
 }

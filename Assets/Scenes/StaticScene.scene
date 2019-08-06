@@ -15,6 +15,3 @@ rotation = 0.0 0.0 1.0 180
 [Sphere]
 name     = "Sphere"
 position = 10.0 2.0 0.0
-
-[Sun]
-name     = "Sun"

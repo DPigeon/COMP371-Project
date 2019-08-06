@@ -174,5 +174,5 @@ void Model::SetRotation(glm::vec3 axis, float angleDegrees)
 
 void Model::SetMaterialCoefficients(glm::vec4 coefficients)
 {
-	mMaterialCoefficients = coefficients;
+    mMaterialCoefficients = coefficients;
 }
