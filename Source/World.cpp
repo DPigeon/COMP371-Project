@@ -23,11 +23,13 @@
 
 #include "BSpline.h"
 #include "BSplineCamera.h"
+#include "Skybox.h"
 
 using namespace std;
 using namespace glm;
 
 World* World::instance;
+Skybox skybox;
 
 // Light Coefficients
 const vec3 lightColor(1.0f, 1.0f, 1.0f);
@@ -45,10 +47,21 @@ World::World()
     instance = this;
     
     // Setup Camera
-    mCamera.push_back(new FirstPersonCamera(vec3(3.0f, 5.0f, 20.0f)));
+    mCamera.push_back(new FirstPersonCamera(vec3(3.0f, 5.0f, 20.0f)));	
     mCamera.push_back(new StaticCamera(vec3(3.0f, 30.0f, 5.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f)));
     mCamera.push_back(new StaticCamera(vec3(0.5f,  0.5f, 5.0f), vec3(0.0f, 0.5f, 0.0f), vec3(0.0f, 1.0f, 0.0f)));
     mCurrentCamera = 0;
+
+	std::vector<std::string> skyboxFaces;
+	// MUST BE IN THIS ORDER: RIGHT LEFT UP DOWN BACK FRONT
+	skyboxFaces.push_back("../Assets/Textures/Skybox/starfield_rt.tga");
+	skyboxFaces.push_back("../Assets/Textures/Skybox/starfield_lf.tga");
+	skyboxFaces.push_back("../Assets/Textures/Skybox/starfield_up.tga");
+	skyboxFaces.push_back("../Assets/Textures/Skybox/starfield_dn.tga");
+	skyboxFaces.push_back("../Assets/Textures/Skybox/starfield_bk.tga");
+	skyboxFaces.push_back("../Assets/Textures/Skybox/starfield_ft.tga");
+
+	skybox = Skybox(skyboxFaces);
 }
 
 World::~World()
@@ -146,7 +159,9 @@ void World::Update(float dt)
 void World::Draw()
 {
     Renderer::BeginFrame();
-    
+	
+	skybox.Draw();
+  
     glUseProgram(Renderer::GetShaderProgramID());
     
     // Everything we need to send to the GPU
