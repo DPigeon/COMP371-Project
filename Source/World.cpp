@@ -35,8 +35,10 @@ const vec3 lightColor(1.0f, 1.0f, 1.0f);
 const float lightKc = 0.05f;
 const float lightKl = 0.02f;
 const float lightKq = 0.002f;
-const vec4 lightPosition(3.0f, 0.0f, 20.0f, 1.0f);
 
+// Negative to ensure light points towards the correct quadrant
+// Lights half of the planet towards the sun
+const vec4 lightPosition(-10.0f, -10.0f, -10.0f, 1.0f); 
 
 World::World()
 {
@@ -187,10 +189,12 @@ void World::Draw()
             MaterialID = glGetUniformLocation(Renderer::GetShaderProgramID(), "materialCoefficients");
             
             glUniformMatrix4fv(WorldMatrixID, 1, GL_FALSE, &((*it)->GetWorldMatrix())[0][0]);
-            float ka = 0.9f;
-            float kd = 0.5f;
-            float ks = 1.0f;
-            float n = 50.0f;
+            
+			// Get material coefficients set in the model
+			float ka = (*it)->GetMaterialCoefficients().x;
+			float kd = (*it)->GetMaterialCoefficients().y;
+			float ks = (*it)->GetMaterialCoefficients().z;
+			float n = (*it)->GetMaterialCoefficients().w;
             
             glUniform4f(MaterialID, ka, kd, ks, n);
         }
@@ -325,7 +329,7 @@ std::vector<Model*> World::generatePlanets(){
     }
 
 	SunModel* sun = new SunModel();
-	sun->SetPosition(vec3(lightPosition));
+	sun->SetPosition(vec3(0.0f, 0.0f, 0.0f)); // Sun placed on origin
 	sun->SetScaling(vec3(10.0f,10.0f,10.0f));
 	planetList.push_back(sun);
 
