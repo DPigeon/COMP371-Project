@@ -15,8 +15,9 @@
 class LoadingScreen
 {
 public:
-	LoadingScreen(ImVec4 backgroundColor);
+	LoadingScreen();
 	static void Draw();
+	static void ProgressBar();
 	~LoadingScreen();
 
 private:
