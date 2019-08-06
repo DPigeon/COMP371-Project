@@ -9,6 +9,7 @@
 
 #include "EventManager.h"
 #include "Renderer.h"
+#include "LoadingScreen.h"
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_glfw.h>
@@ -175,13 +176,17 @@ void EventManager::Update()
 	sFrameTime = static_cast<float>(currentTime - sLastFrameTime);
 	sLastFrameTime = currentTime;
 
+	// Draw the Loading Screen
+	LoadingScreen::Draw();
+
 	// Rendering ImGui
 	ImGui::Render();
 	// Viewport of the screen space
 	int display_w, display_h;
 	glfwGetFramebufferSize(spWindow, &display_w, &display_h);
 	glViewport(0, 0, display_w, display_h);
-	
+	glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+	glClear(GL_COLOR_BUFFER_BIT);
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	glfwSwapBuffers(spWindow);
 }

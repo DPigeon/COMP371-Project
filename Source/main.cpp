@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
 	// Main Loop
 	do
 	{
-		// Update Event Manager - Frame time / input / events processing
+		// Update Event Manager - Frame time / input / events processing / UI
 		EventManager::Update();
 
 		// Update World
