@@ -4,3 +4,4 @@ VS2017
 .vscode
 .vs
 .DS_Store
+Xcode/Area51.xcodeproj/xcuserdata/*/**
