@@ -62,3 +62,4 @@ private:
 };
 
 float randomFloat(float min, float max);
+glm::vec3 randomSphericalCoordinatesToCartesian(float radius, glm::vec3 initialCenter);
