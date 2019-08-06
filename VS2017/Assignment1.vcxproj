@@ -46,12 +46,16 @@
     <OutDir>$(SolutionDir)/../Bin/</OutDir>
     <IntDir>$(SolutionDir)/../Build/$(Configuration)/</IntDir>
     <TargetName>$(ProjectName)-$(Configuration)</TargetName>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../Source/Packages;</IncludePath>
+    <SourcePath>$(VC_SourcePath);../Source/Packages;</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)/../Bin/</OutDir>
     <IntDir>$(SolutionDir)/../Build/$(Configuration)/</IntDir>
     <TargetName>$(ProjectName)-$(Configuration)</TargetName>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../Source/Packages;</IncludePath>
+    <SourcePath>$(VC_SourcePath);../Source/Packages;</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -124,6 +128,12 @@
     <ClCompile Include="..\Source\FirstPersonCamera.cpp" />
     <ClCompile Include="..\Source\main.cpp" />
     <ClCompile Include="..\Source\Model.cpp" />
+    <ClCompile Include="..\Source\Packages\imgui\imgui.cpp" />
+    <ClCompile Include="..\Source\Packages\imgui\imgui_demo.cpp" />
+    <ClCompile Include="..\Source\Packages\imgui\imgui_draw.cpp" />
+    <ClCompile Include="..\Source\Packages\imgui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="..\Source\Packages\imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="..\Source\Packages\imgui\imgui_widgets.cpp" />
     <ClCompile Include="..\Source\Renderer.cpp" />
     <ClCompile Include="..\Source\SphereModel.cpp" />
     <ClCompile Include="..\Source\StaticCamera.cpp" />
@@ -138,6 +148,14 @@
     <ClInclude Include="..\Source\EventManager.h" />
     <ClInclude Include="..\Source\FirstPersonCamera.h" />
     <ClInclude Include="..\Source\Model.h" />
+    <ClInclude Include="..\Source\Packages\imgui\imconfig.h" />
+    <ClInclude Include="..\Source\Packages\imgui\imgui.h" />
+    <ClInclude Include="..\Source\Packages\imgui\imgui_impl_glfw.h" />
+    <ClInclude Include="..\Source\Packages\imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="..\Source\Packages\imgui\imgui_internal.h" />
+    <ClInclude Include="..\Source\Packages\imgui\imstb_rectpack.h" />
+    <ClInclude Include="..\Source\Packages\imgui\imstb_textedit.h" />
+    <ClInclude Include="..\Source\Packages\imgui\imstb_truetype.h" />
     <ClInclude Include="..\Source\ParsingHelper.h" />
     <ClInclude Include="..\Source\Renderer.h" />
     <ClInclude Include="..\Source\SphereModel.h" />
