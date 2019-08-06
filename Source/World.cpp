@@ -36,6 +36,9 @@ const float lightKl = 0.02f;
 const float lightKq = 0.002f;
 const vec4 lightPosition(3.0f, 0.0f, 20.0f, 1.0f);
 
+// TODO: These should be parameters set in the menu
+const int NUMBER_OF_PLANETS = 10;
+const int PLANET_SCALING_MAX_SIZE = 4.0f;
 
 World::World()
 {
@@ -308,17 +311,32 @@ void World::LoadScene(const char * scene_path)
 
 std::vector<Model*> World::generatePlanets(){
     std::vector<Model*> planetList;
-    //Temporary number here
-    for (int i = 0; i < 8; i++) {
-        PlanetModel* randomSphere = new PlanetModel();
-        randomSphere->SetPosition(vec3(randomFloat(0, 100.0f),randomFloat(10.0f, 100.0f),randomFloat(0.0f, 100.0f)));
-        float planetScalingConstant = randomFloat(0.5f, 4.0f);
-        randomSphere->SetScaling(vec3(planetScalingConstant,planetScalingConstant,planetScalingConstant));
-        planetList.push_back(randomSphere);
+    std::vector<vec3> planetPositions;
+
+    for (int i = 0; i < NUMBER_OF_PLANETS; i++) {
+        PlanetModel* randomPlanet = new PlanetModel();
+        vec3 planetRandomPoint;
+        do {
+            planetRandomPoint = vec3(randomFloat(0, 100.0f), randomFloat(10.0f, 100.0f), randomFloat(0.0f, 100.0f));
+        } while(!planetHasSpace(planetRandomPoint, planetPositions));
+        planetPositions.push_back(planetRandomPoint);
+        randomPlanet->SetPosition(planetRandomPoint);
+        float planetScalingConstant = randomFloat(0.5f, PLANET_SCALING_MAX_SIZE);
+        randomPlanet->SetScaling(vec3(planetScalingConstant, planetScalingConstant, planetScalingConstant));
+        planetList.push_back(randomPlanet);
     }
     return planetList;
 }
 
+bool World::planetHasSpace(vec3 planetRandomPoint, std::vector<vec3> planetPositions) {
+    for (auto position : planetPositions) {
+        // The planets have to have at least the max size of a planet in between them
+        if (glm::distance(planetRandomPoint, position) < PLANET_SCALING_MAX_SIZE * 2.0) {
+            return false;
+        }
+    }
+    return true;
+}
 
 float randomFloat(float min, float max)
 {
