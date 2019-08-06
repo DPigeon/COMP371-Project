@@ -49,6 +49,7 @@ private:
 	std::vector<BSplineCamera*> mSplineCamera;
     std::vector<Model*> generatePlanets();
 	unsigned int mCurrentCamera;
+    void generateStars();
 };
 
 float randomFloat(float min, float max);

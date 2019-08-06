@@ -342,7 +342,8 @@ GLuint randVAO(int& vertexCount, std::vector<float>& angles)
     std::vector<float> vertRot;
     
     std::default_random_engine rando;
-    for (int i = 0; i != vertexCount; ++i) {
+    for (int i = 0; i != vertexCount; ++i)
+    {
         //Create a random position
         glm::vec3 randomPosition((float)rando(), (float)rando(), (float)rando());
         randomPosition /= (rando.max() / areaWidth);
@@ -383,6 +384,37 @@ GLuint randVAO(int& vertexCount, std::vector<float>& angles)
     glEnableVertexAttribArray(1);
     
     return VAO;
+}
+
+void  World::generateStars()
+{
+    //     glEnable(GL_BLEND); //Enable transparency blending
+    //    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); //Define transprency blending
+    
+    glClearColor( 1.0f, 1.0f, 1.0f, 1.0f );
+    glEnable(GL_COLOR_MATERIAL);
+    glColor3ub(255, 0, 0  );
+    glColorMaterial ( GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
+    glEnable(GL_TEXTURE_2D);
+    //Draw Stars
+    int vCount = 300;
+    std::vector<float> angles(100);
+    GLuint VAO = randVAO(vCount, angles);
+    
+    glEnable( GL_POINT_SMOOTH );
+    glColor3b(1.0, 0, 0);
+    glPointSize( 5 ); // must be added before glDrawArrays is called
+    glBindVertexArray(VAO);
+    for (int i = 0; i < 1000; i++) {
+        glDrawArrays( GL_POINTS, i, 1 ); // draw the vertixes
+    }
+    glBindVertexArray(0);
+    glDisable( GL_POINT_SMOOTH ); // stop the smoothing to make the points circular
+    
+    glDisable( GL_COLOR_MATERIAL );
+    
+    glEnd();
+    glFinish();
 }
 
 
