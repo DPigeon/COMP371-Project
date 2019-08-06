@@ -36,6 +36,9 @@ const float lightKl = 0.02f;
 const float lightKq = 0.002f;
 const vec4 lightPosition(3.0f, 0.0f, 20.0f, 1.0f);
 
+// TODO: These should be parameters set in the menu
+const int NUMBER_OF_PLANETS = 400;
+const int PLANET_SCALING_MAX_SIZE = 4.0f;
 
 World::World()
 {
@@ -309,9 +312,7 @@ void World::LoadScene(const char * scene_path)
 std::vector<Model*> World::generatePlanets(){
     std::vector<Model*> planetList;
     std::vector<vec3> planetPositions;
-    const int NUMBER_OF_PLANETS = 300;
-    const int PLANET_SCALING_MAX_SIZE = 4.0f;
-    //Temporary number here
+
     for (int i = 0; i < NUMBER_OF_PLANETS; i++) {
         PlanetModel* randomPlanet = new PlanetModel();
         vec3 planetRandomPoint;
@@ -329,9 +330,8 @@ std::vector<Model*> World::generatePlanets(){
 
 bool World::planetHasSpace(vec3 planetRandomPoint, std::vector<vec3> planetPositions) {
     for (auto position : planetPositions) {
-        std::cout << " " << glm::distance(planetRandomPoint, position) << std::endl;
-        if (glm::distance(planetRandomPoint, position) < 10.0f) {
-            std::cout << "close distance" << std::endl;
+        // The planets have to have at least the max size of a planet in between them
+        if (glm::distance(planetRandomPoint, position) < PLANET_SCALING_MAX_SIZE * 2.0) {
             return false;
         }
     }
