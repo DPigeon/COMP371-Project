@@ -279,7 +279,10 @@ void World::LoadScene(const char * scene_path)
 				mModel.insert(mModel.begin(), planets.begin(), planets.end());
 
 				for (std::vector<Model*>::iterator it = planets.begin(); it < planets.end(); ++it) {
-					planetTour->AddControlPoint(glm::vec3((*it)->GetPosition()));
+                    float scaling = glm::length((*it)->GetScaling()); // This is also the new radius since our initial radius is always 1.0f
+                    float buffer = 0.1f; // Make sure we are half a planets initial diameter away
+                    glm::vec3 newPosition  = randomSphericalCoordinatesToCartesian(scaling + buffer, (*it)->GetPosition());
+                    planetTour->AddControlPoint(newPosition);
 				}
 
 				planetTour->CreateVertexBuffer();
@@ -307,6 +310,15 @@ void World::LoadScene(const char * scene_path)
         // Draw model
         (*it)->CreateVertexBuffer();
     }
+}
+
+glm::vec3 randomSphericalCoordinatesToCartesian(float radius, glm::vec3 initialCenter){
+    float theta = randomFloat(0, 180.0f);
+    float phi = randomFloat(0, 360.0f);
+    float x = radius * glm::cos(phi) * glm::sin(theta) + initialCenter.x;
+    float y = radius * glm::sin(phi) * glm::cos(theta) + initialCenter.y;
+    float z = radius * glm::cos(theta) + initialCenter.z;
+    return glm::vec3(x, y, z);
 }
 
 std::vector<Model*> World::generatePlanets(){
