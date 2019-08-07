@@ -203,6 +203,8 @@ void World::Draw()
     
     //Draw the BSpline between all the planets here
 	for (vector<BSpline*>::iterator it = mSpline.begin(); it < mSpline.end(); ++it) {
+		glPushMatrix();
+		glPushAttrib(GL_ALL_ATTRIB_BITS);
 		MaterialID = glGetUniformLocation(Renderer::GetShaderProgramID(), "materialCoefficients");
 
 		glUniformMatrix4fv(WorldMatrixID, 1, GL_FALSE, &((*it)->GetWorldMatrix())[0][0]);
@@ -210,9 +212,10 @@ void World::Draw()
 		float kd = 0.5f;
 		float ks = 1.0f;
 		float n = 50.0f;
-
 		glUniform4f(MaterialID, ka, kd, ks, n);
 		(*it)->ConstructTracks(mSplineCamera.front()->GetExtrapolatedPoints());
+		glPopAttrib();
+		glPopMatrix();
 	}
 
     Renderer::CheckForErrors();

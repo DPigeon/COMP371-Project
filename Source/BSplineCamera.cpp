@@ -76,7 +76,7 @@ void BSplineCamera::ExtrapolatePoints(vec3 mPosition) {
 }
 
 bool BSplineCamera::ComparePoints(vector<vec3> points) {
-	size_t skipPoints = 400; // We skip n anout of points because we know that the smallest distance is not at the beginning
+	size_t skipPoints = 300; // We skip n anout of points because we know that the smallest distance is not at the beginning
 	if (!points.empty() && points.size() > skipPoints) {
 		vec3 initialPoint = points[0];
 		vec3 nextPoint = points[points.size() - 1];
@@ -95,7 +95,7 @@ bool BSplineCamera::ComparePoints(vector<vec3> points) {
 }
 
 bool BSplineCamera::GetSmallestDistance(vec3 point, vec3 nextPoint) { // Look if the smallest distance is the closest to a set precision
-	float precision = 0.2f; // This is enough to see the end point
+	float precision = 0.3f; // This is enough to see the end point
 	float distanceX = point.x - nextPoint.x;
 	float distanceY = point.y - nextPoint.y;
 	float distanceZ = point.z - nextPoint.z;

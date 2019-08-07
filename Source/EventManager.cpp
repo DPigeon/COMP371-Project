@@ -128,8 +128,8 @@ void EventManager::Initialize()
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 
-//	ImGui::StyleColorsDark();
-	ImGui::StyleColorsClassic();
+	ImGui::StyleColorsDark();
+//	ImGui::StyleColorsClassic();
 
 	ImGui_ImplGlfw_InitForOpenGL(spWindow, true);
 	ImGui_ImplOpenGL3_Init(glsl_version);
@@ -167,11 +167,8 @@ void EventManager::Shutdown()
 
 void EventManager::Update()
 {
-
-	bool show_demo_window = true;
-	bool show_another_window = false;
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-
+	ImVec4 transparent = ImVec4(0.45f, 0.55f, 0.60f, 0.00f);
 	// Update inputs / events
 	glfwPollEvents();
 
@@ -199,15 +196,15 @@ void EventManager::Update()
 
 	// Rendering ImGui
 	ImGui::Render();
+
 	// Viewport of the screen space
 	int display_w, display_h;
 	glfwGetFramebufferSize(spWindow, &display_w, &display_h);
 	glViewport(0, 0, display_w, display_h);
 	if (GetLoadingState()) {
-		glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-		glClear(GL_COLOR_BUFFER_BIT);
+		//glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+		//glClear(GL_COLOR_BUFFER_BIT);
 	}
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	glfwSwapBuffers(spWindow);
 }
