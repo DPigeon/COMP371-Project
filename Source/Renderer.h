@@ -26,7 +26,9 @@ enum ShaderType
 	SHADER_BLUE,
     SHADER_PHONG,
     SHADER_STARS,
+	SHADER_SKYBOX,
 	NUM_SHADERS
+	
 };
 
 

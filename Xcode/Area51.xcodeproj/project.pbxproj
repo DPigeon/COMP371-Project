@@ -29,6 +29,8 @@
 		03FE4ED81B2FA9830020F06F /* Animation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 03FE4ED61B2FA9830020F06F /* Animation.cpp */; };
 		D0C44A4222EABDB0001DD3E3 /* BSplineCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0C44A4022EABDB0001DD3E3 /* BSplineCamera.cpp */; };
 		D0C44A4522EABE4C001DD3E3 /* BSpline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0C44A4422EABE4C001DD3E3 /* BSpline.cpp */; };
+		D0CD675E22FA4C6B00C7CF40 /* Skybox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0CD675D22FA4C6B00C7CF40 /* Skybox.cpp */; };
+		D0CD676122FA4D0C00C7CF40 /* Mesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0CD675F22FA4D0B00C7CF40 /* Mesh.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -83,6 +85,11 @@
 		D0C44A4122EABDB0001DD3E3 /* BSplineCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSplineCamera.h; sourceTree = "<group>"; };
 		D0C44A4322EABE4B001DD3E3 /* BSpline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSpline.h; sourceTree = "<group>"; };
 		D0C44A4422EABE4C001DD3E3 /* BSpline.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BSpline.cpp; sourceTree = "<group>"; };
+		D0CD675C22FA4C6A00C7CF40 /* Skybox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Skybox.h; sourceTree = "<group>"; };
+		D0CD675D22FA4C6B00C7CF40 /* Skybox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Skybox.cpp; sourceTree = "<group>"; };
+		D0CD675F22FA4D0B00C7CF40 /* Mesh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Mesh.cpp; sourceTree = "<group>"; };
+		D0CD676022FA4D0C00C7CF40 /* Mesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mesh.h; sourceTree = "<group>"; };
+		D0CD676222FA4D7600C7CF40 /* Textures */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Textures; path = ../Assets/Textures; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,6 +127,7 @@
 		034F0BB31A7010160028E1BA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				D0CD676222FA4D7600C7CF40 /* Textures */,
 				03FE4ED21B2FA1010020F06F /* Scenes */,
 				03FE4ED31B2FA1010020F06F /* Shaders */,
 			);
@@ -161,11 +169,15 @@
 				D0C44A4322EABE4B001DD3E3 /* BSpline.h */,
 				03FE4E9C1B2F8D990020F06F /* FirstPersonCamera.h */,
 				03FE4E9D1B2F8D990020F06F /* main.cpp */,
+				D0CD675F22FA4D0B00C7CF40 /* Mesh.cpp */,
+				D0CD676022FA4D0C00C7CF40 /* Mesh.h */,
 				03FE4E9E1B2F8D990020F06F /* Model.cpp */,
 				D0C44A4022EABDB0001DD3E3 /* BSplineCamera.cpp */,
 				D0C44A4122EABDB0001DD3E3 /* BSplineCamera.h */,
 				03FE4E9F1B2F8D990020F06F /* Model.h */,
 				03FE4EA01B2F8D990020F06F /* ParsingHelper.h */,
+				D0CD675D22FA4C6B00C7CF40 /* Skybox.cpp */,
+				D0CD675C22FA4C6A00C7CF40 /* Skybox.h */,
 				03FE4EA31B2F8D990020F06F /* Renderer.cpp */,
 				03FE4EA41B2F8D990020F06F /* Renderer.h */,
 				03FE4EA51B2F8D990020F06F /* SphereModel.cpp */,
@@ -245,6 +257,8 @@
 				03FE4EB51B2F8D990020F06F /* World.cpp in Sources */,
 				03FE4EB21B2F8D990020F06F /* Renderer.cpp in Sources */,
 				D0C44A4522EABE4C001DD3E3 /* BSpline.cpp in Sources */,
+				D0CD676122FA4D0C00C7CF40 /* Mesh.cpp in Sources */,
+				D0CD675E22FA4C6B00C7CF40 /* Skybox.cpp in Sources */,
 				03FE4EB01B2F8D990020F06F /* Model.cpp in Sources */,
 				03FE4EAF1B2F8D990020F06F /* main.cpp in Sources */,
 				03FE4EAB1B2F8D990020F06F /* Camera.cpp in Sources */,
