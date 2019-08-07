@@ -22,5 +22,5 @@ color = texture(myTexture, texCoord);
         }
     }
 
-    FragColor =  color;
+    FragColor =  sum/25 + color;
 }
