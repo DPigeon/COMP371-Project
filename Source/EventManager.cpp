@@ -191,8 +191,10 @@ void EventManager::Update()
 	sLastFrameTime = currentTime;
 
 	// Draw the Loading Screen
-	if (GetLoadingState()) 
+	if (GetLoadingState()) {
+		Renderer::SetShader(SHADER_PHONG);
 		LoadingScreen::Draw();
+	}
 
 	// Rendering ImGui
 	ImGui::Render();

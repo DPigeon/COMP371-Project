@@ -212,7 +212,6 @@ void BSpline::ConstructTracks(vector<vec3> points) {
 	bool pointsLoaded = !points.empty();
 
 	if (pointsLoaded) { 
-		cout << points.size() << endl;
 		for (size_t i = 0; i < points.size() - 1; i++) {
 			float posX = points[i].x;
 			float posY = points[i].y;

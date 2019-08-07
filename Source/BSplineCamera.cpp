@@ -95,7 +95,7 @@ bool BSplineCamera::ComparePoints(vector<vec3> points) {
 }
 
 bool BSplineCamera::GetSmallestDistance(vec3 point, vec3 nextPoint) { // Look if the smallest distance is the closest to a set precision
-	float precision = 0.3f; // This is enough to see the end point
+	float precision = 0.15f; // This is enough to see the end point
 	float distanceX = point.x - nextPoint.x;
 	float distanceY = point.y - nextPoint.y;
 	float distanceZ = point.z - nextPoint.z;
