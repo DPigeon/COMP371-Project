@@ -54,12 +54,22 @@ World::World()
 
 	std::vector<std::string> skyboxFaces;
 	// MUST BE IN THIS ORDER: RIGHT LEFT UP DOWN BACK FRONT
-	skyboxFaces.push_back("../Assets/Textures/Skybox/starfield_rt.tga");
-	skyboxFaces.push_back("../Assets/Textures/Skybox/starfield_lf.tga");
-	skyboxFaces.push_back("../Assets/Textures/Skybox/starfield_up.tga");
-	skyboxFaces.push_back("../Assets/Textures/Skybox/starfield_dn.tga");
-	skyboxFaces.push_back("../Assets/Textures/Skybox/starfield_bk.tga");
-	skyboxFaces.push_back("../Assets/Textures/Skybox/starfield_ft.tga");
+#if defined(PLATFORM_OSX)
+    skyboxFaces.push_back("Textures/Skybox/starfield_rt.tga");
+    skyboxFaces.push_back("Textures/Skybox/starfield_lf.tga");
+    skyboxFaces.push_back("Textures/Skybox/starfield_up.tga");
+    skyboxFaces.push_back("Textures/Skybox/starfield_dn.tga");
+    skyboxFaces.push_back("Textures/Skybox/starfield_bk.tga");
+    skyboxFaces.push_back("Textures/Skybox/starfield_ft.tga");
+#else
+    skyboxFaces.push_back("../Assets/Textures/Skybox/starfield_rt.tga");
+    skyboxFaces.push_back("../Assets/Textures/Skybox/starfield_lf.tga");
+    skyboxFaces.push_back("../Assets/Textures/Skybox/starfield_up.tga");
+    skyboxFaces.push_back("../Assets/Textures/Skybox/starfield_dn.tga");
+    skyboxFaces.push_back("../Assets/Textures/Skybox/starfield_bk.tga");
+    skyboxFaces.push_back("../Assets/Textures/Skybox/starfield_ft.tga");
+#endif
+
 
 	skybox = Skybox(skyboxFaces);
 }
