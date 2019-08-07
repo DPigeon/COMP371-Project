@@ -11,9 +11,12 @@
 #include "World.h"
 #include "EventManager.h"
 
+#include <iostream>
+
 int main(int argc, char *argv[])
 {
-	EventManager::Initialize();
+	EventManager eventManager;
+	eventManager.Initialize();
 	Renderer::Initialize();
 
 	World world;
@@ -40,18 +43,24 @@ int main(int argc, char *argv[])
 	do
 	{
 		// Update Event Manager - Frame time / input / events processing / UI
-		EventManager::Update();
+		eventManager.Update();
 
 		// Update World
-		float dt = EventManager::GetFrameTime();
+		float dt = eventManager.GetFrameTime();
 		world.Update(dt);
 
 		// Draw World
 		world.Draw();
-	} while (EventManager::ExitRequested() == false);
+
+		bool isLoading = world.GetLoadingState();
+		if (!isLoading) {
+			//std::cout << "Stopping GUI..." << std::endl;
+			eventManager.SetLoadingState(false);
+		}
+	} while (eventManager.ExitRequested() == false);
 
 	Renderer::Shutdown();
-	EventManager::Shutdown();
+	eventManager.Shutdown();
 
 	return 0;
 }

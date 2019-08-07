@@ -37,6 +37,9 @@ public:
     AnimationKey* FindAnimationKey(ci_string keyName);
 
     const Camera* GetCurrentCamera() const;
+
+	bool GetLoadingState();
+	void SetLoadingState(bool state);
     
 private:
     static World* instance;
@@ -49,6 +52,7 @@ private:
 	std::vector<BSplineCamera*> mSplineCamera;
     std::vector<Model*> generatePlanets();
 	unsigned int mCurrentCamera;
+	bool isLoading;
 };
 
 float randomFloat(float min, float max);

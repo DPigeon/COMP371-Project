@@ -41,6 +41,7 @@ using namespace std;
 
 #include <GLFW/glfw3.h>
 
+EventManager* EventManager::instance;
 
 // Time
 double EventManager::sLastFrameTime = glfwGetTime();
@@ -54,6 +55,14 @@ float  EventManager::sMouseDeltaY = 0.0f;
 
 // Window
 GLFWwindow* EventManager::spWindow = nullptr;
+
+EventManager::EventManager() {
+	instance = this;
+	isLoading = true;
+}
+
+EventManager::~EventManager() {
+}
 
 
 void EventManager::Initialize()
@@ -138,6 +147,14 @@ void EventManager::Initialize()
     srand((unsigned int) time(nullptr));
 }
 
+void EventManager::SetLoadingState(bool state) {
+	GetInstance()->isLoading = state;
+}
+
+bool EventManager::GetLoadingState() {
+	return GetInstance()->isLoading;
+}
+
 void EventManager::Shutdown()
 {
 	// Close OpenGL window and terminate GLFW
@@ -177,7 +194,8 @@ void EventManager::Update()
 	sLastFrameTime = currentTime;
 
 	// Draw the Loading Screen
-	LoadingScreen::Draw();
+	if (GetLoadingState()) 
+		LoadingScreen::Draw();
 
 	// Rendering ImGui
 	ImGui::Render();
@@ -185,8 +203,11 @@ void EventManager::Update()
 	int display_w, display_h;
 	glfwGetFramebufferSize(spWindow, &display_w, &display_h);
 	glViewport(0, 0, display_w, display_h);
-	glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-	glClear(GL_COLOR_BUFFER_BIT);
+	if (GetLoadingState()) {
+		glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+		glClear(GL_COLOR_BUFFER_BIT);
+	}
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	glfwSwapBuffers(spWindow);
 }
@@ -204,6 +225,11 @@ bool EventManager::ExitRequested()
 GLFWwindow* EventManager::GetWindow()
 {
 	return spWindow;
+}
+
+EventManager* EventManager::GetInstance()
+{
+	return instance;
 }
 
 float EventManager::GetMouseMotionX()

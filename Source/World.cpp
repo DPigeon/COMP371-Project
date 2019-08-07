@@ -40,12 +40,13 @@ const vec4 lightPosition(3.0f, 0.0f, 20.0f, 1.0f);
 World::World()
 {
     instance = this;
+	isLoading = true; // Initialize loading state
     
     // Setup Camera
     mCamera.push_back(new FirstPersonCamera(vec3(3.0f, 5.0f, 20.0f)));
     mCamera.push_back(new StaticCamera(vec3(3.0f, 30.0f, 5.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f)));
     mCamera.push_back(new StaticCamera(vec3(0.5f,  0.5f, 5.0f), vec3(0.0f, 0.5f, 0.0f), vec3(0.0f, 1.0f, 0.0f)));
-    mCurrentCamera = 0;
+    mCurrentCamera = 2; // Putting this as the current camera so that we load splines automatically
 }
 
 World::~World()
@@ -360,4 +361,12 @@ AnimationKey* World::FindAnimationKey(ci_string keyName)
 const Camera* World::GetCurrentCamera() const
 {
     return mCamera[mCurrentCamera];
+}
+
+bool World::GetLoadingState() {
+	return isLoading;
+}
+
+void World::SetLoadingState(bool state) {
+	isLoading = state;
 }
