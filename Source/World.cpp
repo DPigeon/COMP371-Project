@@ -23,11 +23,13 @@
 
 #include "BSpline.h"
 #include "BSplineCamera.h"
+#include "Skybox.h"
 
 using namespace std;
 using namespace glm;
 
 World* World::instance;
+Skybox skybox;
 
 // Light Coefficients
 const vec3 lightColor(1.0f, 1.0f, 1.0f);
@@ -36,17 +38,43 @@ const float lightKl = 0.02f;
 const float lightKq = 0.002f;
 const vec4 lightPosition(3.0f, 0.0f, 20.0f, 1.0f);
 
+// TODO: These should be parameters set in the menu
+const int NUMBER_OF_PLANETS = 10;
+const int PLANET_SCALING_MAX_SIZE = 4.0f;
 
 World::World()
 {
     instance = this;
-	isLoading = true; // Initialize loading state
+	  isLoading = true; // Initialize loading state
     
     // Setup Camera
-    mCamera.push_back(new FirstPersonCamera(vec3(3.0f, 5.0f, 20.0f)));
+    mCamera.push_back(new FirstPersonCamera(vec3(3.0f, 5.0f, 20.0f)));	
     mCamera.push_back(new StaticCamera(vec3(3.0f, 30.0f, 5.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f)));
     mCamera.push_back(new StaticCamera(vec3(0.5f,  0.5f, 5.0f), vec3(0.0f, 0.5f, 0.0f), vec3(0.0f, 1.0f, 0.0f)));
+
     mCurrentCamera = 2; // Putting this as the current camera so that we load splines automatically
+
+    //mCurrentCamera = 0;
+
+	std::vector<std::string> skyboxFaces;
+	// MUST BE IN THIS ORDER: RIGHT LEFT UP DOWN BACK FRONT
+#if defined(PLATFORM_OSX)
+    skyboxFaces.push_back("Textures/Skybox/starfield_rt.tga");
+    skyboxFaces.push_back("Textures/Skybox/starfield_lf.tga");
+    skyboxFaces.push_back("Textures/Skybox/starfield_up.tga");
+    skyboxFaces.push_back("Textures/Skybox/starfield_dn.tga");
+    skyboxFaces.push_back("Textures/Skybox/starfield_bk.tga");
+    skyboxFaces.push_back("Textures/Skybox/starfield_ft.tga");
+#else
+    skyboxFaces.push_back("../Assets/Textures/Skybox/starfield_rt.tga");
+    skyboxFaces.push_back("../Assets/Textures/Skybox/starfield_lf.tga");
+    skyboxFaces.push_back("../Assets/Textures/Skybox/starfield_up.tga");
+    skyboxFaces.push_back("../Assets/Textures/Skybox/starfield_dn.tga");
+    skyboxFaces.push_back("../Assets/Textures/Skybox/starfield_bk.tga");
+    skyboxFaces.push_back("../Assets/Textures/Skybox/starfield_ft.tga");
+#endif
+  
+	skybox = Skybox(skyboxFaces);
 }
 
 World::~World()
@@ -144,7 +172,9 @@ void World::Update(float dt)
 void World::Draw()
 {
     Renderer::BeginFrame();
-    
+	
+	skybox.Draw();
+  
     glUseProgram(Renderer::GetShaderProgramID());
     
     // Everything we need to send to the GPU
@@ -280,7 +310,10 @@ void World::LoadScene(const char * scene_path)
 				mModel.insert(mModel.begin(), planets.begin(), planets.end());
 
 				for (std::vector<Model*>::iterator it = planets.begin(); it < planets.end(); ++it) {
-					planetTour->AddControlPoint(glm::vec3((*it)->GetPosition()));
+                    float scaling = glm::length((*it)->GetScaling()); // This is also the new radius since our initial radius is always 1.0f
+                    float buffer = 0.1f; // Make sure we are half a planets initial diameter away
+                    glm::vec3 newPosition  = randomSphericalCoordinatesToCartesian(scaling + buffer, (*it)->GetPosition());
+                    planetTour->AddControlPoint(newPosition);
 				}
 
 				planetTour->CreateVertexBuffer();
@@ -310,19 +343,43 @@ void World::LoadScene(const char * scene_path)
     }
 }
 
+glm::vec3 randomSphericalCoordinatesToCartesian(float radius, glm::vec3 initialCenter){
+    float theta = randomFloat(0, 180.0f);
+    float phi = randomFloat(0, 360.0f);
+    float x = radius * glm::cos(phi) * glm::sin(theta) + initialCenter.x;
+    float y = radius * glm::sin(phi) * glm::cos(theta) + initialCenter.y;
+    float z = radius * glm::cos(theta) + initialCenter.z;
+    return glm::vec3(x, y, z);
+}
+
 std::vector<Model*> World::generatePlanets(){
     std::vector<Model*> planetList;
-    //Temporary number here
-    for (int i = 0; i < 8; i++) {
-        PlanetModel* randomSphere = new PlanetModel();
-        randomSphere->SetPosition(vec3(randomFloat(0, 100.0f),randomFloat(10.0f, 100.0f),randomFloat(0.0f, 100.0f)));
-        float planetScalingConstant = randomFloat(0.5f, 4.0f);
-        randomSphere->SetScaling(vec3(planetScalingConstant,planetScalingConstant,planetScalingConstant));
-        planetList.push_back(randomSphere);
+    std::vector<vec3> planetPositions;
+
+    for (int i = 0; i < NUMBER_OF_PLANETS; i++) {
+        PlanetModel* randomPlanet = new PlanetModel();
+        vec3 planetRandomPoint;
+        do {
+            planetRandomPoint = vec3(randomFloat(0, 100.0f), randomFloat(10.0f, 100.0f), randomFloat(0.0f, 100.0f));
+        } while(!planetHasSpace(planetRandomPoint, planetPositions));
+        planetPositions.push_back(planetRandomPoint);
+        randomPlanet->SetPosition(planetRandomPoint);
+        float planetScalingConstant = randomFloat(0.5f, PLANET_SCALING_MAX_SIZE);
+        randomPlanet->SetScaling(vec3(planetScalingConstant, planetScalingConstant, planetScalingConstant));
+        planetList.push_back(randomPlanet);
     }
     return planetList;
 }
 
+bool World::planetHasSpace(vec3 planetRandomPoint, std::vector<vec3> planetPositions) {
+    for (auto position : planetPositions) {
+        // The planets have to have at least the max size of a planet in between them
+        if (glm::distance(planetRandomPoint, position) < PLANET_SCALING_MAX_SIZE * 2.0) {
+            return false;
+        }
+    }
+    return true;
+}
 
 float randomFloat(float min, float max)
 {

@@ -3,3 +3,6 @@ Build
 VS2017
 .vscode
 .vs
+.DS_Store
+Xcode/Area51.xcodeproj/xcuserdata/*/**
+Xcode/Area51.xcodeproj/project.xcworkspace/xcshareddata/*/**
