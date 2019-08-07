@@ -39,8 +39,9 @@ const float lightKq = 0.002f;
 const vec4 lightPosition(3.0f, 0.0f, 20.0f, 1.0f);
 
 // TODO: These should be parameters set in the menu
-const int NUMBER_OF_PLANETS = 10;
-const int PLANET_SCALING_MAX_SIZE = 4.0f;
+const int NUMBER_OF_PLANETS = 100;
+const int PLANET_SCALING_MIN_SIZE = 4.0f;
+const int PLANET_SCALING_MAX_SIZE = 8.0f;
 
 World::World()
 {
@@ -352,14 +353,23 @@ std::vector<Model*> World::generatePlanets(){
 
     for (int i = 0; i < NUMBER_OF_PLANETS; i++) {
         PlanetModel* randomPlanet = new PlanetModel();
+        
+        // Position
         vec3 planetRandomPoint;
         do {
             planetRandomPoint = vec3(randomFloat(0, 100.0f), randomFloat(10.0f, 100.0f), randomFloat(0.0f, 100.0f));
         } while(!planetHasSpace(planetRandomPoint, planetPositions));
         planetPositions.push_back(planetRandomPoint);
         randomPlanet->SetPosition(planetRandomPoint);
-        float planetScalingConstant = randomFloat(0.5f, PLANET_SCALING_MAX_SIZE);
+        float planetScalingConstant = randomFloat(PLANET_SCALING_MIN_SIZE, PLANET_SCALING_MAX_SIZE);
         randomPlanet->SetScaling(vec3(planetScalingConstant, planetScalingConstant, planetScalingConstant));
+        
+        // Color
+        float red = randomFloat(0.0f, 1.0f);
+        float green = randomFloat(0.0f, 1.0f);
+        float blue = randomFloat(0.0f, 1.0f);
+        randomPlanet->SetColor(vec3(red, green, blue));
+        
         planetList.push_back(randomPlanet);
     }
     return planetList;
