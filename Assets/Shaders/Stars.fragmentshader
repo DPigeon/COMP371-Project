@@ -1,0 +1,26 @@
+#version 330 core
+vec4 color;
+out vec4 FragColor;
+
+uniform sampler2D myTexture;
+uniform mat4 textureRotation;
+
+void main()
+{
+vec2 texCoord = (textureRotation * vec4(gl_PointCoord, 0, 1)).xy;
+color = texture(myTexture, texCoord);
+
+
+//To enable bloom effect + gaussian shadow
+    int i, j;
+    vec4 sum = vec4(0);
+
+    for(i = -2 ; i <= 2 ; i++) {
+        for(j = -2 ; j <=2 ; j++){
+            vec2 offset = vec2(i,j) * 0.005;
+            sum += texture(myTexture, texCoord + offset);
+        }
+    }
+
+    FragColor =  color;
+}
