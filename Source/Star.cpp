@@ -27,11 +27,14 @@
 #include "Camera.h"
 #include "World.h"
 
-
+Star::Star(int texture_id)
+{
+    glBindTexture(GL_TEXTURE_2D, texture_id);
+}
 //Creates many random points within a cubic area
 GLuint randVAO(int& vertexCount, std::vector<float>& angles)
 {
-    float areaWidth = 100.0f;
+    float areaWidth = 200.0f;
     
     std::vector<glm::vec3> vertPos;
     std::vector<float> vertRot;
@@ -85,7 +88,7 @@ GLuint randVAO(int& vertexCount, std::vector<float>& angles)
 void Star::Draw()
 {
     //Draw Stars
-    int vCount = 300;
+    int vCount = 500;
     std::vector<float> angles(100);
     GLuint VAO = randVAO(vCount, angles);
     
@@ -112,16 +115,6 @@ void Star::Draw()
     
     glm::mat4 ViewProjection = currentCamera->GetViewProjectionMatrix();
     glUniformMatrix4fv(ViewProjMatrixID,  1, GL_FALSE, &ViewProjection[0][0]);
-    
-    int spriteWidth;
-    
-#if defined(PLATFORM_OSX)
-//        int texture_id = TextureLoader::LoadTexture("Textures/BillboardTest.bmp", spriteWidth);
-    int texture_id = TextureLoader::LoadTexture("/Users/kevinluu/Workspace/Concordia/COMP371-Project/Assets/Images/shiny_yellow_star-min.png", spriteWidth);
-#else
-    //    int texture_id = TextureLoader::LoadTexture("../Assets/Textures/BillboardTest.bmp", spriteWidth);
-    int texture_id = TextureLoader::LoadTexture("../Assets/Images/shiny_star.png", spriteWidth);
-#endif
  
     glEnable( GL_POINT_SMOOTH );
     glDisable(GL_DEPTH_TEST);

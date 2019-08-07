@@ -11,6 +11,7 @@ class Star
 {
 public:
     Star();
+    Star(int texture_id);
     ~Star();
     
     static Star* GetInstance();

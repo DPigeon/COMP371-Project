@@ -7,7 +7,7 @@
 // Copyright (c) 2014-2019 Concordia University. All rights reserved.
 //
 
-
+#include <unistd.h>
 
 #include "World.h"
 #include "Renderer.h"
@@ -28,6 +28,7 @@
 #include "Skybox.h"
 
 #include "Star.h"
+#include "TextureLoader.h"
 
 using namespace std;
 using namespace glm;
@@ -46,6 +47,8 @@ const vec4 lightPosition(3.0f, 0.0f, 20.0f, 1.0f);
 // TODO: These should be parameters set in the menu
 const int NUMBER_OF_PLANETS = 10;
 const int PLANET_SCALING_MAX_SIZE = 4.0f;
+
+ char cwd[256];
 
 World::World()
 {
@@ -259,6 +262,18 @@ void World::Draw()
 	}
 
     Renderer::CheckForErrors();
+    
+    int spriteWidth;
+    
+#if defined(PLATFORM_OSX)
+    //        int texture_id = TextureLoader::LoadTexture("Textures/BillboardTest.bmp", spriteWidth);
+    int texture_id = TextureLoader::LoadTexture("/Users/kevinluu/Workspace/Concordia/COMP371-Project/Assets/Textures/Stars/shiny_yellow_star-min.png", spriteWidth);
+#else
+    //    int texture_id = TextureLoader::LoadTexture("../Assets/Textures/BillboardTest.bmp", spriteWidth);
+    int texture_id = TextureLoader::LoadTexture("../Assets/Images/shiny_star.png", spriteWidth);
+#endif
+    
+    star = new Star(texture_id);
     
     Renderer::SetShader(SHADER_STARS);
     glUseProgram(Renderer::GetShaderProgramID());
