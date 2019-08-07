@@ -33,6 +33,7 @@
 		B9DBF90322FA9BBA00C8BBEF /* Star.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B9DBF8F122FA9BBA00C8BBEF /* Star.cpp */; };
 		B9DBF90422FA9BBA00C8BBEF /* World.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B9DBF8F222FA9BBA00C8BBEF /* World.cpp */; };
 		B9DBF90522FA9BBA00C8BBEF /* EventManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B9DBF8F422FA9BBA00C8BBEF /* EventManager.cpp */; };
+		B9DBF90622FB867300C8BBEF /* Textures in CopyFiles */ = {isa = PBXBuildFile; fileRef = D0CD676222FA4D7600C7CF40 /* Textures */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -42,6 +43,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
+				B9DBF90622FB867300C8BBEF /* Textures in CopyFiles */,
 				03FE4ED41B2FA1210020F06F /* Scenes in CopyFiles */,
 				03FE4ED51B2FA1210020F06F /* Shaders in CopyFiles */,
 			);
