@@ -173,7 +173,6 @@ void EventManager::Shutdown()
 void EventManager::Update()
 {
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-	ImVec4 transparent = ImVec4(0.45f, 0.55f, 0.60f, 0.00f);
 	// Update inputs / events
 	glfwPollEvents();
 
@@ -210,8 +209,8 @@ void EventManager::Update()
 	glfwGetFramebufferSize(spWindow, &display_w, &display_h);
 	glViewport(0, 0, display_w, display_h);
 	if (GetLoadingState()) {
-		//glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-		//glClear(GL_COLOR_BUFFER_BIT);
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
 	}
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	glfwSwapBuffers(spWindow);

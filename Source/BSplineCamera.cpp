@@ -82,16 +82,12 @@ bool BSplineCamera::ComparePoints(vector<vec3> points) {
 		vec3 nextPoint = points[points.size() - 1];
 
 		if (!GetSmallestDistance(initialPoint, nextPoint)) {
-			//cout << "Loading..." << endl;
 			return false; // Continue
 		}
 		else {
-			//cout << "Starting..." << endl;
 			return true; // Stop
 		} 
-	}
-	//cout << "Loading..." << endl;
-	return false; // Continue
+	}	return false; // Continue
 }
 
 bool BSplineCamera::GetSmallestDistance(vec3 point, vec3 nextPoint) { // Look if the smallest distance is the closest to a set precision

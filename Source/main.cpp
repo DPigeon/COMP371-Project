@@ -54,7 +54,6 @@ int main(int argc, char *argv[])
 
 		bool isLoading = world.GetLoadingState();
 		if (!isLoading) {
-			//std::cout << "Stopping GUI..." << std::endl;
 			eventManager.SetLoadingState(false);
 		}
 	} while (eventManager.ExitRequested() == false);

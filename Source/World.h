@@ -37,6 +37,7 @@ public:
     AnimationKey* FindAnimationKey(ci_string keyName);
 
     const Camera* GetCurrentCamera() const;
+	void SetCurrentCamera(int cameraNumber);
 
 	bool GetLoadingState();
 	void SetLoadingState(bool state);

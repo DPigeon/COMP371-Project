@@ -366,6 +366,10 @@ const Camera* World::GetCurrentCamera() const
     return mCamera[mCurrentCamera];
 }
 
+void World::SetCurrentCamera(int cameraNumber) {
+	mCurrentCamera = cameraNumber;
+}
+
 bool World::GetLoadingState() {
 	return isLoading;
 }
