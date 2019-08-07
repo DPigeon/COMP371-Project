@@ -76,7 +76,7 @@ void BSplineCamera::ExtrapolatePoints(vec3 mPosition) {
 }
 
 bool BSplineCamera::ComparePoints(vector<vec3> points) {
-	size_t skipPoints = 300; // We skip n anout of points because we know that the smallest distance is not at the beginning
+	size_t skipPoints = 300; // We skip n amount of points because we know that the smallest distance is not at the beginning
 	if (!points.empty() && points.size() > skipPoints) {
 		vec3 initialPoint = points[0];
 		vec3 nextPoint = points[points.size() - 1];

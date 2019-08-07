@@ -17,7 +17,7 @@ class LoadingScreen
 public:
 	LoadingScreen();
 	static void Draw();
-	static void ProgressBar(float percentage);
+	static void ProgressBar();
 	~LoadingScreen();
 
 private:

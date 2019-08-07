@@ -37,20 +37,21 @@ void LoadingScreen::Draw() {
 			ImGui::Image(ImTextureID(logo), logoSize, ImVec2(0.0f, 0.0f), ImVec2(1, -1));
 
 			SetCursorPos(progressBarPosition);
-			ProgressBar(0.4f);
+			ProgressBar();
 
 			ImGui::End();
 	}
 }
 
-void LoadingScreen::ProgressBar(float percentage) {
+void LoadingScreen::ProgressBar() {
 	// 1. Start timer at 0 (for 5-15 seconds, increment the bar)
 	// 2. Now at 60-70 percent, wait until comparedPoints returns true
 	// 3. Put bar to 100%
 	// 4. Open next window (navigation window will be for later)
 
-	double maxRandom = 10.0f;
+	double maxRandom = 13.0f; // Set a constant random number for now (cannot determine how many points total on the spline at beginning cause we live extrapolate)
 	double time = ImGui::GetTime();
+	double percent = time / maxRandom;
 
 	ImGui::ProgressBar(time / maxRandom, ImVec2(0.0f, 0.0f));
 }

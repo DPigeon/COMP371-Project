@@ -43,6 +43,11 @@ using namespace std;
 
 EventManager* EventManager::instance;
 
+/* True if you don't want to see the loading screen */
+/* False if you want to see the loading screen */
+bool devMode = false;
+					 
+
 // Time
 double EventManager::sLastFrameTime = glfwGetTime();
 float  EventManager::sFrameTime = 0.0f;
@@ -193,7 +198,8 @@ void EventManager::Update()
 	// Draw the Loading Screen
 	if (GetLoadingState()) {
 		Renderer::SetShader(SHADER_PHONG);
-		LoadingScreen::Draw();
+		if (!devMode)
+			LoadingScreen::Draw();
 	}
 
 	// Rendering ImGui
