@@ -5,3 +5,4 @@ VS2017
 .vs
 .DS_Store
 Xcode/Area51.xcodeproj/xcuserdata/*/**
+Xcode/Area51.xcodeproj/project.xcworkspace/xcshareddata/*/**
