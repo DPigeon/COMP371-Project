@@ -7,7 +7,6 @@
 #include "LoadingScreen.h"
 #include "TextureLoader.h"
 
-#include <ctime>
 #include <iostream>
 
 using namespace std;
@@ -48,17 +47,12 @@ void LoadingScreen::ProgressBar(float percentage) {
 	// 1. Start timer at 0 (for 5-15 seconds, increment the bar)
 	// 2. Now at 60-70 percent, wait until comparedPoints returns true
 	// 3. Put bar to 100%
-	// 4. Open next window
-	
-	long duration = time(0);
+	// 4. Open next window (navigation window will be for later)
 
-	//cout << duration << endl;
+	double maxRandom = 10.0f;
+	double time = ImGui::GetTime();
 
-	float percent = 0.0f;
-	if (duration > time(0))
-		percent += 0.2f;
-
-	ImGui::ProgressBar(percent, ImVec2(0.0f, 0.0f));
+	ImGui::ProgressBar(time / maxRandom, ImVec2(0.0f, 0.0f));
 }
 
 LoadingScreen::~LoadingScreen() {
