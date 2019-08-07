@@ -7,19 +7,6 @@
 // Copyright (c) 2014-2019 Concordia University. All rights reserved.
 //
 
-#include <stdlib.h>
-#include <math.h>
-
-#define GLEW_STATIC 1   // This allows linking with Static Library on Windows, without DLL
-#include <GL/glew.h>    // Include GLEW - OpenGL Extension Wrangler
-// GLFW provides a cross-platform interface for creating a graphical context,
-// initializing OpenGL and binding inputs
-
-#include <glm/glm.hpp>  // GLM is an optimized math library with syntax to similar to OpenGL Shading Language
-#include <glm/gtc/matrix_transform.hpp> // include this to create transformation matrices
-#include <glm/common.hpp>
-#include <GLFW/glfw3.h> // GLFW provides a cross-platform interface for creating a graphical context,
-#include <random>
 
 
 #include "World.h"
@@ -39,10 +26,14 @@
 #include "BSpline.h"
 #include "BSplineCamera.h"
 
+#include "Star.h"
+
 using namespace std;
 using namespace glm;
 
 World* World::instance;
+Star* star;
+
 
 // Light Coefficients
 const vec3 lightColor(1.0f, 1.0f, 1.0f);
@@ -123,6 +114,15 @@ void World::Update(float dt)
         }
 		Renderer::SetShader(SHADER_PHONG);
     }
+    else if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_4 ) == GLFW_PRESS)
+    {
+        if (mCamera.size() > 3)
+        {
+            mCurrentCamera = 3;
+        }
+        Renderer::SetShader(SHADER_STARS);
+    }
+
     
     // Spacebar to change the shader
     if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_0 ) == GLFW_PRESS)
@@ -157,10 +157,13 @@ void World::Update(float dt)
 
 void World::Draw()
 {
+    
     Renderer::BeginFrame();
     
     glUseProgram(Renderer::GetShaderProgramID());
     
+    unsigned int prevShader = Renderer::GetCurrentShader();
+
     // Everything we need to send to the GPU
     
     GLuint WorldMatrixID = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldTransform");
@@ -210,7 +213,7 @@ void World::Draw()
         (*it)->Draw();
     }
     
-    unsigned int prevShader = Renderer::GetCurrentShader();
+    prevShader = Renderer::GetCurrentShader();
 	Renderer::SetShader(SHADER_PHONG);
     glUseProgram(Renderer::GetShaderProgramID());
     
@@ -229,6 +232,17 @@ void World::Draw()
 	}
 
     Renderer::CheckForErrors();
+    
+    Renderer::SetShader(SHADER_STARS);
+    glUseProgram(Renderer::GetShaderProgramID());
+    
+    glEnable(GL_BLEND); //Enable transparency blending
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); //Define transparency blending
+    glEnable(GL_POINT_SPRITE); //Enable use of point sprites
+    glEnable(GL_VERTEX_PROGRAM_POINT_SIZE); //Enable changing size of point sprites
+    star -> Draw();
+    star -> Draw();
+    glDisable(GL_BLEND);
     
     // Restore previous shader
     Renderer::SetShader((ShaderType) prevShader);
@@ -331,90 +345,6 @@ std::vector<Model*> World::generatePlanets(){
         planetList.push_back(randomSphere);
     }
     return planetList;
-}
-
-//Creates many random points within a cubic area
-GLuint randVAO(int& vertexCount, std::vector<float>& angles)
-{
-    float areaWidth = 50.0f;
-    
-    std::vector<glm::vec3> vertPos;
-    std::vector<float> vertRot;
-    
-    std::default_random_engine rando;
-    for (int i = 0; i != vertexCount; ++i)
-    {
-        //Create a random position
-        glm::vec3 randomPosition((float)rando(), (float)rando(), (float)rando());
-        randomPosition /= (rando.max() / areaWidth);
-        randomPosition -= glm::vec3(areaWidth / 2.0f, areaWidth / 2.0f, 0.0f);
-        randomPosition.z *= -1.0f;
-        
-        //Create a random angle
-        float randomAngle = rando() / (rando.max() / 360.0f);
-        angles.push_back(randomAngle);
-        randomAngle = glm::radians(randomAngle);
-        
-        
-        vertPos.push_back(randomPosition);
-        vertRot.push_back(randomAngle);
-    }
-    
-    vertexCount = vertPos.size();
-    
-    GLuint VAO;
-    glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO); //Becomes active VAO
-    // Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s).
-    
-    //Vertex VBO setup
-    GLuint vertices_VBO;
-    glGenBuffers(1, &vertices_VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, vertices_VBO);
-    glBufferData(GL_ARRAY_BUFFER, vertPos.size() * sizeof(glm::vec3), &vertPos.front(), GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-    glEnableVertexAttribArray(0);
-    
-    //Angle VBO setup
-    GLuint angles_VBO;
-    glGenBuffers(1, &angles_VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, angles_VBO);
-    glBufferData(GL_ARRAY_BUFFER, vertRot.size() * sizeof(float), &vertRot.front(), GL_STATIC_DRAW);
-    glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, 0, NULL);
-    glEnableVertexAttribArray(1);
-    
-    return VAO;
-}
-
-void  World::generateStars()
-{
-    //     glEnable(GL_BLEND); //Enable transparency blending
-    //    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); //Define transprency blending
-    
-    glClearColor( 1.0f, 1.0f, 1.0f, 1.0f );
-    glEnable(GL_COLOR_MATERIAL);
-    glColor3ub(255, 0, 0  );
-    glColorMaterial ( GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
-    glEnable(GL_TEXTURE_2D);
-    //Draw Stars
-    int vCount = 300;
-    std::vector<float> angles(100);
-    GLuint VAO = randVAO(vCount, angles);
-    
-    glEnable( GL_POINT_SMOOTH );
-    glColor3b(1.0, 0, 0);
-    glPointSize( 5 ); // must be added before glDrawArrays is called
-    glBindVertexArray(VAO);
-    for (int i = 0; i < 1000; i++) {
-        glDrawArrays( GL_POINTS, i, 1 ); // draw the vertixes
-    }
-    glBindVertexArray(0);
-    glDisable( GL_POINT_SMOOTH ); // stop the smoothing to make the points circular
-    
-    glDisable( GL_COLOR_MATERIAL );
-    
-    glEnd();
-    glFinish();
 }
 
 
