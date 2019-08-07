@@ -19,8 +19,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <irrKlang.h>
 
-using namespace std;
+using namespace std; 
+using namespace irrklang;
 
 
 // Time
@@ -35,6 +37,8 @@ float  EventManager::sMouseDeltaY = 0.0f;
 
 // Window
 GLFWwindow* EventManager::spWindow = nullptr;
+
+ISoundEngine* engine = createIrrKlangDevice();
 
 
 void EventManager::Initialize()
@@ -91,10 +95,14 @@ void EventManager::Initialize()
 	// Initial time
 	sLastFrameTime = glfwGetTime();
     srand((unsigned int) time(nullptr));
+
+	engine->play2D("../Audio/Dystopic-Factory.ogg", true);
 }
 
 void EventManager::Shutdown()
 {
+	engine->drop();
+
 	// Close OpenGL window and terminate GLFW
 	glfwTerminate();
 	spWindow = nullptr;
