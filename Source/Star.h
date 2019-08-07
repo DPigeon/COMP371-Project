@@ -6,8 +6,20 @@
 //  Copyright © 2019 Concordia. All rights reserved.
 //
 
-#ifndef Star_h
-#define Star_h
+
+class Star
+{
+public:
+    Star();
+    ~Star();
+    
+    static Star* GetInstance();
+    
+    void Draw();
+    
+private:
+    void generateStars();
+    void setTextureRotation(int shaderProgram, float textureRotationAngle);
+};
 
 
-#endif /* Star_h */
