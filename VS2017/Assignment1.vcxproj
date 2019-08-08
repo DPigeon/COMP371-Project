@@ -130,6 +130,7 @@
     <ClCompile Include="..\Source\CubeModel.cpp" />
     <ClCompile Include="..\Source\EventManager.cpp" />
     <ClCompile Include="..\Source\FirstPersonCamera.cpp" />
+    <ClCompile Include="..\Source\FPSWindow.cpp" />
     <ClCompile Include="..\Source\LoadingScreen.cpp" />
     <ClCompile Include="..\Source\main.cpp" />
     <ClCompile Include="..\Source\Mesh.cpp" />
@@ -156,6 +157,7 @@
     <ClInclude Include="..\Source\CubeModel.h" />
     <ClInclude Include="..\Source\EventManager.h" />
     <ClInclude Include="..\Source\FirstPersonCamera.h" />
+    <ClInclude Include="..\Source\FPSWindow.h" />
     <ClInclude Include="..\Source\LoadingScreen.h" />
     <ClInclude Include="..\Source\Mesh.h" />
     <ClInclude Include="..\Source\Model.h" />
