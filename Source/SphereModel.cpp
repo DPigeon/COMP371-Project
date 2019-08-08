@@ -1344,7 +1344,7 @@ void PlanetModel::Draw()
     glUniformMatrix4fv(WorldMatrixLocation, 1, GL_FALSE, &GetWorldMatrix()[0][0]);
     
     unsigned int prevShader = Renderer::GetCurrentShader();
-    Renderer::SetShader(SHADER_PHONG);
+    Renderer::SetShader(SHADER_PLANET);
     glUseProgram(Renderer::GetShaderProgramID());
     GLuint ModelColorID = glGetUniformLocation(Renderer::GetShaderProgramID(), "modelColor");
     glUniform3f(ModelColorID, mColor.r, mColor.g, mColor.b);
