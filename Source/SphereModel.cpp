@@ -1342,13 +1342,17 @@ void PlanetModel::Draw()
 
     GLuint WorldMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldTransform"); 
     glUniformMatrix4fv(WorldMatrixLocation, 1, GL_FALSE, &GetWorldMatrix()[0][0]);
-    
+
+    // Ambient set to 0.5 to better see the effect of lighting
+    // Shininess is set super high to remove the point light effect
+    SetMaterialCoefficients(vec4(0.5f, 0.5f, 1.0f, 100000.0f));
+
     Renderer::SetShader(SHADER_PLANET);
     glUseProgram(Renderer::GetShaderProgramID());
     GLuint ModelColorID = glGetUniformLocation(Renderer::GetShaderProgramID(), "modelColor");
     glUniform3f(ModelColorID, mColor.r, mColor.g, mColor.b);
     Renderer::CheckForErrors();
-    
+
     // Draw the triangles !
     glDrawArrays(GL_TRIANGLE_STRIP, 0, numOfVertices);
 }

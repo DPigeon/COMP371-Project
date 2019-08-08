@@ -17,6 +17,7 @@
 
 #include "CubeModel.h"
 #include "SphereModel.h"
+#include "SunModel.h"
 #include "Animation.h"
 #include <GLFW/glfw3.h>
 #include "EventManager.h"
@@ -36,12 +37,15 @@ const vec3 lightColor(1.0f, 1.0f, 1.0f);
 const float lightKc = 0.05f;
 const float lightKl = 0.02f;
 const float lightKq = 0.002f;
-const vec4 lightPosition(3.0f, 0.0f, 20.0f, 1.0f);
+
+// Negative to ensure light points towards the correct quadrant
+// Lights half of the planet towards the sun
+const vec4 lightPosition(-10.0f, -10.0f, -10.0f, 1.0f); 
 
 // TODO: These should be parameters set in the menu
 const int NUMBER_OF_PLANETS = 10;
-const int PLANET_SCALING_MIN_SIZE = 4.0f;
-const int PLANET_SCALING_MAX_SIZE = 8.0f;
+const float PLANET_SCALING_MIN_SIZE = 4.0f;
+const float PLANET_SCALING_MAX_SIZE = 8.0f;
 
 World::World()
 {
@@ -218,10 +222,12 @@ void World::Draw()
             MaterialID = glGetUniformLocation(Renderer::GetShaderProgramID(), "materialCoefficients");
             
             glUniformMatrix4fv(WorldMatrixID, 1, GL_FALSE, &((*it)->GetWorldMatrix())[0][0]);
-            float ka = 0.9f;
-            float kd = 0.5f;
-            float ks = 1.0f;
-            float n = 50.0f;
+
+            // Get material coefficients set in the model
+            float ka = (*it)->GetMaterialCoefficients().x;
+            float kd = (*it)->GetMaterialCoefficients().y;
+            float ks = (*it)->GetMaterialCoefficients().z;
+            float n = (*it)->GetMaterialCoefficients().w;
             
             glUniform4f(MaterialID, ka, kd, ks, n);
         }
@@ -286,9 +292,15 @@ void World::LoadScene(const char * scene_path)
                 cube->Load(iss);
                 mModel.push_back(cube);
             }
-            else if( result == "sphere" )
+            else if (result == "sphere")
             {
                 PlanetModel* sphere = new PlanetModel();
+                sphere->Load(iss);
+                mModel.push_back(sphere);
+            }
+            else if (result == "sun")
+            {
+                SunModel* sphere = new SunModel();
                 sphere->Load(iss);
                 mModel.push_back(sphere);
             }
@@ -378,12 +390,17 @@ std::vector<Model*> World::generatePlanets(){
         
         planetList.push_back(randomPlanet);
     }
-    
+  
+    SunModel* sun = new SunModel();
+    sun->SetPosition(vec3(0.0f, 0.0f, 0.0f)); // Sun placed on origin
+    sun->SetScaling(vec3(10.0f,10.0f,10.0f));
+    planetList.push_back(sun);
+
     // Sorts the planets by their position vector magnitude
     std::sort(planetList.begin(), planetList.end(), [ ]( const Model* p1, const Model* p2) {
         return glm::length(p1->GetPosition()) < glm::length(p2->GetPosition());
     });
-    
+  
     return planetList;
 }
 

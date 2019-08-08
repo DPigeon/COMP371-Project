@@ -37,8 +37,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <irrKlang.h>
 
-using namespace std;
+using namespace std; 
+using namespace irrklang;
 
 #include <GLFW/glfw3.h>
 
@@ -62,6 +64,9 @@ float  EventManager::sMouseDeltaY = 0.0f;
 // Window
 GLFWwindow* EventManager::spWindow = nullptr;
 
+// Sound Engine 
+ISoundEngine* engine = createIrrKlangDevice();
+
 EventManager::EventManager() {
 	instance = this;
 	isLoading = true;
@@ -69,7 +74,6 @@ EventManager::EventManager() {
 
 EventManager::~EventManager() {
 }
-
 
 void EventManager::Initialize()
 {
@@ -151,6 +155,8 @@ void EventManager::Initialize()
 	// Initial time
 	sLastFrameTime = glfwGetTime();
     srand((unsigned int) time(nullptr));
+
+	engine->play2D("../Audio/Dystopic-Factory.ogg", true);
 }
 
 void EventManager::SetLoadingState(bool state) {
@@ -169,6 +175,7 @@ void EventManager::Shutdown()
 	ImGui::DestroyContext();
 	glfwTerminate();
 	spWindow = nullptr;
+  engine->drop();
 }
 
 void EventManager::Update()

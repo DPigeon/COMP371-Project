@@ -6,3 +6,4 @@ VS2017
 .DS_Store
 Xcode/Area51.xcodeproj/xcuserdata/*/**
 Xcode/Area51.xcodeproj/project.xcworkspace/xcshareddata/*/**
+!VS2017/irrKlang.dll
