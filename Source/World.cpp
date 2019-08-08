@@ -373,19 +373,10 @@ std::vector<Model*> World::generatePlanets(){
         planetList.push_back(randomPlanet);
     }
     
-    for (int i = 0; i < NUMBER_OF_PLANETS; i++) {
-        std::cout << "vector: length" << glm::length(planetList.at(i)->GetPosition()) << "  x=" << planetList.at(i)->GetPosition().x << "  y=" << planetList.at(i)->GetPosition().y << "  z=" << planetList.at(i)->GetPosition().z << std::endl;
-    }
-    
+    // Sorts the planets by their position vector magnitude
     std::sort(planetList.begin(), planetList.end(), [ ]( const Model* p1, const Model* p2) {
         return glm::length(p1->GetPosition()) < glm::length(p2->GetPosition());
     });
-    
-    std::cout << "-----" << std::endl;
-    
-    for (int i = 0; i < NUMBER_OF_PLANETS; i++) {
-        std::cout << "vector: length" << glm::length(planetList.at(i)->GetPosition()) << "  x=" << planetList.at(i)->GetPosition().x << "  y=" << planetList.at(i)->GetPosition().y << "  z=" << planetList.at(i)->GetPosition().z << std::endl;
-    }
     
     return planetList;
 }
