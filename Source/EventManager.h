@@ -14,8 +14,12 @@ struct GLFWwindow;
 class EventManager
 {
 public:
+	EventManager();
+	~EventManager();
 	static void Initialize();
 	static void Shutdown();
+	static void SetLoadingState(bool state);
+	static bool GetLoadingState();
 
 	static void Update();
 
@@ -23,6 +27,7 @@ public:
 	static bool ExitRequested();
 
 	static GLFWwindow* GetWindow();
+	static EventManager* GetInstance();
 
 	static float GetMouseMotionX();
 	static float GetMouseMotionY();
@@ -32,6 +37,8 @@ public:
     static float GetRandomFloat(float min, float max);
 
 private:
+	static EventManager* instance;
+
 	// Time
 	static double sLastFrameTime;
 	static float sFrameTime;
@@ -44,4 +51,6 @@ private:
 
 	// Window
 	static GLFWwindow* spWindow;
+
+    bool isLoading;
 };

@@ -45,12 +45,16 @@ const int PLANET_SCALING_MAX_SIZE = 4.0f;
 World::World()
 {
     instance = this;
+	  isLoading = true; // Initialize loading state
     
     // Setup Camera
     mCamera.push_back(new FirstPersonCamera(vec3(3.0f, 5.0f, 20.0f)));	
     mCamera.push_back(new StaticCamera(vec3(3.0f, 30.0f, 5.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f)));
     mCamera.push_back(new StaticCamera(vec3(0.5f,  0.5f, 5.0f), vec3(0.0f, 0.5f, 0.0f), vec3(0.0f, 1.0f, 0.0f)));
-    mCurrentCamera = 0;
+
+    mCurrentCamera = 2; // Putting this as the current camera so that we load splines automatically
+
+    //mCurrentCamera = 0;
 
 	std::vector<std::string> skyboxFaces;
 	// MUST BE IN THIS ORDER: RIGHT LEFT UP DOWN BACK FRONT
@@ -69,8 +73,7 @@ World::World()
     skyboxFaces.push_back("../Assets/Textures/Skybox/starfield_bk.tga");
     skyboxFaces.push_back("../Assets/Textures/Skybox/starfield_ft.tga");
 #endif
-
-
+  
 	skybox = Skybox(skyboxFaces);
 }
 
@@ -230,6 +233,8 @@ void World::Draw()
     
     //Draw the BSpline between all the planets here
 	for (vector<BSpline*>::iterator it = mSpline.begin(); it < mSpline.end(); ++it) {
+		glPushMatrix();
+		glPushAttrib(GL_ALL_ATTRIB_BITS);
 		MaterialID = glGetUniformLocation(Renderer::GetShaderProgramID(), "materialCoefficients");
 
 		glUniformMatrix4fv(WorldMatrixID, 1, GL_FALSE, &((*it)->GetWorldMatrix())[0][0]);
@@ -237,9 +242,10 @@ void World::Draw()
 		float kd = 0.5f;
 		float ks = 1.0f;
 		float n = 50.0f;
-
 		glUniform4f(MaterialID, ka, kd, ks, n);
 		(*it)->ConstructTracks(mSplineCamera.front()->GetExtrapolatedPoints());
+		glPopAttrib();
+		glPopMatrix();
 	}
 
     Renderer::CheckForErrors();
@@ -415,4 +421,16 @@ AnimationKey* World::FindAnimationKey(ci_string keyName)
 const Camera* World::GetCurrentCamera() const
 {
     return mCamera[mCurrentCamera];
+}
+
+void World::SetCurrentCamera(int cameraNumber) {
+	mCurrentCamera = cameraNumber;
+}
+
+bool World::GetLoadingState() {
+	return isLoading;
+}
+
+void World::SetLoadingState(bool state) {
+	isLoading = state;
 }
