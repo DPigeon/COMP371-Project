@@ -1,0 +1,50 @@
+#version 330 core
+
+// Input vertex data, different for all executions of this shader.
+layout(location = 0) in vec3 vertexPosition_modelspace;
+layout(location = 1) in vec3 vertexNormal_modelspace;  // You will need this when you do lighting
+
+uniform vec3 modelColor;
+
+// output to Fragment Shader
+out vec3 v_color;
+
+out vec3 normal;          // Transformed normal in View Space
+out vec3 eyeVector;       // Vector from the vertex to the Camera in View Space
+out vec4 lightVector;     // Vector from the vertex to the Light in View Space
+// Length of lightVector is the distance between light and vertex
+
+// Uniform
+// Values that stay constant for the whole mesh.
+uniform mat4 WorldTransform;
+uniform mat4 ViewTransform;
+uniform mat4 ProjectionTransform;
+
+// light position
+uniform vec4 WorldLightPosition; // if w = 1: Point light, if w = 0: directional light
+
+
+void main()
+{
+    mat4 MV = ViewTransform * WorldTransform;
+    mat4 MVP = ProjectionTransform * MV;
+
+    // Output position of the vertex, in clip space : MVP * position
+    gl_Position =  MVP * vec4(vertexPosition_modelspace, 1);
+
+    v_color = modelColor;
+
+    mat4 viewTransformTranspose = transpose(ViewTransform);
+    vec3 cameraPosition = vec3(viewTransformTranspose[2]);
+
+    normal = mat3(transpose(inverse(MV)))*vertexNormal_modelspace;
+
+    eyeVector = vec3(normalize(vec4(cameraPosition, 1) - MV*vec4(vertexPosition_modelspace, 1)));
+
+    lightVector = MV*WorldLightPosition;
+
+    if (WorldLightPosition.w == 1){ // Point light
+        lightVector = (MV*WorldLightPosition - MV*vec4(vertexPosition_modelspace, 1));
+    }
+}
+
