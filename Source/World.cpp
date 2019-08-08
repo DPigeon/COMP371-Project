@@ -39,7 +39,7 @@ const float lightKq = 0.002f;
 const vec4 lightPosition(3.0f, 0.0f, 20.0f, 1.0f);
 
 // TODO: These should be parameters set in the menu
-const int NUMBER_OF_PLANETS = 10;
+const int NUMBER_OF_PLANETS = 100;
 const int PLANET_SCALING_MIN_SIZE = 4.0f;
 const int PLANET_SCALING_MAX_SIZE = 8.0f;
 
@@ -372,6 +372,21 @@ std::vector<Model*> World::generatePlanets(){
         
         planetList.push_back(randomPlanet);
     }
+    
+    for (int i = 0; i < NUMBER_OF_PLANETS; i++) {
+        std::cout << "vector: length" << glm::length(planetList.at(i)->GetPosition()) << "  x=" << planetList.at(i)->GetPosition().x << "  y=" << planetList.at(i)->GetPosition().y << "  z=" << planetList.at(i)->GetPosition().z << std::endl;
+    }
+    
+    std::sort(planetList.begin(), planetList.end(), [ ]( const Model* p1, const Model* p2) {
+        return glm::length(p1->GetPosition()) < glm::length(p2->GetPosition());
+    });
+    
+    std::cout << "-----" << std::endl;
+    
+    for (int i = 0; i < NUMBER_OF_PLANETS; i++) {
+        std::cout << "vector: length" << glm::length(planetList.at(i)->GetPosition()) << "  x=" << planetList.at(i)->GetPosition().x << "  y=" << planetList.at(i)->GetPosition().y << "  z=" << planetList.at(i)->GetPosition().z << std::endl;
+    }
+    
     return planetList;
 }
 
