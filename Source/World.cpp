@@ -7,8 +7,6 @@
 // Copyright (c) 2014-2019 Concordia University. All rights reserved.
 //
 
-#include <unistd.h>
-
 #include "World.h"
 #include "Renderer.h"
 #include "ParsingHelper.h"
