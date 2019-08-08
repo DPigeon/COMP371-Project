@@ -362,6 +362,12 @@ std::vector<Model*> World::generatePlanets(){
         randomPlanet->SetScaling(vec3(planetScalingConstant, planetScalingConstant, planetScalingConstant));
         planetList.push_back(randomPlanet);
     }
+    
+    // Sorts the planets by their position vector magnitude
+    std::sort(planetList.begin(), planetList.end(), [ ]( const Model* p1, const Model* p2) {
+        return glm::length(p1->GetPosition()) < glm::length(p2->GetPosition());
+    });
+    
     return planetList;
 }
 
