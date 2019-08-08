@@ -21,7 +21,6 @@
 		03FE4EAF1B2F8D990020F06F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 03FE4E9D1B2F8D990020F06F /* main.cpp */; };
 		03FE4EB01B2F8D990020F06F /* Model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 03FE4E9E1B2F8D990020F06F /* Model.cpp */; };
 		03FE4EB21B2F8D990020F06F /* Renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 03FE4EA31B2F8D990020F06F /* Renderer.cpp */; };
-		03FE4EB31B2F8D990020F06F /* SphereModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 03FE4EA51B2F8D990020F06F /* SphereModel.cpp */; };
 		03FE4EB41B2F8D990020F06F /* StaticCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 03FE4EA71B2F8D990020F06F /* StaticCamera.cpp */; };
 		03FE4EB51B2F8D990020F06F /* World.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 03FE4EA91B2F8D990020F06F /* World.cpp */; };
 		03FE4ED41B2FA1210020F06F /* Scenes in CopyFiles */ = {isa = PBXBuildFile; fileRef = 03FE4ED21B2FA1010020F06F /* Scenes */; };
@@ -66,7 +65,6 @@
 		D090EF5E22FC941900908074 /* ik_ISoundMixedOutputReceiver.h in Sources */ = {isa = PBXBuildFile; fileRef = D090EF4922FC941900908074 /* ik_ISoundMixedOutputReceiver.h */; };
 		D090EF6122FC985100908074 /* FPSWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D090EF5F22FC985000908074 /* FPSWindow.cpp */; };
 		D090EF6422FC9B7500908074 /* SphereModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D090EF6322FC9B7400908074 /* SphereModel.cpp */; };
-		D090EF6722FC9B9700908074 /* SphereModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D090EF6522FC9B9700908074 /* SphereModel.cpp */; };
 		D0C44A4222EABDB0001DD3E3 /* BSplineCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0C44A4022EABDB0001DD3E3 /* BSplineCamera.cpp */; };
 		D0C44A4522EABE4C001DD3E3 /* BSpline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0C44A4422EABE4C001DD3E3 /* BSpline.cpp */; };
 		D0CD675A22FA2A0900C7CF40 /* RocketModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0CD675922FA2A0900C7CF40 /* RocketModel.cpp */; };
@@ -363,7 +361,7 @@
 		0371ABC31A6EAF2E00029CF8 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1020;
+				LastUpgradeCheck = 1030;
 				ORGANIZATIONNAME = Concordia;
 				TargetAttributes = {
 					0371ABCA1A6EAF2E00029CF8 = {
@@ -434,9 +432,7 @@
 				D090EF2922FC8D4100908074 /* imgui.h in Sources */,
 				03FE4EB41B2F8D990020F06F /* StaticCamera.cpp in Sources */,
 				03FE4EAD1B2F8D990020F06F /* EventManager.cpp in Sources */,
-				03FE4EB31B2F8D990020F06F /* SphereModel.cpp in Sources */,
 				03FE4EAC1B2F8D990020F06F /* CubeModel.cpp in Sources */,
-				D090EF6722FC9B9700908074 /* SphereModel.cpp in Sources */,
 				D0C44A4222EABDB0001DD3E3 /* BSplineCamera.cpp in Sources */,
 				03FE4EAE1B2F8D990020F06F /* FirstPersonCamera.cpp in Sources */,
 				03FE4EB51B2F8D990020F06F /* World.cpp in Sources */,
