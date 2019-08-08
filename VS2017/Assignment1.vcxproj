@@ -109,14 +109,14 @@
     <None Include="..\Assets\Scenes\CoordinateSystem.scene" />
     <None Include="..\Assets\Scenes\StaticScene.scene" />
     <None Include="..\Assets\Shaders\BlueColor.fragmentshader" />
-    <None Include="..\Assets\Shaders\PathLines.fragmentshader" />
-    <None Include="..\Assets\Shaders\PathLines.vertexshader" />
     <None Include="..\Assets\Shaders\Phong.fragmentshader" />
     <None Include="..\Assets\Shaders\Phong.vertexshader" />
     <None Include="..\Assets\Shaders\Skybox.fragmentshader" />
     <None Include="..\Assets\Shaders\Skybox.vertexshader" />
     <None Include="..\Assets\Shaders\SolidColor.fragmentshader" />
     <None Include="..\Assets\Shaders\SolidColor.vertexshader" />
+    <None Include="..\Assets\Shaders\SplineTracks.fragmentshader" />
+    <None Include="..\Assets\Shaders\SplineTracks.vertexshader" />
     <None Include="..\Assets\Shaders\Texture.fragmentshader" />
     <None Include="..\Assets\Shaders\Texture.vertexshader" />
   </ItemGroup>
