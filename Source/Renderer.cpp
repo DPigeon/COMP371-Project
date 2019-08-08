@@ -61,11 +61,7 @@ void Renderer::Initialize()
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
     
-    
     CheckForErrors();
-    
-
-    
     
 	// Loading Shaders
 #if defined(PLATFORM_OSX)
@@ -96,7 +92,6 @@ void Renderer::Initialize()
 							   );
     
 	sCurrentShader = 0;
-
 }
 
 void Renderer::Shutdown()
@@ -123,7 +118,7 @@ void Renderer::BeginFrame()
 void Renderer::EndFrame()
 {
 	// Swap buffers
-	glfwSwapBuffers(spWindow);
+	//glfwSwapBuffers(spWindow);
     
     CheckForErrors();
 }

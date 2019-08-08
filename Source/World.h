@@ -37,6 +37,10 @@ public:
     AnimationKey* FindAnimationKey(ci_string keyName);
 
     const Camera* GetCurrentCamera() const;
+	void SetCurrentCamera(int cameraNumber);
+
+	bool GetLoadingState();
+	void SetLoadingState(bool state);
     
 private:
     static World* instance;
@@ -59,6 +63,7 @@ private:
      */
     bool planetHasSpace(glm::vec3 planetRandomPoint, std::vector<glm::vec3> planetPositions);
 	unsigned int mCurrentCamera;
+	bool isLoading;
 };
 
 float randomFloat(float min, float max);
