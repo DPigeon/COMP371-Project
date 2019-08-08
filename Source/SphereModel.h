@@ -20,9 +20,6 @@ public:
     virtual void Update(float dt);
     virtual void Draw();
     
-    glm::vec3 GetColor() const { return mColor; }
-    void SetColor(glm::vec3 color);
-    
 protected:
     virtual bool ParseLine(const std::vector<ci_string> &token);
 

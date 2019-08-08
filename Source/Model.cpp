@@ -176,3 +176,8 @@ void Model::SetMaterialCoefficients(glm::vec4 coefficients)
 {
     mMaterialCoefficients = coefficients;
 }
+
+void Model::SetColor(glm::vec3 color)
+{
+    mColor = color;
+}

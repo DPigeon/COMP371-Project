@@ -3,7 +3,8 @@
 // Input vertex data, different for all executions of this shader.
 layout(location = 0) in vec3 vertexPosition_modelspace;
 layout(location = 1) in vec3 vertexNormal_modelspace;  // You will need this when you do lighting
-layout(location = 2) in vec3 vertexColor;
+
+uniform vec3 modelColor;
 
 // output to Fragment Shader
 out vec3 v_color;
@@ -30,7 +31,7 @@ void main()
 
     // Output position of the vertex, in clip space : MVP * position
     gl_Position =  MVP * vec4(vertexPosition_modelspace, 1);
-    v_color = vertexColor;
+    v_color = modelColor;
 
     mat4 viewTransformTranspose = transpose(ViewTransform);
 	vec3 cameraPosition = vec3(viewTransformTranspose[2]);
