@@ -44,7 +44,8 @@ const vec4 lightPosition(-10.0f, -10.0f, -10.0f, 1.0f);
 
 // TODO: These should be parameters set in the menu
 const int NUMBER_OF_PLANETS = 10;
-const float PLANET_SCALING_MAX_SIZE = 4.0f;
+const float PLANET_SCALING_MIN_SIZE = 4.0f;
+const float PLANET_SCALING_MAX_SIZE = 8.0f;
 
 World::World()
 {
@@ -370,22 +371,36 @@ std::vector<Model*> World::generatePlanets(){
 
     for (int i = 0; i < NUMBER_OF_PLANETS; i++) {
         PlanetModel* randomPlanet = new PlanetModel();
+        
+        // Position
         vec3 planetRandomPoint;
         do {
             planetRandomPoint = vec3(randomFloat(0, 100.0f), randomFloat(10.0f, 100.0f), randomFloat(0.0f, 100.0f));
         } while(!planetHasSpace(planetRandomPoint, planetPositions));
         planetPositions.push_back(planetRandomPoint);
         randomPlanet->SetPosition(planetRandomPoint);
-        float planetScalingConstant = randomFloat(0.5f, PLANET_SCALING_MAX_SIZE);
+        float planetScalingConstant = randomFloat(PLANET_SCALING_MIN_SIZE, PLANET_SCALING_MAX_SIZE);
         randomPlanet->SetScaling(vec3(planetScalingConstant, planetScalingConstant, planetScalingConstant));
+        
+        // Color
+        float red = randomFloat(0.0f, 1.0f);
+        float green = randomFloat(0.0f, 1.0f);
+        float blue = randomFloat(0.0f, 1.0f);
+        randomPlanet->SetColor(vec3(red, green, blue));
+        
         planetList.push_back(randomPlanet);
     }
-
+  
     SunModel* sun = new SunModel();
     sun->SetPosition(vec3(0.0f, 0.0f, 0.0f)); // Sun placed on origin
     sun->SetScaling(vec3(10.0f,10.0f,10.0f));
     planetList.push_back(sun);
 
+    // Sorts the planets by their position vector magnitude
+    std::sort(planetList.begin(), planetList.end(), [ ]( const Model* p1, const Model* p2) {
+        return glm::length(p1->GetPosition()) < glm::length(p2->GetPosition());
+    });
+  
     return planetList;
 }
 

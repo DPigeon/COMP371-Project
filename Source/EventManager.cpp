@@ -10,6 +10,7 @@
 #include "EventManager.h"
 #include "Renderer.h"
 #include "LoadingScreen.h"
+#include "FPSWindow.h"
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_glfw.h>
@@ -207,6 +208,10 @@ void EventManager::Update()
 		if (!devMode)
 			LoadingScreen::Draw();
 	}
+	
+	// Draw FPS window when done loading
+	if (!GetLoadingState())
+		FPSWindow::Draw();
 
 	// Rendering ImGui
 	ImGui::Render();
@@ -215,7 +220,7 @@ void EventManager::Update()
 	int display_w, display_h;
 	glfwGetFramebufferSize(spWindow, &display_w, &display_h);
 	glViewport(0, 0, display_w, display_h);
-	if (GetLoadingState()) {
+	if (GetLoadingState() && !devMode) {
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 	}
