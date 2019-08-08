@@ -268,7 +268,7 @@ void World::Draw()
     int texture_id = TextureLoader::LoadTexture("Textures/Stars/shiny_yellow_star-min.png", spriteWidth);
 #else
     //    int texture_id = TextureLoader::LoadTexture("../Assets/Textures/BillboardTest.bmp", spriteWidth);
-    int texture_id = TextureLoader::LoadTexture("../Textures/Stars/shiny_yellow_star-min.png", spriteWidth);
+    int texture_id = TextureLoader::LoadTexture("../Assets/Textures/Stars/shiny_yellow_star-min.png", spriteWidth);
 #endif
     
     star = new Star(texture_id);
