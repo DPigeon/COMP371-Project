@@ -31,6 +31,8 @@ void BSpline::CreateVertexBuffer()
         GenerateSamplePoints();
     }
 
+	vec3 colors = vec3(0.02f, 0.04f, 0.9f);
+
     // Create a vertex array
     glGenVertexArrays(1, &mVAO);
     glBindVertexArray(mVAO);
@@ -58,6 +60,28 @@ void BSpline::CreateVertexBuffer()
                           (void*)0        // array buffer offset
                           );
     glEnableVertexAttribArray(0);
+
+	// 2nd attribute buffer : vertex normal
+	glVertexAttribPointer(1,
+		3,
+		GL_FLOAT,
+		GL_FALSE,
+		sizeof(Vertex),
+		(void*)sizeof(vec3)    // Normal is Offseted by vec3 (see class Vertex)
+	);
+	glEnableVertexAttribArray(1);
+
+
+	// 3rd attribute buffer : vertex color
+	glVertexAttribPointer(2,
+		3,
+		GL_FLOAT,
+		GL_FALSE,
+		sizeof(Vertex),
+		(void*)(2 * sizeof(vec3)) // Color is Offseted by 2 vec3 (see class Vertex)
+	);
+	glEnableVertexAttribArray(2);
+
 }
 
 void BSpline::Update(float dt)

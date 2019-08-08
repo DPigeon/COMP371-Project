@@ -179,6 +179,9 @@ void World::Draw()
     
     // Everything we need to send to the GPU
     
+	GLuint VPMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "ViewProjectionTransform");
+	mat4 VP = mCamera[mCurrentCamera]->GetViewProjectionMatrix();
+
     GLuint WorldMatrixID = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldTransform");
     GLuint ViewMatrixID = glGetUniformLocation(Renderer::GetShaderProgramID(), "ViewTransform");
     GLuint ProjMatrixID = glGetUniformLocation(Renderer::GetShaderProgramID(), "ProjectionTransform");
@@ -227,14 +230,20 @@ void World::Draw()
         (*it)->Draw();
     }
     
-    unsigned int prevShader = Renderer::GetCurrentShader();
-	Renderer::SetShader(SHADER_PHONG);
-    glUseProgram(Renderer::GetShaderProgramID());
+	// Draw Path Lines
+
+	 // Set Shader for path lines
+	unsigned int prevShader = Renderer::GetCurrentShader();
+	Renderer::SetShader(SHADER_TRACKS);
+	glUseProgram(Renderer::GetShaderProgramID());
+
+
+	// Send the view projection constants to the shader
+	VPMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "ViewProjectionTransform");
+	glUniformMatrix4fv(VPMatrixLocation, 1, GL_FALSE, &VP[0][0]);
     
     //Draw the BSpline between all the planets here
 	for (vector<BSpline*>::iterator it = mSpline.begin(); it < mSpline.end(); ++it) {
-		glPushMatrix();
-		glPushAttrib(GL_ALL_ATTRIB_BITS);
 		MaterialID = glGetUniformLocation(Renderer::GetShaderProgramID(), "materialCoefficients");
 
 		glUniformMatrix4fv(WorldMatrixID, 1, GL_FALSE, &((*it)->GetWorldMatrix())[0][0]);
@@ -244,11 +253,10 @@ void World::Draw()
 		float n = 50.0f;
 		glUniform4f(MaterialID, ka, kd, ks, n);
 		(*it)->ConstructTracks(mSplineCamera.front()->GetExtrapolatedPoints());
-		glPopAttrib();
-		glPopMatrix();
 	}
 
     Renderer::CheckForErrors();
+
     
     // Restore previous shader
     Renderer::SetShader((ShaderType) prevShader);
