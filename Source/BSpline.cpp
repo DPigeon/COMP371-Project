@@ -31,8 +31,6 @@ void BSpline::CreateVertexBuffer()
         GenerateSamplePoints();
     }
 
-	vec3 colors = vec3(0.02f, 0.04f, 0.9f);
-
     // Create a vertex array
     glGenVertexArrays(1, &mVAO);
     glBindVertexArray(mVAO);
@@ -252,28 +250,20 @@ void BSpline::ConstructTracks(vector<vec3> points) {
 
 				/* Left Track Cylinder */
 
-				//glDisable(GL_LIGHTING);
-				glColor3f(0.0f, 0.9f, 0.3f); // colors not working anymore ? supposed to be green
-				glBegin(GL_TRIANGLE_STRIP);
+				glBegin(GL_TRIANGLE_FAN); // GL_TRIANGLES to see hexagones
 
 				/* Vertex in middle of the end of cylinder (point 2) */
-				glColor3f(0.0f, 0.9f, 0.3f);
 				glVertex3f(nextPosX, nextPosY, nextPosZ);
 
 				/* Vertices at edges of circle to make a pie slice (point 2) */
-				glColor3f(0.0f, 0.9f, 0.3f);
 				glVertex3f(radius * cos(pieAngle) + nextPosX, radius * sin(pieAngle) + nextPosY, nextPosZ);
-				glColor3f(0.0f, 0.9f, 0.3f);
 				glVertex3f(radius * cos(nextPieAngle) + nextPosX, radius * sin(nextPieAngle) + nextPosY, nextPosZ);
 
 				/* Vertices at edges of other circle to make a pie slice (point 1) */
-				glColor3f(0.0f, 0.9f, 0.3f);
 				glVertex3f(radius * cos(nextPieAngle) + posX, radius * sin(nextPieAngle) + posY, posZ);
-				glColor3f(0.0f, 0.9f, 0.3f);
 				glVertex3f(radius * cos(pieAngle) + posX, radius * sin(pieAngle) + posY, posZ);
 
 				/* Vertex in middle of first circle (point 1) */
-				glColor3f(0.0f, 0.9f, 0.3f);
 				glVertex3f(posX, posY, posZ);
 				glEnd();
 

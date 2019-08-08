@@ -40,7 +40,7 @@ const vec4 lightPosition(3.0f, 0.0f, 20.0f, 1.0f);
 
 // TODO: These should be parameters set in the menu
 const int NUMBER_OF_PLANETS = 10;
-const int PLANET_SCALING_MAX_SIZE = 4.0f;
+const int PLANET_SCALING_MAX_SIZE = 4.0;
 
 World::World()
 {
@@ -53,8 +53,6 @@ World::World()
     mCamera.push_back(new StaticCamera(vec3(0.5f,  0.5f, 5.0f), vec3(0.0f, 0.5f, 0.0f), vec3(0.0f, 1.0f, 0.0f)));
 
     mCurrentCamera = 2; // Putting this as the current camera so that we load splines automatically
-
-    //mCurrentCamera = 0;
 
 	std::vector<std::string> skyboxFaces;
 	// MUST BE IN THIS ORDER: RIGHT LEFT UP DOWN BACK FRONT
