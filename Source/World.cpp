@@ -229,16 +229,12 @@ void World::Draw()
         }
         (*it)->Draw();
     }
-    
-	// Draw Path Lines
 
-	 // Set Shader for path lines
+	 // Set Shader for tracks
 	unsigned int prevShader = Renderer::GetCurrentShader();
 	Renderer::SetShader(SHADER_TRACKS);
 	glUseProgram(Renderer::GetShaderProgramID());
 
-
-	// Send the view projection constants to the shader
 	VPMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "ViewProjectionTransform");
 	glUniformMatrix4fv(VPMatrixLocation, 1, GL_FALSE, &VP[0][0]);
     

@@ -27,7 +27,6 @@ enum ShaderType
     SHADER_PHONG,
 	SHADER_SKYBOX,
 	NUM_SHADERS
-	
 };
 
 
