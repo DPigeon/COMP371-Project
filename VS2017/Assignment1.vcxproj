@@ -113,8 +113,6 @@
     <None Include="..\Assets\Shaders\PathLines.vertexshader" />
     <None Include="..\Assets\Shaders\Phong.fragmentshader" />
     <None Include="..\Assets\Shaders\Phong.vertexshader" />
-    <None Include="..\Assets\Shaders\Planet.fragmentshader" />
-    <None Include="..\Assets\Shaders\Planet.vertexshader" />
     <None Include="..\Assets\Shaders\Skybox.fragmentshader" />
     <None Include="..\Assets\Shaders\Skybox.vertexshader" />
     <None Include="..\Assets\Shaders\SolidColor.fragmentshader" />
@@ -145,7 +143,6 @@
     <ClCompile Include="..\Source\Skybox.cpp" />
     <ClCompile Include="..\Source\SphereModel.cpp" />
     <ClCompile Include="..\Source\StaticCamera.cpp" />
-    <ClCompile Include="..\Source\SunModel.cpp" />
     <ClCompile Include="..\Source\TextureLoader.cpp" />
     <ClCompile Include="..\Source\World.cpp" />
   </ItemGroup>
@@ -174,7 +171,6 @@
     <ClInclude Include="..\Source\Skybox.h" />
     <ClInclude Include="..\Source\SphereModel.h" />
     <ClInclude Include="..\Source\StaticCamera.h" />
-    <ClInclude Include="..\Source\SunModel.h" />
     <ClInclude Include="..\Source\TextureLoader.h" />
     <ClInclude Include="..\Source\stb_image.h" />
     <ClInclude Include="..\Source\World.h" />

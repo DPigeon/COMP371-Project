@@ -17,7 +17,6 @@
 
 #include "CubeModel.h"
 #include "SphereModel.h"
-#include "SunModel.h"
 #include "Animation.h"
 #include <GLFW/glfw3.h>
 #include "EventManager.h"
@@ -195,6 +194,7 @@ void World::Draw()
     GLuint LightAttenuationID = glGetUniformLocation(Renderer::GetShaderProgramID(), "lightAttenuation");
     
     GLuint MaterialID = glGetUniformLocation(Renderer::GetShaderProgramID(), "materialCoefficients");
+    GLuint ModelColorID = glGetUniformLocation(Renderer::GetShaderProgramID(), "modelColor");
     
     // Draw the Vertex Buffer
     // Note this draws a unit Sphere
@@ -230,6 +230,7 @@ void World::Draw()
             float n = (*it)->GetMaterialCoefficients().w;
             
             glUniform4f(MaterialID, ka, kd, ks, n);
+            glUniform3f(ModelColorID, (*it)->GetColor().x, (*it)->GetColor().y, (*it)->GetColor().z);
         }
         (*it)->Draw();
     }
@@ -250,6 +251,10 @@ void World::Draw()
 		float ks = 1.0f;
 		float n = 50.0f;
 		glUniform4f(MaterialID, ka, kd, ks, n);
+
+        // Set color of spline here
+        glUniform3f(ModelColorID, 0.0f, 0.0f, 1.0f);
+
 		(*it)->ConstructTracks(mSplineCamera.front()->GetExtrapolatedPoints());
 		glPopAttrib();
 		glPopMatrix();
@@ -295,12 +300,6 @@ void World::LoadScene(const char * scene_path)
             else if (result == "sphere")
             {
                 PlanetModel* sphere = new PlanetModel();
-                sphere->Load(iss);
-                mModel.push_back(sphere);
-            }
-            else if (result == "sun")
-            {
-                SunModel* sphere = new SunModel();
                 sphere->Load(iss);
                 mModel.push_back(sphere);
             }
@@ -388,12 +387,21 @@ std::vector<Model*> World::generatePlanets(){
         float blue = randomFloat(0.0f, 1.0f);
         randomPlanet->SetColor(vec3(red, green, blue));
         
+        // Ambient set to 0.5 to better see the effect of lighting
+        // Shininess is set super high to remove the point light effect
+        randomPlanet->SetMaterialCoefficients(vec4(0.5f, 0.5f, 1.0f, 100000.0f));
+
         planetList.push_back(randomPlanet);
     }
   
-    SunModel* sun = new SunModel();
+    PlanetModel* sun = new PlanetModel();
     sun->SetPosition(vec3(0.0f, 0.0f, 0.0f)); // Sun placed on origin
     sun->SetScaling(vec3(10.0f,10.0f,10.0f));
+    sun->SetColor(vec3(0.988f, 0.831f, 0.251f));
+
+    // Sun is unaffected by lighting
+    sun->SetMaterialCoefficients(vec4(1.0f, 0.0f, 0.0f, 1.0f));
+
     planetList.push_back(sun);
 
     // Sorts the planets by their position vector magnitude
