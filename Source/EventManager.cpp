@@ -64,8 +64,11 @@ float  EventManager::sMouseDeltaY = 0.0f;
 // Window
 GLFWwindow* EventManager::spWindow = nullptr;
 
-// Sound Engine 
-ISoundEngine* engine = createIrrKlangDevice();
+// Sound Engine
+#if !defined(PLATFORM_OSX)
+    ISoundEngine* engine = createIrrKlangDevice();
+#endif
+
 
 EventManager::EventManager() {
 	instance = this;
@@ -155,8 +158,11 @@ void EventManager::Initialize()
 	// Initial time
 	sLastFrameTime = glfwGetTime();
     srand((unsigned int) time(nullptr));
-
-	engine->play2D("../Audio/Dystopic-Factory.ogg", true);
+    
+#if !defined(PLATFORM_OSX)
+    engine->play2D("../Audio/Dystopic-Factory.ogg", true);
+#endif
+	
 }
 
 void EventManager::SetLoadingState(bool state) {
@@ -175,7 +181,9 @@ void EventManager::Shutdown()
 	ImGui::DestroyContext();
 	glfwTerminate();
 	spWindow = nullptr;
-  engine->drop();
+#if !defined(PLATFORM_OSX)
+    engine->drop();
+#endif
 }
 
 void EventManager::Update()
