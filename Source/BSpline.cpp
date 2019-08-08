@@ -250,7 +250,7 @@ void BSpline::ConstructTracks(vector<vec3> points) {
 				float pieAngle = (float)angle;
 				float nextPieAngle = (float)angle2;
 
-				/* Right Track Cylinder */
+				/* Right Track Cylinder --> | */
 
 				glBegin(GL_TRIANGLE_FAN);
 
@@ -267,14 +267,15 @@ void BSpline::ConstructTracks(vector<vec3> points) {
 
 				/* Vertex in middle of first circle (point 1) */
 				glVertex3f(posX + offset, posY + offset, posZ + offset);
+
 				glEnd();
 
 				/* Next steps:
-				 * Generate 2 offset cylinders on the sides (parallel to spline)
+				 * Generate 2 offset cylinders on the sides (parallel to spline) (done)
 				 * Generate two more cylinders inside those 2 cylinders perpendicular to spline
 				 */
 
-				 /* Left Track Cylinder */
+				 /* Left Track Cylinder --> | | */ 
 
 				glBegin(GL_TRIANGLE_FAN);
 
@@ -287,6 +288,27 @@ void BSpline::ConstructTracks(vector<vec3> points) {
 				glVertex3f(radius * cos(pieAngle) + posX - offset, radius * sin(pieAngle) + posY - offset, posZ - offset);
 
 				glVertex3f(posX - offset, posY - offset, posZ - offset);
+
+				glEnd();
+
+				/* 2st Perpendicular Track Cylinder --> |¯| */
+
+				glBegin(GL_TRIANGLE_FAN);
+
+				/* Point in middle end of left track (point 2) */
+				glVertex3f(nextPosX - offset, nextPosY - offset, nextPosZ - offset);
+
+				/* Vertices at edges of circle to make a pie slice (point 2) */
+				glVertex3f(nextPosX - offset, radius * sin(pieAngle) + nextPosY - offset, radius * cos(pieAngle) + nextPosZ - offset);
+				glVertex3f(nextPosX - offset, radius * sin(nextPieAngle) + nextPosY - offset, radius * cos(pieAngle) + nextPosZ - offset);
+
+				/* Vertices at edges of other circle to make a pie slice (point 1) */
+				glVertex3f(nextPosX + offset, radius * sin(pieAngle) + nextPosY + offset, radius * cos(pieAngle) + nextPosZ + offset);
+				glVertex3f(nextPosX + offset, radius * sin(nextPieAngle) + nextPosY + offset, radius * cos(pieAngle) + nextPosZ + offset);
+
+				/* Point in middle end of right track (point 1) */
+				glVertex3f(nextPosX + offset, nextPosY + offset, nextPosZ + offset);
+
 				glEnd();
 
 			}
