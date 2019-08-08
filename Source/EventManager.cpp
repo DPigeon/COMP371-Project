@@ -208,7 +208,7 @@ void EventManager::Update()
 	int display_w, display_h;
 	glfwGetFramebufferSize(spWindow, &display_w, &display_h);
 	glViewport(0, 0, display_w, display_h);
-	if (GetLoadingState()) {
+	if (GetLoadingState() && !devMode) {
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 	}
