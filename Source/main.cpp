@@ -22,6 +22,8 @@ int main(int argc, char *argv[])
 	EventManager eventManager;
 	eventManager.Initialize();
 	Renderer::Initialize();
+    
+    glEnable(GL_CULL_FACE);
 
 	World world;
 
