@@ -227,6 +227,7 @@ void BSpline::ConstructTracks(vector<vec3> points) {
 	GLuint WorldMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldTransform");
 	glUniformMatrix4fv(WorldMatrixLocation, 1, GL_FALSE, &GetWorldMatrix()[0][0]);
 
+	glLineWidth(5.0f);
 	glDrawArrays(GL_LINE_LOOP, 0, mSamplePoints.size()); // Using this to test realistic tracks
 
 	double PI = 3.1415926535897932384626433832795;
@@ -291,25 +292,26 @@ void BSpline::ConstructTracks(vector<vec3> points) {
 
 				glEnd();
 
-				/* 2st Perpendicular Track Cylinder --> |¯| */
+				/* Perpendicular Track Cylinder --> |¯| */
+				/* This part works but we get a very weird plane in the x direction. */
 
-				glBegin(GL_TRIANGLE_FAN);
+				/*glBegin(GL_TRIANGLE_FAN);
 
-				/* Point in middle end of left track (point 2) */
+				// Point in middle end of left track (point 2) 
 				glVertex3f(nextPosX - offset, nextPosY - offset, nextPosZ - offset);
 
-				/* Vertices at edges of circle to make a pie slice (point 2) */
-				glVertex3f(nextPosX - offset, radius * sin(pieAngle) + nextPosY - offset, radius * cos(pieAngle) + nextPosZ - offset);
+				// Vertices at edges of circle to make a pie slice (point 2) 
+				glVertex3f(nextPosX - offset, radius * sin(pieAngle) + nextPosY - offset, radius * cos(pieAngle) + nextPosZ - offset); 
 				glVertex3f(nextPosX - offset, radius * sin(nextPieAngle) + nextPosY - offset, radius * cos(pieAngle) + nextPosZ - offset);
 
-				/* Vertices at edges of other circle to make a pie slice (point 1) */
+				// Vertices at edges of other circle to make a pie slice (point 1) 
 				glVertex3f(nextPosX + offset, radius * sin(pieAngle) + nextPosY + offset, radius * cos(pieAngle) + nextPosZ + offset);
 				glVertex3f(nextPosX + offset, radius * sin(nextPieAngle) + nextPosY + offset, radius * cos(pieAngle) + nextPosZ + offset);
 
-				/* Point in middle end of right track (point 1) */
+				// Point in middle end of right track (point 1) 
 				glVertex3f(nextPosX + offset, nextPosY + offset, nextPosZ + offset);
 
-				glEnd();
+				glEnd();*/
 
 			}
 		}
