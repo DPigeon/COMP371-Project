@@ -44,16 +44,15 @@ void LoadingScreen::Draw() {
 }
 
 void LoadingScreen::ProgressBar() {
-	// 1. Start timer at 0 (for 5-15 seconds, increment the bar)
-	// 2. Now at 60-70 percent, wait until comparedPoints returns true
-	// 3. Put bar to 100%
-	// 4. Open next window (navigation window will be for later)
+	// Loads naturally 27 points / seconds
+	// So we set a constant maxPoints (250 is fine since we almost never get below 250 points)
 
-	double maxRandom = 13.0f; // Set a constant random number for now (cannot determine how many points total on the spline at beginning cause we live extrapolate)
+	float pointsPerSecond = 27.0f;
+	float maxFixedPoints = 250.0f; // Set a constant random number for now (cannot determine how many points total on the spline at beginning cause we live extrapolate)
+	float totalTime = maxFixedPoints / pointsPerSecond;
 	double time = ImGui::GetTime();
-	double percent = time / maxRandom;
 
-	ImGui::ProgressBar(time / maxRandom, ImVec2(0.0f, 0.0f));
+	ImGui::ProgressBar(time / totalTime, ImVec2(0.0f, 0.0f));
 }
 
 LoadingScreen::~LoadingScreen() {
