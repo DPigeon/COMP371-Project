@@ -126,7 +126,7 @@ void Renderer::BeginFrame()
 void Renderer::EndFrame()
 {
 	// Swap buffers
-	//glfwSwapBuffers(spWindow);
+	glfwSwapBuffers(spWindow);
     
     CheckForErrors();
 }
