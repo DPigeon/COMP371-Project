@@ -61,7 +61,6 @@ void BSplineCamera::ExtrapolatePoints(vec3 mPosition) {
 
 	if (!ComparePoints(mExtrapolatedPoints)) {
 		mExtrapolatedPoints.push_back(mPosition);
-		cout<<mExtrapolatedPoints.size()<<endl;
 	}
 	else {
 		// Tell the world loading is done
