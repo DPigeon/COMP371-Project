@@ -14,12 +14,16 @@
 #include <vector>
 #include "BSpline.h"
 
+#include "Billboard.h"
+
 class Camera;
 class Model;
 class Animation;
 class AnimationKey;
 class BSpline;
 class BSplineCamera;
+class ParticleSystem;
+class ParticleDescriptor;
 
 class World
 {
@@ -37,6 +41,14 @@ public:
     AnimationKey* FindAnimationKey(ci_string keyName);
 
     const Camera* GetCurrentCamera() const;
+
+    void AddBillboard(Billboard* b);
+    void RemoveBillboard(Billboard* b);
+    void AddParticleSystem(ParticleSystem* particleSystem);
+    void RemoveParticleSystem(ParticleSystem* particleSystem);
+    void AddParticleDescriptor(ParticleDescriptor* particleDescriptor);
+    ParticleDescriptor* FindParticleDescriptor(ci_string name);
+
     
 private:
     static World* instance;
@@ -59,6 +71,12 @@ private:
      */
     bool planetHasSpace(glm::vec3 planetRandomPoint, std::vector<glm::vec3> planetPositions);
 	unsigned int mCurrentCamera;
+    void generateStars();
+    
+    std::vector<ParticleSystem*> mParticleSystemList;
+    std::vector<ParticleDescriptor*> mParticleDescriptorList;
+    BillboardList* mpBillboardList;
+    
 };
 
 float randomFloat(float min, float max);

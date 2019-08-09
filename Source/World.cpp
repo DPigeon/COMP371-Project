@@ -7,6 +7,8 @@
 // Copyright (c) 2014-2019 Concordia University. All rights reserved.
 //
 
+#include <unistd.h>
+
 #include "World.h"
 #include "Renderer.h"
 #include "ParsingHelper.h"
@@ -25,10 +27,18 @@
 #include "BSplineCamera.h"
 #include "Skybox.h"
 
+#include "ParticleDescriptor.h"
+#include "ParticleEmitter.h"
+#include "ParticleSystem.h"
+
+#include "Star.h"
+#include "TextureLoader.h"
+
 using namespace std;
 using namespace glm;
 
 World* World::instance;
+Star* star;
 Skybox skybox;
 
 // Light Coefficients
@@ -41,6 +51,8 @@ const vec4 lightPosition(3.0f, 0.0f, 20.0f, 1.0f);
 // TODO: These should be parameters set in the menu
 const int NUMBER_OF_PLANETS = 10;
 const int PLANET_SCALING_MAX_SIZE = 4.0f;
+
+ char cwd[256];
 
 World::World()
 {
@@ -72,6 +84,34 @@ World::World()
 
 
 	skybox = Skybox(skyboxFaces);
+    
+    int size;
+#if defined(PLATFORM_OSX)
+    //    int billboardTextureID = TextureLoader::LoadTexture("/Users/kevinluu/Google Drive/Concordia/Semester 7 - Summer 2019/COMP 371/Assignment/A1/Framework/Assets/Textures/BillboardTest.bmp");
+    int billboardTextureID = TextureLoader::LoadTexture("Textures/BillboardTest.bmp", size);
+#else
+    //    int billboardTextureID = TextureLoader::LoadTexture("../Assets/Textures/BillboardTest.bmp");
+    int billboardTextureID = TextureLoader::LoadTexture("../Assets/Textures/Particle.png");
+#endif
+    assert(billboardTextureID != 0);
+    
+    Renderer::SetShader(TEXTURE);
+    glUseProgram(Renderer::GetShaderProgramID());
+    mpBillboardList = new BillboardList(2048, billboardTextureID);
+    
+//         Billboard *b = new Billboard();
+//         b->size  = glm::vec2(2.0, 2.0);
+//         b->position = glm::vec3(0.0, 3.0, 0.0);
+//         b->color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+//         b->angle = 100.f;
+//    
+//         Billboard *b2 = new Billboard();
+//         b2->size  = glm::vec2(2.0, 2.0);
+//         b2->position = glm::vec3(0.0, 3.0, 1.0);
+//         b2->color = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+//    
+//         mpBillboardList->AddBillboard(b);
+//         mpBillboardList->AddBillboard(b2);
 }
 
 World::~World()
@@ -134,6 +174,23 @@ void World::Update(float dt)
         }
 		Renderer::SetShader(SHADER_PHONG);
     }
+    else if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_4 ) == GLFW_PRESS)
+    {
+        if (mCamera.size() > 3)
+        {
+            mCurrentCamera = 3;
+        }
+        Renderer::SetShader(SHADER_STARS);
+    }
+    else if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_5 ) == GLFW_PRESS)
+    {
+        if (mCamera.size() > 4)
+        {
+            mCurrentCamera = 4;
+        }
+        Renderer::SetShader(TEXTURE);
+    }
+
     
     // Spacebar to change the shader
     if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_0 ) == GLFW_PRESS)
@@ -164,16 +221,28 @@ void World::Update(float dt)
         (*it)->Update(dt);
     }
     
+    // Update billboards
+    
+    for (vector<ParticleSystem*>::iterator it = mParticleSystemList.begin(); it != mParticleSystemList.end(); ++it)
+    {
+        (*it)->Update(dt);
+    }
+    
+    mpBillboardList->Update(dt);
+    
 }
 
 void World::Draw()
 {
+    
     Renderer::BeginFrame();
 	
 	skybox.Draw();
   
     glUseProgram(Renderer::GetShaderProgramID());
     
+    unsigned int prevShader = Renderer::GetCurrentShader();
+
     // Everything we need to send to the GPU
     
     GLuint WorldMatrixID = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldTransform");
@@ -212,7 +281,6 @@ void World::Draw()
     {
         if ((*it)->GetMaterialCoefficients().length() > 0){
             MaterialID = glGetUniformLocation(Renderer::GetShaderProgramID(), "materialCoefficients");
-            
             glUniformMatrix4fv(WorldMatrixID, 1, GL_FALSE, &((*it)->GetWorldMatrix())[0][0]);
             float ka = 0.9f;
             float kd = 0.5f;
@@ -224,7 +292,7 @@ void World::Draw()
         (*it)->Draw();
     }
     
-    unsigned int prevShader = Renderer::GetCurrentShader();
+    prevShader = Renderer::GetCurrentShader();
 	Renderer::SetShader(SHADER_PHONG);
     glUseProgram(Renderer::GetShaderProgramID());
     
@@ -243,6 +311,37 @@ void World::Draw()
 	}
 
     Renderer::CheckForErrors();
+    
+    int spriteWidth;
+    
+#if defined(PLATFORM_OSX)
+    //        int texture_id = TextureLoader::LoadTexture("Textures/BillboardTest.bmp", spriteWidth);
+    int texture_id = TextureLoader::LoadTexture("Textures/Stars/shiny_yellow_star-min.png", spriteWidth);
+#else
+    //    int texture_id = TextureLoader::LoadTexture("../Assets/Textures/BillboardTest.bmp", spriteWidth);
+    int texture_id = TextureLoader::LoadTexture("../Textures/Stars/shiny_yellow_star-min.png", spriteWidth);
+#endif
+    
+    star = new Star(texture_id);
+    
+    Renderer::SetShader(SHADER_STARS);
+    glUseProgram(Renderer::GetShaderProgramID());
+    
+    glEnable(GL_BLEND); //Enable transparency blending
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); //Define transparency blending
+    glEnable(GL_POINT_SPRITE); //Enable use of point sprites
+    glEnable(GL_VERTEX_PROGRAM_POINT_SIZE); //Enable changing size of point sprites
+    star -> Draw();
+    star -> Draw();
+    glDisable(GL_BLEND);
+   
+    Renderer::SetShader((ShaderType) prevShader);
+
+    Renderer::SetShader(TEXTURE);
+    glUseProgram(Renderer::GetShaderProgramID());
+    glEnable(GL_BLEND); //Enable transparency blending
+    mpBillboardList -> Draw();
+    glDisable(GL_BLEND);
     
     // Restore previous shader
     Renderer::SetShader((ShaderType) prevShader);
@@ -321,6 +420,12 @@ void World::LoadScene(const char * scene_path)
 				mCamera.push_back(SplineCamera);
 				mSplineCamera.push_back(SplineCamera);
 			}
+            else if (result == "particledescriptor")
+            {
+                ParticleDescriptor* psd = new ParticleDescriptor();
+                psd->Load(iss);
+                AddParticleDescriptor(psd);
+            }
             else if ( result.empty() == false && result[0] == '#')
             {
                 // this is a comment line
@@ -415,4 +520,43 @@ AnimationKey* World::FindAnimationKey(ci_string keyName)
 const Camera* World::GetCurrentCamera() const
 {
     return mCamera[mCurrentCamera];
+}
+
+
+void World::AddBillboard(Billboard* b)
+{
+    mpBillboardList->AddBillboard(b);
+}
+
+void World::RemoveBillboard(Billboard* b)
+{
+    mpBillboardList->RemoveBillboard(b);
+}
+
+void World::AddParticleSystem(ParticleSystem* particleSystem)
+{
+    mParticleSystemList.push_back(particleSystem);
+}
+
+void World::RemoveParticleSystem(ParticleSystem* particleSystem)
+{
+    vector<ParticleSystem*>::iterator it = std::find(mParticleSystemList.begin(), mParticleSystemList.end(), particleSystem);
+    mParticleSystemList.erase(it);
+}
+
+void World::AddParticleDescriptor(ParticleDescriptor* particleDescriptor)
+{
+    mParticleDescriptorList.push_back(particleDescriptor);
+}
+
+ParticleDescriptor* World::FindParticleDescriptor(ci_string name)
+{
+    for(std::vector<ParticleDescriptor*>::iterator it = mParticleDescriptorList.begin(); it < mParticleDescriptorList.end(); ++it)
+    {
+        if((*it)->GetName() == name)
+        {
+            return *it;
+        }
+    }
+    return nullptr;
 }
