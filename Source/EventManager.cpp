@@ -10,7 +10,7 @@
 #include "EventManager.h"
 #include "Renderer.h"
 #include "LoadingScreen.h"
-#include "FPSWindow.h"
+#include "AppInfoWindow.h"
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_glfw.h>
@@ -48,9 +48,8 @@ EventManager* EventManager::instance;
 
 /* True if you don't want to see the loading screen */
 /* False if you want to see the loading screen */
-bool devMode = false;
-					 
-
+bool devMode = true;
+					
 // Time
 double EventManager::sLastFrameTime = glfwGetTime();
 float  EventManager::sFrameTime = 0.0f;
@@ -219,7 +218,7 @@ void EventManager::Update()
 	
 	// Draw FPS window when done loading
 	if (!GetLoadingState())
-		FPSWindow::Draw();
+		AppInfoWindow::Draw();
 
 	// Rendering ImGui
 	ImGui::Render();

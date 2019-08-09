@@ -7,7 +7,6 @@
 // Copyright (c) 2014-2019 Concordia University. All rights reserved.
 //
 
-
 #include "World.h"
 #include "Renderer.h"
 #include "ParsingHelper.h"
@@ -33,14 +32,21 @@
 #include "Star.h"
 #include "TextureLoader.h"
 
-
 using namespace std;
 using namespace glm;
 
 World* World::instance;
 Star* star;
-
 Skybox skybox;
+
+
+// TODO: These should be parameters set in the menu
+const int NUMBER_OF_PLANETS = 10;
+const int PLANET_GENERATE_MAX_RETRIES = 5;
+const float WORLD_LENGTH = 100.0f;
+const float PLANET_DISTANCE_RATIO = 4.0f;
+const float PLANET_SCALING_MIN_SIZE = 4.0f;
+const float PLANET_SCALING_MAX_SIZE = 8.0f;
 
 // Light Coefficients
 const vec3 lightColor(1.0f, 1.0f, 1.0f);
@@ -48,16 +54,8 @@ const float lightKc = 0.05f;
 const float lightKl = 0.02f;
 const float lightKq = 0.002f;
 
-// Negative to ensure light points towards the correct quadrant
-// Lights half of the planet towards the sun
-const vec4 lightPosition(-10.0f, -10.0f, -10.0f, 1.0f); 
-
-// TODO: These should be parameters set in the menu
-const int NUMBER_OF_PLANETS = 10;
-const float PLANET_SCALING_MIN_SIZE = 4.0f;
-const float PLANET_SCALING_MAX_SIZE = 8.0f;
-
- char cwd[256];
+// Light comes from the sun position and goes in any direction
+const vec4 lightPosition(WORLD_LENGTH/2, WORLD_LENGTH/2, WORLD_LENGTH/2, 1.0f);
 
 World::World()
 {
@@ -70,8 +68,6 @@ World::World()
     mCamera.push_back(new StaticCamera(vec3(0.5f,  0.5f, 5.0f), vec3(0.0f, 0.5f, 0.0f), vec3(0.0f, 1.0f, 0.0f)));
 
     mCurrentCamera = 2; // Putting this as the current camera so that we load splines automatically
-
-    //mCurrentCamera = 0;
 
 	std::vector<std::string> skyboxFaces;
 	// MUST BE IN THIS ORDER: RIGHT LEFT UP DOWN BACK FRONT
@@ -254,6 +250,9 @@ void World::Draw()
 
     // Everything we need to send to the GPU
     
+	GLuint VPMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "ViewProjectionTransform");
+	mat4 VP = mCamera[mCurrentCamera]->GetViewProjectionMatrix();
+
     GLuint WorldMatrixID = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldTransform");
     GLuint ViewMatrixID = glGetUniformLocation(Renderer::GetShaderProgramID(), "ViewTransform");
     GLuint ProjMatrixID = glGetUniformLocation(Renderer::GetShaderProgramID(), "ProjectionTransform");
@@ -291,6 +290,7 @@ void World::Draw()
     {
         if ((*it)->GetMaterialCoefficients().length() > 0){
             MaterialID = glGetUniformLocation(Renderer::GetShaderProgramID(), "materialCoefficients");
+            
             glUniformMatrix4fv(WorldMatrixID, 1, GL_FALSE, &((*it)->GetWorldMatrix())[0][0]);
 
             // Get material coefficients set in the model
@@ -304,15 +304,17 @@ void World::Draw()
         }
         (*it)->Draw();
     }
-    
+
+	 // Set Shader for tracks
     prevShader = Renderer::GetCurrentShader();
-	Renderer::SetShader(SHADER_PHONG);
-    glUseProgram(Renderer::GetShaderProgramID());
+	Renderer::SetShader(SHADER_TRACKS);
+	glUseProgram(Renderer::GetShaderProgramID());
+
+	VPMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "ViewProjectionTransform");
+	glUniformMatrix4fv(VPMatrixLocation, 1, GL_FALSE, &VP[0][0]);
     
     //Draw the BSpline between all the planets here
 	for (vector<BSpline*>::iterator it = mSpline.begin(); it < mSpline.end(); ++it) {
-		glPushMatrix();
-		glPushAttrib(GL_ALL_ATTRIB_BITS);
 		MaterialID = glGetUniformLocation(Renderer::GetShaderProgramID(), "materialCoefficients");
 
 		glUniformMatrix4fv(WorldMatrixID, 1, GL_FALSE, &((*it)->GetWorldMatrix())[0][0]);
@@ -326,8 +328,6 @@ void World::Draw()
         glUniform3f(ModelColorID, 0.0f, 0.0f, 1.0f);
 
 		(*it)->ConstructTracks(mSplineCamera.front()->GetExtrapolatedPoints());
-		glPopAttrib();
-		glPopMatrix();
 	}
 
     Renderer::CheckForErrors();
@@ -339,7 +339,11 @@ void World::Draw()
     int texture_id = TextureLoader::LoadTexture("Textures/Stars/shiny_yellow_star-min.png", spriteWidth);
 #else
     //    int texture_id = TextureLoader::LoadTexture("../Assets/Textures/BillboardTest.bmp", spriteWidth);
+<<<<<<< HEAD
     int texture_id = TextureLoader::LoadTexture("../Textures/Stars/shiny_yellow_star-min.png", spriteWidth);
+=======
+    int texture_id = TextureLoader::LoadTexture("../Assets/Textures/Stars/shiny_yellow_star-min.png", spriteWidth);
+>>>>>>> #1-stars-generator
 #endif
     
     star = new Star(texture_id);
@@ -351,7 +355,6 @@ void World::Draw()
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); //Define transparency blending
     glEnable(GL_POINT_SPRITE); //Enable use of point sprites
     glEnable(GL_VERTEX_PROGRAM_POINT_SIZE); //Enable changing size of point sprites
-    star -> Draw();
     star -> Draw();
     glDisable(GL_BLEND);
    
@@ -421,6 +424,7 @@ void World::LoadScene(const char * scene_path)
 			{
 				BSpline* planetTour = new BSpline();
 				std::vector<Model*> planets = generatePlanets();
+                mNumberOfPlanetsGenerated = (int)planets.size() - 1; // Remove the sun from the count!!
 				mModel.insert(mModel.begin(), planets.begin(), planets.end());
 
 				for (std::vector<Model*>::iterator it = planets.begin(); it < planets.end(); ++it) {
@@ -475,36 +479,48 @@ glm::vec3 randomSphericalCoordinatesToCartesian(float radius, glm::vec3 initialC
 std::vector<Model*> World::generatePlanets(){
     std::vector<Model*> planetList;
     std::vector<vec3> planetPositions;
+    
+    // Sun is positioned exactly at center
+    const vec3 sunPosition = vec3(WORLD_LENGTH/2, WORLD_LENGTH/2, WORLD_LENGTH/2);
+    planetPositions.push_back(sunPosition);
 
     for (int i = 0; i < NUMBER_OF_PLANETS; i++) {
         PlanetModel* randomPlanet = new PlanetModel();
         
         // Position
         vec3 planetRandomPoint;
+        int randomTries = 0;
+        bool positionIsValid = false;
         do {
-            planetRandomPoint = vec3(randomFloat(0, 100.0f), randomFloat(10.0f, 100.0f), randomFloat(0.0f, 100.0f));
-        } while(!planetHasSpace(planetRandomPoint, planetPositions));
-        planetPositions.push_back(planetRandomPoint);
-        randomPlanet->SetPosition(planetRandomPoint);
-        float planetScalingConstant = randomFloat(PLANET_SCALING_MIN_SIZE, PLANET_SCALING_MAX_SIZE);
-        randomPlanet->SetScaling(vec3(planetScalingConstant, planetScalingConstant, planetScalingConstant));
+            randomTries++;
+            planetRandomPoint = vec3(randomFloat(0, WORLD_LENGTH), randomFloat(0.0f, WORLD_LENGTH), randomFloat(0.0f, WORLD_LENGTH));
+            positionIsValid = planetHasSpace(planetRandomPoint, planetPositions);
+        } while(!positionIsValid && randomTries < PLANET_GENERATE_MAX_RETRIES);
+        randomTries = 0;
         
-        // Color
-        float red = randomFloat(0.0f, 1.0f);
-        float green = randomFloat(0.0f, 1.0f);
-        float blue = randomFloat(0.0f, 1.0f);
-        randomPlanet->SetColor(vec3(red, green, blue));
-        
-        // Ambient set to 0.5 to better see the effect of lighting
-        // Shininess is set super high to remove the point light effect
-        randomPlanet->SetMaterialCoefficients(vec4(0.5f, 0.5f, 1.0f, 100000.0f));
-
-        planetList.push_back(randomPlanet);
+        if (positionIsValid) {
+            planetPositions.push_back(planetRandomPoint);
+            randomPlanet->SetPosition(planetRandomPoint);
+            float planetScalingConstant = randomFloat(PLANET_SCALING_MIN_SIZE, PLANET_SCALING_MAX_SIZE);
+            randomPlanet->SetScaling(vec3(planetScalingConstant, planetScalingConstant, planetScalingConstant));
+            
+            // Color
+            float red = randomFloat(0.0f, 1.0f);
+            float green = randomFloat(0.0f, 1.0f);
+            float blue = randomFloat(0.0f, 1.0f);
+            randomPlanet->SetColor(vec3(red, green, blue));
+            
+            // Ambient set to 0.5 to better see the effect of lighting
+            // Shininess is set super high to remove the point light effect
+            randomPlanet->SetMaterialCoefficients(vec4(0.5f, 0.5f, 1.0f, 100000.0f));
+            
+            planetList.push_back(randomPlanet);
+        }
     }
   
     PlanetModel* sun = new PlanetModel();
-    sun->SetPosition(vec3(0.0f, 0.0f, 0.0f)); // Sun placed on origin
-    sun->SetScaling(vec3(10.0f,10.0f,10.0f));
+    sun->SetPosition(sunPosition); // Sun placed on origin
+    sun->SetScaling(vec3(10.0f, 10.0f, 10.0f));
     sun->SetColor(vec3(0.988f, 0.831f, 0.251f));
 
     // Sun is unaffected by lighting
@@ -523,7 +539,7 @@ std::vector<Model*> World::generatePlanets(){
 bool World::planetHasSpace(vec3 planetRandomPoint, std::vector<vec3> planetPositions) {
     for (auto position : planetPositions) {
         // The planets have to have at least the max size of a planet in between them
-        if (glm::distance(planetRandomPoint, position) < PLANET_SCALING_MAX_SIZE * 2.0) {
+        if (glm::distance(planetRandomPoint, position) < PLANET_SCALING_MAX_SIZE * PLANET_DISTANCE_RATIO) {
             return false;
         }
     }
@@ -621,4 +637,8 @@ bool World::GetLoadingState() {
 
 void World::SetLoadingState(bool state) {
 	isLoading = state;
+}
+
+int World::NumberOfPlanetsToGenerate() {
+    return NUMBER_OF_PLANETS;
 }

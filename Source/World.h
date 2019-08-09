@@ -52,6 +52,8 @@ public:
 	void SetCurrentCamera(int cameraNumber);
 	bool GetLoadingState();
 	void SetLoadingState(bool state);
+    int NumberOfPlanetsToGenerate();
+    int NumberOfPlanetsGenerated() { return mNumberOfPlanetsGenerated; }
     
 private:
     static World* instance;
@@ -62,6 +64,7 @@ private:
 	std::vector<Camera*> mCamera;
     std::vector<BSpline*> mSpline;
 	std::vector<BSplineCamera*> mSplineCamera;
+    int mNumberOfPlanetsGenerated;
     std::vector<Model*> generatePlanets();
     /**
      * Checks if the randomly generated planet could possibly overlap with any of
@@ -74,12 +77,9 @@ private:
      */
     bool planetHasSpace(glm::vec3 planetRandomPoint, std::vector<glm::vec3> planetPositions);
 	unsigned int mCurrentCamera;
-    void generateStars();
-    
     std::vector<ParticleSystem*> mParticleSystemList;
     std::vector<ParticleDescriptor*> mParticleDescriptorList;
     BillboardList* mpBillboardList;
-    
 	bool isLoading;
 };
 

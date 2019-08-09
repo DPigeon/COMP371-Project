@@ -14,5 +14,5 @@ void main()
 {
 mat4 modelViewProjection = ProjectionTransform * ViewTransform * WorldTransform;
 gl_Position = modelViewProjection * vec4(aPos, 1.0);
-gl_PointSize = StarPointSize /* / distance(camPos, aPos) * 3.0f */; //TODO 4  \n
+gl_PointSize = StarPointSize;
 }

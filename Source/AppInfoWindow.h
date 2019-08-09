@@ -6,12 +6,12 @@
 #include <imgui/imgui_impl_opengl3.h>
 #include <GL/glew.h>
 
-class FPSWindow
+class AppInfoWindow
 {
 public:
-	FPSWindow();
+	AppInfoWindow();
 	static void Draw();
-	~FPSWindow();
+	~AppInfoWindow();
 
 private:
 	//static ImVec4 clear_color;

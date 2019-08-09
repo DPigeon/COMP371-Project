@@ -35,7 +35,7 @@ Star::Star(int texture_id)
 //Creates many random points within a cubic area
 GLuint randVAO(int& vertexCount, std::vector<float>& angles)
 {
-    float areaWidth = 200.0f;
+    float areaWidth = 50.0f;
     
     std::vector<glm::vec3> vertPos;
     std::vector<float> vertRot;
@@ -90,7 +90,7 @@ void Star::Draw()
 {
     //Draw Stars
     int vCount = 500;
-    std::vector<float> angles(100);
+    std::vector<float> angles(30);
     GLuint VAO = randVAO(vCount, angles);
     
     // Draw models
@@ -116,7 +116,6 @@ void Star::Draw()
     
     glm::mat4 ViewProjection = currentCamera->GetViewProjectionMatrix();
     glUniformMatrix4fv(ViewProjMatrixID,  1, GL_FALSE, &ViewProjection[0][0]);
-    
  
     glEnable( GL_POINT_SMOOTH );
     glDisable(GL_DEPTH_TEST);

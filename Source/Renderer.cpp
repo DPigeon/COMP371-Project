@@ -75,8 +75,8 @@ void Renderer::Initialize()
                             shaderPathPrefix + "SolidColor.fragmentshader")
                                );
 	sShaderProgramID.push_back(
-                LoadShaders(shaderPathPrefix + "PathLines.vertexshader",
-                            shaderPathPrefix + "PathLines.fragmentshader")
+                LoadShaders(shaderPathPrefix + "SplineTracks.vertexshader",
+                            shaderPathPrefix + "SplineTracks.fragmentshader")
                                );
 	sShaderProgramID.push_back(
                 LoadShaders(shaderPathPrefix + "SolidColor.vertexshader",
@@ -86,19 +86,19 @@ void Renderer::Initialize()
                 LoadShaders(shaderPathPrefix + "Phong.vertexshader",
                             shaderPathPrefix + "Phong.fragmentshader")
                                );
-    sShaderProgramID.push_back(
-                LoadShaders(shaderPathPrefix + "Stars.vertexshader",
-                            shaderPathPrefix + "Stars.fragmentshader")
-                               );
 	sShaderProgramID.push_back(
 				LoadShaders(shaderPathPrefix + "Skybox.vertexshader",
 							shaderPathPrefix + "Skybox.fragmentshader")
 							   );
     sShaderProgramID.push_back(
+                               LoadShaders(shaderPathPrefix + "Stars.vertexshader",
+                                           shaderPathPrefix + "Stars.fragmentshader")
+                               );
+    sShaderProgramID.push_back(
                                LoadShaders(shaderPathPrefix + "Texture.vertexshader",
                                            shaderPathPrefix + "Texture.fragmentshader")
                                );
-    
+
 	sCurrentShader = 0;
 }
 
