@@ -10,7 +10,7 @@
 #include "EventManager.h"
 #include "Renderer.h"
 #include "LoadingScreen.h"
-#include "FPSWindow.h"
+#include "AppInfoWindow.h"
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_glfw.h>
@@ -218,7 +218,7 @@ void EventManager::Update()
 	
 	// Draw FPS window when done loading
 	if (!GetLoadingState())
-		FPSWindow::Draw();
+		AppInfoWindow::Draw();
 
 	// Rendering ImGui
 	ImGui::Render();
