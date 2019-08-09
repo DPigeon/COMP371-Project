@@ -17,10 +17,11 @@ LoadingScreen::LoadingScreen() {
 
 void LoadingScreen::Draw() {
 	{
+        int sizeLogo;
 		#if defined(PLATFORM_OSX)
-			int logo = TextureLoader::LoadTexture("Textures/Area51_Logo.png");
+			int logo = TextureLoader::LoadTexture("Textures/Area51_Logo.png", sizeLogo);
 		#else
-			int logo = TextureLoader::LoadTexture("../Assets/Textures/Area51_Logo.png"); // Let's find a better logo
+			int logo = TextureLoader::LoadTexture("../Assets/Textures/Area51_Logo.png", sizeLogo); // Let's find a better logo
 		#endif
 
 			ImVec2 size = ImVec2(1024.0f, 768.0f);

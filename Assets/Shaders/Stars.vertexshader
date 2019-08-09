@@ -1,0 +1,18 @@
+#version 330 core
+layout (location = 0) in vec3 aPos;
+
+uniform float StarPointSize;
+uniform vec3 camPos;
+
+// Values that stay constant for the whole mesh.
+uniform mat4 ViewProjectionTransform;
+uniform mat4 WorldTransform;
+uniform mat4 ViewTransform;
+uniform mat4 ProjectionTransform;
+
+void main()
+{
+mat4 modelViewProjection = ProjectionTransform * ViewTransform * WorldTransform;
+gl_Position = modelViewProjection * vec4(aPos, 1.0);
+gl_PointSize = StarPointSize /* / distance(camPos, aPos) * 3.0f */; //TODO 4  \n
+}

@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
 	eventManager.Initialize();
 	Renderer::Initialize();
     
-    glEnable(GL_CULL_FACE);
+    //glEnable(GL_CULL_FACE);
 
 	World world;
 
