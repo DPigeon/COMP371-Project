@@ -86,10 +86,6 @@ void Renderer::Initialize()
                 LoadShaders(shaderPathPrefix + "Phong.vertexshader",
                             shaderPathPrefix + "Phong.fragmentshader")
                                );
-    sShaderProgramID.push_back(
-                LoadShaders(shaderPathPrefix + "Stars.vertexshader",
-                            shaderPathPrefix + "Stars.fragmentshader")
-                               );
 	sShaderProgramID.push_back(
 				LoadShaders(shaderPathPrefix + "Skybox.vertexshader",
 							shaderPathPrefix + "Skybox.fragmentshader")

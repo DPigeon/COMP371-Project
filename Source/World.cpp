@@ -7,8 +7,6 @@
 // Copyright (c) 2014-2019 Concordia University. All rights reserved.
 //
 
-
-
 #include "World.h"
 #include "Renderer.h"
 #include "ParsingHelper.h"
@@ -27,14 +25,10 @@
 #include "BSplineCamera.h"
 #include "Skybox.h"
 
-#include "Star.h"
-
 using namespace std;
 using namespace glm;
 
 World* World::instance;
-Star* star;
-
 Skybox skybox;
 
 // Light Coefficients
@@ -55,7 +49,7 @@ const float PLANET_SCALING_MAX_SIZE = 8.0f;
 World::World()
 {
     instance = this;
-    isLoading = true; // Initialize loading state
+	  isLoading = true; // Initialize loading state
     
     // Setup Camera
     mCamera.push_back(new FirstPersonCamera(vec3(3.0f, 5.0f, 20.0f)));	
@@ -147,15 +141,6 @@ void World::Update(float dt)
         }
 		Renderer::SetShader(SHADER_PHONG);
     }
-    else if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_4 ) == GLFW_PRESS)
-    {
-        if (mCamera.size() > 3)
-        {
-            mCurrentCamera = 3;
-        }
-        Renderer::SetShader(SHADER_STARS);
-    }
-
     
     // Spacebar to change the shader
     if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_0 ) == GLFW_PRESS)
@@ -190,15 +175,12 @@ void World::Update(float dt)
 
 void World::Draw()
 {
-    
     Renderer::BeginFrame();
 	
 	skybox.Draw();
   
     glUseProgram(Renderer::GetShaderProgramID());
     
-    unsigned int prevShader = Renderer::GetCurrentShader();
-
     // Everything we need to send to the GPU
     
     GLuint WorldMatrixID = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldTransform");
@@ -238,6 +220,7 @@ void World::Draw()
     {
         if ((*it)->GetMaterialCoefficients().length() > 0){
             MaterialID = glGetUniformLocation(Renderer::GetShaderProgramID(), "materialCoefficients");
+            
             glUniformMatrix4fv(WorldMatrixID, 1, GL_FALSE, &((*it)->GetWorldMatrix())[0][0]);
 
             // Get material coefficients set in the model
@@ -252,7 +235,7 @@ void World::Draw()
         (*it)->Draw();
     }
     
-    prevShader = Renderer::GetCurrentShader();
+    unsigned int prevShader = Renderer::GetCurrentShader();
 	Renderer::SetShader(SHADER_PHONG);
     glUseProgram(Renderer::GetShaderProgramID());
     
@@ -278,17 +261,6 @@ void World::Draw()
 	}
 
     Renderer::CheckForErrors();
-    
-    Renderer::SetShader(SHADER_STARS);
-    glUseProgram(Renderer::GetShaderProgramID());
-    
-    glEnable(GL_BLEND); //Enable transparency blending
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); //Define transparency blending
-    glEnable(GL_POINT_SPRITE); //Enable use of point sprites
-    glEnable(GL_VERTEX_PROGRAM_POINT_SIZE); //Enable changing size of point sprites
-    star -> Draw();
-    star -> Draw();
-    glDisable(GL_BLEND);
     
     // Restore previous shader
     Renderer::SetShader((ShaderType) prevShader);

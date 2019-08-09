@@ -14,7 +14,7 @@
 #include <FreeImageIO.h>
 
 
-int TextureLoader::LoadTexture(const char * imagepath, int& spriteWidth)
+int TextureLoader::LoadTexture(const char * imagepath)
 {    
     // Load image using the Free Image library
     FREE_IMAGE_FORMAT format = FreeImage_GetFileType(imagepath, 0);
@@ -29,15 +29,12 @@ int TextureLoader::LoadTexture(const char * imagepath, int& spriteWidth)
     // Set OpenGL filtering properties (bi-linear interpolation)
     glBindTexture(GL_TEXTURE_2D, texture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    
     // Retrieve width and hight
     int width = FreeImage_GetWidth(image32bits);
     int height = FreeImage_GetHeight(image32bits);
-	spriteWidth = width;
-
+    
     // This will upload the texture to the GPU memory
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height,
                  0, GL_BGRA, GL_UNSIGNED_BYTE, (void*)FreeImage_GetBits(image32bits));
