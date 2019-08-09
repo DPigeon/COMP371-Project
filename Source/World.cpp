@@ -382,8 +382,8 @@ std::vector<Model*> World::generatePlanets(){
         int randomTries = 0;
         bool positionIsValid = false;
         do {
-            randomTries++; 
-            planetRandomPoint = vec3(randomFloat(0, WORLD_LENGTH), randomFloat(0.0f, WORLD_LENGTH), randomFloat(0.0f, WORLD_LENGTH));
+            randomTries++;
+            planetRandomPoint = vec3(randomFloat(20.0f, WORLD_LENGTH), randomFloat(20.0f, WORLD_LENGTH), randomFloat(20.0f, WORLD_LENGTH));
             positionIsValid = planetHasSpace(planetRandomPoint, planetPositions);
         } while(!positionIsValid && randomTries < PLANET_GENERATE_MAX_RETRIES);
         randomTries = 0;
