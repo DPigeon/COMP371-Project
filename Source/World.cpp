@@ -42,7 +42,10 @@ const float lightKq = 0.002f;
 const vec4 lightPosition(-10.0f, -10.0f, -10.0f, 1.0f); 
 
 // TODO: These should be parameters set in the menu
-const int NUMBER_OF_PLANETS = 10;
+const int NUMBER_OF_PLANETS = 20;
+const int PLANET_GENERATE_MAX_RETRIES = 5;
+const float WORLD_LENGTH = 200.0f;
+const float PLANET_DISTANCE_RATIO = 6.0f;
 const float PLANET_SCALING_MIN_SIZE = 4.0f;
 const float PLANET_SCALING_MAX_SIZE = 8.0f;
 
@@ -319,6 +322,7 @@ void World::LoadScene(const char * scene_path)
 			{
 				BSpline* planetTour = new BSpline();
 				std::vector<Model*> planets = generatePlanets();
+                mNumberOfPlanetsGenerated = (int)planets.size() - 1; // Remove the sun from the count!!
 				mModel.insert(mModel.begin(), planets.begin(), planets.end());
 
 				for (std::vector<Model*>::iterator it = planets.begin(); it < planets.end(); ++it) {
@@ -367,36 +371,48 @@ glm::vec3 randomSphericalCoordinatesToCartesian(float radius, glm::vec3 initialC
 std::vector<Model*> World::generatePlanets(){
     std::vector<Model*> planetList;
     std::vector<vec3> planetPositions;
+    
+    // Sun is positioned exactly at center
+    const vec3 sunPosition = vec3(WORLD_LENGTH/2, WORLD_LENGTH/2, WORLD_LENGTH/2);
+    planetPositions.push_back(sunPosition);
 
     for (int i = 0; i < NUMBER_OF_PLANETS; i++) {
         PlanetModel* randomPlanet = new PlanetModel();
         
         // Position
         vec3 planetRandomPoint;
+        int randomTries = 0;
+        bool positionIsValid = false;
         do {
-            planetRandomPoint = vec3(randomFloat(0, 100.0f), randomFloat(10.0f, 100.0f), randomFloat(0.0f, 100.0f));
-        } while(!planetHasSpace(planetRandomPoint, planetPositions));
-        planetPositions.push_back(planetRandomPoint);
-        randomPlanet->SetPosition(planetRandomPoint);
-        float planetScalingConstant = randomFloat(PLANET_SCALING_MIN_SIZE, PLANET_SCALING_MAX_SIZE);
-        randomPlanet->SetScaling(vec3(planetScalingConstant, planetScalingConstant, planetScalingConstant));
+            randomTries++;
+            planetRandomPoint = vec3(randomFloat(0, WORLD_LENGTH), randomFloat(0.0f, WORLD_LENGTH), randomFloat(0.0f, WORLD_LENGTH));
+            positionIsValid = planetHasSpace(planetRandomPoint, planetPositions);
+        } while(!positionIsValid && randomTries < PLANET_GENERATE_MAX_RETRIES);
+        randomTries = 0;
         
-        // Color
-        float red = randomFloat(0.0f, 1.0f);
-        float green = randomFloat(0.0f, 1.0f);
-        float blue = randomFloat(0.0f, 1.0f);
-        randomPlanet->SetColor(vec3(red, green, blue));
-        
-        // Ambient set to 0.5 to better see the effect of lighting
-        // Shininess is set super high to remove the point light effect
-        randomPlanet->SetMaterialCoefficients(vec4(0.5f, 0.5f, 1.0f, 100000.0f));
-
-        planetList.push_back(randomPlanet);
+        if (positionIsValid) {
+            planetPositions.push_back(planetRandomPoint);
+            randomPlanet->SetPosition(planetRandomPoint);
+            float planetScalingConstant = randomFloat(PLANET_SCALING_MIN_SIZE, PLANET_SCALING_MAX_SIZE);
+            randomPlanet->SetScaling(vec3(planetScalingConstant, planetScalingConstant, planetScalingConstant));
+            
+            // Color
+            float red = randomFloat(0.0f, 1.0f);
+            float green = randomFloat(0.0f, 1.0f);
+            float blue = randomFloat(0.0f, 1.0f);
+            randomPlanet->SetColor(vec3(red, green, blue));
+            
+            // Ambient set to 0.5 to better see the effect of lighting
+            // Shininess is set super high to remove the point light effect
+            randomPlanet->SetMaterialCoefficients(vec4(0.5f, 0.5f, 1.0f, 100000.0f));
+            
+            planetList.push_back(randomPlanet);
+        }
     }
   
     PlanetModel* sun = new PlanetModel();
-    sun->SetPosition(vec3(0.0f, 0.0f, 0.0f)); // Sun placed on origin
-    sun->SetScaling(vec3(10.0f,10.0f,10.0f));
+    sun->SetPosition(sunPosition); // Sun placed on origin
+    sun->SetScaling(vec3(30.0f, 30.0f, 30.0f));
     sun->SetColor(vec3(0.988f, 0.831f, 0.251f));
 
     // Sun is unaffected by lighting
@@ -415,7 +431,7 @@ std::vector<Model*> World::generatePlanets(){
 bool World::planetHasSpace(vec3 planetRandomPoint, std::vector<vec3> planetPositions) {
     for (auto position : planetPositions) {
         // The planets have to have at least the max size of a planet in between them
-        if (glm::distance(planetRandomPoint, position) < PLANET_SCALING_MAX_SIZE * 2.0) {
+        if (glm::distance(planetRandomPoint, position) < PLANET_SCALING_MAX_SIZE * PLANET_DISTANCE_RATIO) {
             return false;
         }
     }
@@ -474,4 +490,8 @@ bool World::GetLoadingState() {
 
 void World::SetLoadingState(bool state) {
 	isLoading = state;
+}
+
+int World::NumberOfPlanetsToGenerate() {
+    return NUMBER_OF_PLANETS;
 }

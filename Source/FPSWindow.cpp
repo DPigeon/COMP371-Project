@@ -6,6 +6,7 @@
 
 #include "FPSWindow.h"
 #include "TextureLoader.h"
+#include "World.h"
 
 #include <iostream>
 
@@ -25,6 +26,8 @@ void FPSWindow::Draw() {
 		ImGui::Begin("App Info");
 
 		ImGui::Text("Average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+        
+        ImGui::Text("Number of planets: %d / %d", World::GetInstance()->NumberOfPlanetsGenerated(), World::GetInstance()->NumberOfPlanetsToGenerate());
 
 		ImGui::End();
 	}
