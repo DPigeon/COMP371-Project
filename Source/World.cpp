@@ -25,11 +25,16 @@
 #include "BSplineCamera.h"
 #include "Skybox.h"
 
+#include "Star.h"
+#include "TextureLoader.h"
+
 using namespace std;
 using namespace glm;
 
 World* World::instance;
+Star* star;
 Skybox skybox;
+
 
 // TODO: These should be parameters set in the menu
 const int NUMBER_OF_PLANETS = 10;
@@ -48,10 +53,12 @@ const float lightKq = 0.002f;
 // Light comes from the sun position and goes in any direction
 const vec4 lightPosition(WORLD_LENGTH/2, WORLD_LENGTH/2, WORLD_LENGTH/2, 1.0f);
 
+ char cwd[256];
+
 World::World()
 {
     instance = this;
-	  isLoading = true; // Initialize loading state
+    isLoading = true; // Initialize loading state
     
     // Setup Camera
     mCamera.push_back(new FirstPersonCamera(vec3(3.0f, 5.0f, 20.0f)));	
@@ -141,6 +148,15 @@ void World::Update(float dt)
         }
 		Renderer::SetShader(SHADER_PHONG);
     }
+    else if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_4 ) == GLFW_PRESS)
+    {
+        if (mCamera.size() > 3)
+        {
+            mCurrentCamera = 3;
+        }
+        Renderer::SetShader(SHADER_STARS);
+    }
+
     
     // Spacebar to change the shader
     if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_0 ) == GLFW_PRESS)
@@ -175,12 +191,15 @@ void World::Update(float dt)
 
 void World::Draw()
 {
+    
     Renderer::BeginFrame();
 	
 	skybox.Draw();
   
     glUseProgram(Renderer::GetShaderProgramID());
     
+    unsigned int prevShader = Renderer::GetCurrentShader();
+
     // Everything we need to send to the GPU
     
 	GLuint VPMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "ViewProjectionTransform");
@@ -239,7 +258,7 @@ void World::Draw()
     }
 
 	 // Set Shader for tracks
-	unsigned int prevShader = Renderer::GetCurrentShader();
+    prevShader = Renderer::GetCurrentShader();
 	Renderer::SetShader(SHADER_TRACKS);
 	glUseProgram(Renderer::GetShaderProgramID());
 
@@ -264,7 +283,28 @@ void World::Draw()
 	}
 
     Renderer::CheckForErrors();
-
+    
+    int spriteWidth;
+    
+#if defined(PLATFORM_OSX)
+    //        int texture_id = TextureLoader::LoadTexture("Textures/BillboardTest.bmp", spriteWidth);
+    int texture_id = TextureLoader::LoadTexture("Textures/Stars/shiny_yellow_star-min.png", spriteWidth);
+#else
+    //    int texture_id = TextureLoader::LoadTexture("../Assets/Textures/BillboardTest.bmp", spriteWidth);
+    int texture_id = TextureLoader::LoadTexture("../Assets/Textures/Stars/shiny_yellow_star-min.png", spriteWidth);
+#endif
+    
+    star = new Star(texture_id);
+    
+    Renderer::SetShader(SHADER_STARS);
+    glUseProgram(Renderer::GetShaderProgramID());
+    
+    glEnable(GL_BLEND); //Enable transparency blending
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); //Define transparency blending
+    glEnable(GL_POINT_SPRITE); //Enable use of point sprites
+    glEnable(GL_VERTEX_PROGRAM_POINT_SIZE); //Enable changing size of point sprites
+    star -> Draw();
+    glDisable(GL_BLEND);
     
     // Restore previous shader
     Renderer::SetShader((ShaderType) prevShader);
