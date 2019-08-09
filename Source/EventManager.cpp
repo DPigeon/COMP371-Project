@@ -10,6 +10,7 @@
 #include "EventManager.h"
 #include "Renderer.h"
 #include "LoadingScreen.h"
+#include "FPSWindow.h"
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_glfw.h>
@@ -36,8 +37,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <irrKlang.h>
 
-using namespace std;
+using namespace std; 
+using namespace irrklang;
 
 #include <GLFW/glfw3.h>
 
@@ -61,6 +64,12 @@ float  EventManager::sMouseDeltaY = 0.0f;
 // Window
 GLFWwindow* EventManager::spWindow = nullptr;
 
+// Sound Engine
+#if !defined(PLATFORM_OSX)
+    ISoundEngine* engine = createIrrKlangDevice();
+#endif
+
+
 EventManager::EventManager() {
 	instance = this;
 	isLoading = true;
@@ -68,7 +77,6 @@ EventManager::EventManager() {
 
 EventManager::~EventManager() {
 }
-
 
 void EventManager::Initialize()
 {
@@ -150,6 +158,11 @@ void EventManager::Initialize()
 	// Initial time
 	sLastFrameTime = glfwGetTime();
     srand((unsigned int) time(nullptr));
+    
+#if !defined(PLATFORM_OSX)
+    engine->play2D("../Audio/Dystopic-Factory.ogg", true);
+#endif
+	
 }
 
 void EventManager::SetLoadingState(bool state) {
@@ -168,6 +181,9 @@ void EventManager::Shutdown()
 	ImGui::DestroyContext();
 	glfwTerminate();
 	spWindow = nullptr;
+#if !defined(PLATFORM_OSX)
+    engine->drop();
+#endif
 }
 
 void EventManager::Update()
@@ -200,6 +216,10 @@ void EventManager::Update()
 		if (!devMode)
 			LoadingScreen::Draw();
 	}
+	
+	// Draw FPS window when done loading
+	if (!GetLoadingState())
+		FPSWindow::Draw();
 
 	// Rendering ImGui
 	ImGui::Render();

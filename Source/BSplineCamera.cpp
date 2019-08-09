@@ -47,6 +47,8 @@ void BSplineCamera::Update(float dt)
 
     mSplineParameterT += dt;
     mPosition = mpSpline->GetPosition(mSplineParameterT);
+    
+    Camera::SetPosition(mPosition);
 
 	ExtrapolatePoints(mPosition);
 }
