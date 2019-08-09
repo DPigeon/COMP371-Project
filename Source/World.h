@@ -49,6 +49,9 @@ public:
     void AddParticleDescriptor(ParticleDescriptor* particleDescriptor);
     ParticleDescriptor* FindParticleDescriptor(ci_string name);
 
+	void SetCurrentCamera(int cameraNumber);
+	bool GetLoadingState();
+	void SetLoadingState(bool state);
     
 private:
     static World* instance;
@@ -77,6 +80,7 @@ private:
     std::vector<ParticleDescriptor*> mParticleDescriptorList;
     BillboardList* mpBillboardList;
     
+	bool isLoading;
 };
 
 float randomFloat(float min, float max);

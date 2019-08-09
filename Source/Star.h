@@ -1,0 +1,27 @@
+//
+//  Star.h
+//  Area51
+//
+//  Created by Kevin Luu on 2019-08-06.
+//  Copyright © 2019 Concordia. All rights reserved.
+//
+
+
+class Star
+{
+public:
+    Star();
+    ~Star();
+    Star(int texture_id);
+
+    
+    static Star* GetInstance();
+    
+    void Draw();
+    
+private:
+    void generateStars();
+    void setTextureRotation(int shaderProgram, float textureRotationAngle);
+};
+
+
