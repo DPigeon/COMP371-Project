@@ -75,8 +75,8 @@ void Renderer::Initialize()
                             shaderPathPrefix + "SolidColor.fragmentshader")
                                );
 	sShaderProgramID.push_back(
-                LoadShaders(shaderPathPrefix + "PathLines.vertexshader",
-                            shaderPathPrefix + "PathLines.fragmentshader")
+                LoadShaders(shaderPathPrefix + "SplineTracks.vertexshader",
+                            shaderPathPrefix + "SplineTracks.fragmentshader")
                                );
 	sShaderProgramID.push_back(
                 LoadShaders(shaderPathPrefix + "SolidColor.vertexshader",

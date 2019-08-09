@@ -58,8 +58,6 @@ World::World()
 
     mCurrentCamera = 2; // Putting this as the current camera so that we load splines automatically
 
-    //mCurrentCamera = 0;
-
 	std::vector<std::string> skyboxFaces;
 	// MUST BE IN THIS ORDER: RIGHT LEFT UP DOWN BACK FRONT
 #if defined(PLATFORM_OSX)
@@ -183,6 +181,9 @@ void World::Draw()
     
     // Everything we need to send to the GPU
     
+	GLuint VPMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "ViewProjectionTransform");
+	mat4 VP = mCamera[mCurrentCamera]->GetViewProjectionMatrix();
+
     GLuint WorldMatrixID = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldTransform");
     GLuint ViewMatrixID = glGetUniformLocation(Renderer::GetShaderProgramID(), "ViewTransform");
     GLuint ProjMatrixID = glGetUniformLocation(Renderer::GetShaderProgramID(), "ProjectionTransform");
@@ -234,15 +235,17 @@ void World::Draw()
         }
         (*it)->Draw();
     }
-    
-    unsigned int prevShader = Renderer::GetCurrentShader();
-	Renderer::SetShader(SHADER_PHONG);
-    glUseProgram(Renderer::GetShaderProgramID());
+
+	 // Set Shader for tracks
+	unsigned int prevShader = Renderer::GetCurrentShader();
+	Renderer::SetShader(SHADER_TRACKS);
+	glUseProgram(Renderer::GetShaderProgramID());
+
+	VPMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "ViewProjectionTransform");
+	glUniformMatrix4fv(VPMatrixLocation, 1, GL_FALSE, &VP[0][0]);
     
     //Draw the BSpline between all the planets here
 	for (vector<BSpline*>::iterator it = mSpline.begin(); it < mSpline.end(); ++it) {
-		glPushMatrix();
-		glPushAttrib(GL_ALL_ATTRIB_BITS);
 		MaterialID = glGetUniformLocation(Renderer::GetShaderProgramID(), "materialCoefficients");
 
 		glUniformMatrix4fv(WorldMatrixID, 1, GL_FALSE, &((*it)->GetWorldMatrix())[0][0]);
@@ -256,11 +259,10 @@ void World::Draw()
         glUniform3f(ModelColorID, 0.0f, 0.0f, 1.0f);
 
 		(*it)->ConstructTracks(mSplineCamera.front()->GetExtrapolatedPoints());
-		glPopAttrib();
-		glPopMatrix();
 	}
 
     Renderer::CheckForErrors();
+
     
     // Restore previous shader
     Renderer::SetShader((ShaderType) prevShader);
