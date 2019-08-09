@@ -304,7 +304,6 @@ void World::Draw()
     glEnable(GL_POINT_SPRITE); //Enable use of point sprites
     glEnable(GL_VERTEX_PROGRAM_POINT_SIZE); //Enable changing size of point sprites
     star -> Draw();
-    star -> Draw();
     glDisable(GL_BLEND);
     
     // Restore previous shader

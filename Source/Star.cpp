@@ -34,7 +34,7 @@ Star::Star(int texture_id)
 //Creates many random points within a cubic area
 GLuint randVAO(int& vertexCount, std::vector<float>& angles)
 {
-    float areaWidth = 200.0f;
+    float areaWidth = 50.0f;
     
     std::vector<glm::vec3> vertPos;
     std::vector<float> vertRot;
@@ -88,8 +88,8 @@ GLuint randVAO(int& vertexCount, std::vector<float>& angles)
 void Star::Draw()
 {
     //Draw Stars
-    int vCount = 300;
-    std::vector<float> angles(100);
+    int vCount = 500;
+    std::vector<float> angles(30);
     GLuint VAO = randVAO(vCount, angles);
     
     // Draw models
