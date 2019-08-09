@@ -42,10 +42,10 @@ const float lightKq = 0.002f;
 const vec4 lightPosition(-10.0f, -10.0f, -10.0f, 1.0f); 
 
 // TODO: These should be parameters set in the menu
-const int NUMBER_OF_PLANETS = 20;
+const int NUMBER_OF_PLANETS = 10;
 const int PLANET_GENERATE_MAX_RETRIES = 5;
-const float WORLD_LENGTH = 200.0f;
-const float PLANET_DISTANCE_RATIO = 6.0f;
+const float WORLD_LENGTH = 100.0f;
+const float PLANET_DISTANCE_RATIO = 4.0f;
 const float PLANET_SCALING_MIN_SIZE = 4.0f;
 const float PLANET_SCALING_MAX_SIZE = 8.0f;
 
@@ -412,7 +412,7 @@ std::vector<Model*> World::generatePlanets(){
   
     PlanetModel* sun = new PlanetModel();
     sun->SetPosition(sunPosition); // Sun placed on origin
-    sun->SetScaling(vec3(30.0f, 30.0f, 30.0f));
+    sun->SetScaling(vec3(10.0f, 10.0f, 10.0f));
     sun->SetColor(vec3(0.988f, 0.831f, 0.251f));
 
     // Sun is unaffected by lighting
