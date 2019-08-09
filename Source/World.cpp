@@ -45,8 +45,9 @@ const float lightKc = 0.05f;
 const float lightKl = 0.02f;
 const float lightKq = 0.002f;
 
-// Light comes from the sun position and goes in any direction
-const vec4 lightPosition(WORLD_LENGTH/2, WORLD_LENGTH/2, WORLD_LENGTH/2, 1.0f);
+// Negative to ensure light points towards the correct quadrant
+// Lights half of the planet towards the sun
+const vec4 lightPosition(-10.0f, -10.0f, -10.0f, 1.0f);
 
 World::World()
 {
@@ -372,10 +373,6 @@ glm::vec3 randomSphericalCoordinatesToCartesian(float radius, glm::vec3 initialC
 std::vector<Model*> World::generatePlanets(){
     std::vector<Model*> planetList;
     std::vector<vec3> planetPositions;
-    
-    // Sun is positioned exactly at center
-    const vec3 sunPosition = vec3(WORLD_LENGTH/2, WORLD_LENGTH/2, WORLD_LENGTH/2);
-    planetPositions.push_back(sunPosition);
 
     for (int i = 0; i < NUMBER_OF_PLANETS; i++) {
         PlanetModel* randomPlanet = new PlanetModel();
@@ -385,7 +382,7 @@ std::vector<Model*> World::generatePlanets(){
         int randomTries = 0;
         bool positionIsValid = false;
         do {
-            randomTries++;
+            randomTries++; 
             planetRandomPoint = vec3(randomFloat(0, WORLD_LENGTH), randomFloat(0.0f, WORLD_LENGTH), randomFloat(0.0f, WORLD_LENGTH));
             positionIsValid = planetHasSpace(planetRandomPoint, planetPositions);
         } while(!positionIsValid && randomTries < PLANET_GENERATE_MAX_RETRIES);
@@ -412,7 +409,7 @@ std::vector<Model*> World::generatePlanets(){
     }
   
     PlanetModel* sun = new PlanetModel();
-    sun->SetPosition(sunPosition); // Sun placed on origin
+    sun->SetPosition(vec3(0.0f, 0.0f, 0.0f)); // Sun placed on origin
     sun->SetScaling(vec3(10.0f, 10.0f, 10.0f));
     sun->SetColor(vec3(0.988f, 0.831f, 0.251f));
 
