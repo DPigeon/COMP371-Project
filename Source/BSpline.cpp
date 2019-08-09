@@ -233,7 +233,7 @@ void BSpline::ConstructTracks(vector<vec3> points) {
 	double PI = 3.1415926535897932384626433832795;
 	float radius = 0.1f;
 	int slices = 8; // slices for the circle, increases precision
-	float offset = 0.5f;
+	float offset = 0.3f;
 	bool pointsLoaded = !points.empty();
 
 	if (pointsLoaded) { 

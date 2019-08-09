@@ -45,7 +45,7 @@ EventManager* EventManager::instance;
 
 /* True if you don't want to see the loading screen */
 /* False if you want to see the loading screen */
-bool devMode = true;
+bool devMode = false;
 					 
 
 // Time
