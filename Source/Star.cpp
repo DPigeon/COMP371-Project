@@ -119,7 +119,7 @@ void Star::Draw()
     glEnable( GL_POINT_SMOOTH );
     glDisable(GL_DEPTH_TEST);
     glBindVertexArray(VAO);
-    for (int i = 0; i < 1000; i++) {
+    for (int i = 0; i < 500; i++) {
         glDrawArrays( GL_POINTS, i, 1 ); // draw the vertixes
     }
     glBindVertexArray(0);
