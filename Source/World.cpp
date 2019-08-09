@@ -31,16 +31,6 @@ using namespace glm;
 World* World::instance;
 Skybox skybox;
 
-// Light Coefficients
-const vec3 lightColor(1.0f, 1.0f, 1.0f);
-const float lightKc = 0.05f;
-const float lightKl = 0.02f;
-const float lightKq = 0.002f;
-
-// Negative to ensure light points towards the correct quadrant
-// Lights half of the planet towards the sun
-const vec4 lightPosition(-10.0f, -10.0f, -10.0f, 1.0f); 
-
 // TODO: These should be parameters set in the menu
 const int NUMBER_OF_PLANETS = 10;
 const int PLANET_GENERATE_MAX_RETRIES = 5;
@@ -48,6 +38,15 @@ const float WORLD_LENGTH = 100.0f;
 const float PLANET_DISTANCE_RATIO = 4.0f;
 const float PLANET_SCALING_MIN_SIZE = 4.0f;
 const float PLANET_SCALING_MAX_SIZE = 8.0f;
+
+// Light Coefficients
+const vec3 lightColor(1.0f, 1.0f, 1.0f);
+const float lightKc = 0.05f;
+const float lightKl = 0.02f;
+const float lightKq = 0.002f;
+
+// Light comes from the sun position and goes in any direction
+const vec4 lightPosition(WORLD_LENGTH/2, WORLD_LENGTH/2, WORLD_LENGTH/2, 1.0f);
 
 World::World()
 {
