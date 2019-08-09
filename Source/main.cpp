@@ -11,13 +11,19 @@
 #include "World.h"
 #include "EventManager.h"
 
+#include <iostream>
+
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
+
 int main(int argc, char *argv[])
 {
-	EventManager::Initialize();
+	EventManager eventManager;
+	eventManager.Initialize();
 	Renderer::Initialize();
+    
+    glEnable(GL_CULL_FACE);
 
 	World world;
 
@@ -42,19 +48,24 @@ int main(int argc, char *argv[])
 	// Main Loop
 	do
 	{
-		// Update Event Manager - Frame time / input / events processing
-		EventManager::Update();
+		// Update Event Manager - Frame time / input / events processing / UI
+		eventManager.Update();
 
 		// Update World
-		float dt = EventManager::GetFrameTime();
+		float dt = eventManager.GetFrameTime();
 		world.Update(dt);
 
 		// Draw World
 		world.Draw();
-	} while (EventManager::ExitRequested() == false);
+
+		bool isLoading = world.GetLoadingState();
+		if (!isLoading) {
+			eventManager.SetLoadingState(false);
+		}
+	} while (eventManager.ExitRequested() == false);
 
 	Renderer::Shutdown();
-	EventManager::Shutdown();
+	eventManager.Shutdown();
 
 	return 0;
 }

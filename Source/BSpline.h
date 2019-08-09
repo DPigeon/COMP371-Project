@@ -42,7 +42,8 @@ public:
     static glm::vec3 GetTangent(float t, const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3, const glm::vec3& p4);
 
 	void ConstructTracks(std::vector<glm::vec3> points);
-    
+	void DrawParallelRails(float posX, float posY, float posZ, float nextPosX, float nextPosY, float nextPosZ, float pieAngle, float nextPieAngle, float offset);
+	void DrawPerpendicularRails(float posX, float posY, float posZ, float nextPosX, float nextPosY, float nextPosZ, float pieAngle, float nextPieAngle, float offset);
     
 protected:
     virtual bool ParseLine(const std::vector<ci_string> &token);

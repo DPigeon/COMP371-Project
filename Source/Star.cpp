@@ -88,7 +88,7 @@ GLuint randVAO(int& vertexCount, std::vector<float>& angles)
 void Star::Draw()
 {
     //Draw Stars
-    int vCount = 500;
+    int vCount = 300;
     std::vector<float> angles(100);
     GLuint VAO = randVAO(vCount, angles);
     

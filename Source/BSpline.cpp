@@ -58,6 +58,28 @@ void BSpline::CreateVertexBuffer()
                           (void*)0        // array buffer offset
                           );
     glEnableVertexAttribArray(0);
+
+	// 2nd attribute buffer : vertex normal
+	glVertexAttribPointer(1,
+		3,
+		GL_FLOAT,
+		GL_FALSE,
+		sizeof(Vertex),
+		(void*)sizeof(vec3)    // Normal is Offseted by vec3 (see class Vertex)
+	);
+	glEnableVertexAttribArray(1);
+
+
+	// 3rd attribute buffer : vertex color
+	glVertexAttribPointer(2,
+		3,
+		GL_FLOAT,
+		GL_FALSE,
+		sizeof(Vertex),
+		(void*)(2 * sizeof(vec3)) // Color is Offseted by 2 vec3 (see class Vertex)
+	);
+	glEnableVertexAttribArray(2);
+
 }
 
 void BSpline::Update(float dt)
@@ -205,13 +227,15 @@ void BSpline::ConstructTracks(vector<vec3> points) {
 	GLuint WorldMatrixLocation = glGetUniformLocation(Renderer::GetShaderProgramID(), "WorldTransform");
 	glUniformMatrix4fv(WorldMatrixLocation, 1, GL_FALSE, &GetWorldMatrix()[0][0]);
 
+	glLineWidth(5.0f);
+	glDrawArrays(GL_LINE_LOOP, 0, mSamplePoints.size()); // Using this to test realistic tracks
+
 	double PI = 3.1415926535897932384626433832795;
-	float radius = 0.5;
 	int slices = 8; // slices for the circle, increases precision
-	float offset = 0.5;
+	float offset = 0.3f;
 	bool pointsLoaded = !points.empty();
 
-	if (pointsLoaded) { 
+	if (pointsLoaded) {
 		for (size_t i = 0; i < points.size() - 1; i++) {
 			float posX = points[i].x;
 			float posY = points[i].y;
@@ -226,38 +250,60 @@ void BSpline::ConstructTracks(vector<vec3> points) {
 				float pieAngle = (float)angle;
 				float nextPieAngle = (float)angle2;
 
-				/* Left Track Cylinder */
+				/* Right Track Cylinder --> | */
+				DrawParallelRails(posX, posY, posZ, nextPosX, nextPosY, nextPosZ, pieAngle, nextPieAngle, offset);
 
-				//glDisable(GL_LIGHTING);
-				glColor3f(0.0f, 0.9f, 0.3f); // colors not working anymore ? supposed to be green
-				glBegin(GL_TRIANGLE_STRIP);
+				/* Left Track Cylinder --> | | */
+				DrawParallelRails(posX, posY, posZ, nextPosX, nextPosY, nextPosZ, pieAngle, nextPieAngle, -offset);
 
-				/* Vertex in middle of the end of cylinder (point 2) */
-				glColor3f(0.0f, 0.9f, 0.3f);
-				glVertex3f(nextPosX, nextPosY, nextPosZ);
-
-				/* Vertices at edges of circle to make a pie slice (point 2) */
-				glColor3f(0.0f, 0.9f, 0.3f);
-				glVertex3f(radius * cos(pieAngle) + nextPosX, radius * sin(pieAngle) + nextPosY, nextPosZ);
-				glColor3f(0.0f, 0.9f, 0.3f);
-				glVertex3f(radius * cos(nextPieAngle) + nextPosX, radius * sin(nextPieAngle) + nextPosY, nextPosZ);
-
-				/* Vertices at edges of other circle to make a pie slice (point 1) */
-				glColor3f(0.0f, 0.9f, 0.3f);
-				glVertex3f(radius * cos(nextPieAngle) + posX, radius * sin(nextPieAngle) + posY, posZ);
-				glColor3f(0.0f, 0.9f, 0.3f);
-				glVertex3f(radius * cos(pieAngle) + posX, radius * sin(pieAngle) + posY, posZ);
-
-				/* Vertex in middle of first circle (point 1) */
-				glColor3f(0.0f, 0.9f, 0.3f);
-				glVertex3f(posX, posY, posZ);
-				glEnd();
-
-				/* Next steps:
-				 * Generate 2 offset cylinders on the sides (parallel to spline)
-				 * Generate two more cylinders inside those 2 cylinders perpendicular to spline
-				 */
+				/* Perpendicular Track Cylinder --> |¯| */
+				/* This part works but we get a very weird plane in the x direction. Commenting out. */
+				//DrawPerpendicularRails(posX, posY, posZ, nextPosX, nextPosY, nextPosZ, pieAngle, nextPieAngle, -offset);
 			}
 		}
 	}
+}
+
+void BSpline::DrawParallelRails(float posX, float posY, float posZ, float nextPosX, float nextPosY, float nextPosZ, float pieAngle, float nextPieAngle, float offset) {
+	float radius = 0.1f;
+
+	glBegin(GL_TRIANGLE_FAN);
+
+	/* Vertex in middle of the end of cylinder (point 2) */
+	glVertex3f(nextPosX + offset, nextPosY + offset, nextPosZ + offset);
+
+	/* Vertices at edges of circle to make a pie slice (point 2) */
+	glVertex3f(radius * cos(pieAngle) + nextPosX + offset, radius * sin(pieAngle) + nextPosY + offset, nextPosZ + offset);
+	glVertex3f(radius * cos(nextPieAngle) + nextPosX + offset, radius * sin(nextPieAngle) + nextPosY + offset, nextPosZ + offset);
+
+	/* Vertices at edges of other circle to make a pie slice (point 1) */
+	glVertex3f(radius * cos(nextPieAngle) + posX + offset, radius * sin(nextPieAngle) + posY + offset, posZ + offset);
+	glVertex3f(radius * cos(pieAngle) + posX + offset, radius * sin(pieAngle) + posY + offset, posZ + offset);
+
+	/* Vertex in middle of first circle (point 1) */
+	glVertex3f(posX + offset, posY + offset, posZ + offset);
+
+	glEnd();
+}
+
+void BSpline::DrawPerpendicularRails(float posX, float posY, float posZ, float nextPosX, float nextPosY, float nextPosZ, float pieAngle, float nextPieAngle, float offset) {
+	float radius = 0.1f;
+
+	glBegin(GL_TRIANGLE_FAN);
+
+	// Point in middle end of left track (point 2)
+	glVertex3f(nextPosX - offset, nextPosY - offset, nextPosZ - offset);
+
+	// Vertices at edges of circle to make a pie slice (point 2)
+	glVertex3f(nextPosX - offset, radius * sin(pieAngle) + nextPosY - offset, radius * cos(pieAngle) + nextPosZ - offset);
+	glVertex3f(nextPosX - offset, radius * sin(nextPieAngle) + nextPosY - offset, radius * cos(pieAngle) + nextPosZ - offset);
+
+	// Vertices at edges of other circle to make a pie slice (point 1)
+	glVertex3f(nextPosX + offset, radius * sin(pieAngle) + nextPosY + offset, radius * cos(pieAngle) + nextPosZ + offset);
+	glVertex3f(nextPosX + offset, radius * sin(nextPieAngle) + nextPosY + offset, radius * cos(pieAngle) + nextPosZ + offset);
+
+	// Point in middle end of right track (point 1)
+	glVertex3f(nextPosX + offset, nextPosY + offset, nextPosZ + offset);
+
+	glEnd();
 }

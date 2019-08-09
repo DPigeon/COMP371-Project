@@ -61,11 +61,7 @@ void Renderer::Initialize()
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
     
-    
     CheckForErrors();
-    
-
-    
     
 	// Loading Shaders
 #if defined(PLATFORM_OSX)
@@ -79,8 +75,8 @@ void Renderer::Initialize()
                             shaderPathPrefix + "SolidColor.fragmentshader")
                                );
 	sShaderProgramID.push_back(
-                LoadShaders(shaderPathPrefix + "PathLines.vertexshader",
-                            shaderPathPrefix + "PathLines.fragmentshader")
+                LoadShaders(shaderPathPrefix + "SplineTracks.vertexshader",
+                            shaderPathPrefix + "SplineTracks.fragmentshader")
                                );
 	sShaderProgramID.push_back(
                 LoadShaders(shaderPathPrefix + "SolidColor.vertexshader",
@@ -98,9 +94,8 @@ void Renderer::Initialize()
                                LoadShaders(shaderPathPrefix + "Stars.vertexshader",
                                            shaderPathPrefix + "Stars.fragmentshader")
                                );
-    
-	sCurrentShader = 0;
 
+	sCurrentShader = 0;
 }
 
 void Renderer::Shutdown()

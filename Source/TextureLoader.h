@@ -14,6 +14,8 @@ class TextureLoader
 {
 public:
     static int LoadTexture(const char * imagepath, int& spriteWidth);
+    static int LoadTexture(const char * imagepath);
+
 
 private:
     

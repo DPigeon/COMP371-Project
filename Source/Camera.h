@@ -23,7 +23,9 @@ public:
 	virtual glm::mat4 GetViewMatrix() const = 0;
 	virtual glm::mat4 GetProjectionMatrix() const;
 	glm::mat4 GetViewProjectionMatrix() const;
-
+    glm::vec3 GetPosition() const { return mPosition; }
+    void SetPosition(glm::vec3 position);
+    glm::vec3 mPosition;
 private:
 
 };
