@@ -10,6 +10,8 @@
 #include "Model.h"
 #include "Animation.h"
 #include "World.h"
+#include "ParticleEmitter.h"
+#include "ParticleSystem.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/common.hpp>
 
@@ -111,7 +113,6 @@ bool Model::ParseLine(const std::vector<ci_string> &token)
             
             mAnimation = World::GetInstance()->FindAnimation(animName);
         }
-    
         else if(token[0] == "materialcoefficient")
         {
             assert(token.size() > 2);
@@ -121,6 +122,19 @@ bool Model::ParseLine(const std::vector<ci_string> &token)
             mMaterialCoefficients.y = static_cast<float>(atof(token[3].c_str()));
             mMaterialCoefficients.z = static_cast<float>(atof(token[4].c_str()));
             mMaterialCoefficients.w = static_cast<float>(atof(token[5].c_str()));
+        }
+        else if (token[0] == "particleemitter")
+        {
+            assert(token.size() > 2);
+            assert(token[1] == "=");
+            
+            ParticleDescriptor* desc = World::GetInstance()->FindParticleDescriptor(token[2]);
+            assert(desc != nullptr);
+            
+            ParticleEmitter* emitter = new ParticleEmitter(vec3(0.0f, 0.0f, 0.0f), this);
+            
+            ParticleSystem* ps = new ParticleSystem(emitter, desc);
+            World::GetInstance()->AddParticleSystem(ps);
         }
         else
         {

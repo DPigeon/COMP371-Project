@@ -4,6 +4,22 @@ name     = "KeyForth"
 position = -3.0 1.0 0.0
 rotation =  1.0f 0.0f 0.0f 180.0f
 
+[AnimationKey]
+name     = "KeyUp"
+position = 0.0 3.0 0.0
+rotation =  1.0f 0.0f 0.0f 150.0f
+
+[AnimationKey]
+name     = "KeyDown"
+position = 1.0 0.0 0.0
+rotation =  1.0f 0.0f 0.0f 150.0f
+
+[Animation]
+name     = "UpAndDown"
+key      = "KeyUp"        time = 0.0f
+key      = "KeyDown"      time = 2.0f
+key      = "KeyForth"     time = 4.0f
+
 
 [AnimationKey]
 name     = "KeyBack"
@@ -98,6 +114,14 @@ fadeInTime = 0.2
 fadeOutTime = 0.7
 totalLifetime = 2.0
 totalLifetimeRandomness = 0.3
+
+[Cube]
+name     = "Cube"
+scaling  = 1.0 1.0 1.0
+position = 0.0 1.0 0.0
+rotation = 0.0 0.0 1.0 180
+animation = "UpAndDown"
+particleEmitter = "Fountain"
 
 
 [ParticleDescriptor]

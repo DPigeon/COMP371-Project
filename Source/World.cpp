@@ -92,7 +92,7 @@ World::World()
     int size;
 #if defined(PLATFORM_OSX)
     //    int billboardTextureID = TextureLoader::LoadTexture("/Users/kevinluu/Google Drive/Concordia/Semester 7 - Summer 2019/COMP 371/Assignment/A1/Framework/Assets/Textures/BillboardTest.bmp");
-    int billboardTextureID = TextureLoader::LoadTexture("Textures/BillboardTest.bmp", size);
+    int billboardTextureID = TextureLoader::LoadTexture("Textures/Area51_Logo.png", size);
 #else
     //    int billboardTextureID = TextureLoader::LoadTexture("../Assets/Textures/BillboardTest.bmp");
     int billboardTextureID = TextureLoader::LoadTexture("../Assets/Textures/Particle.png");
@@ -339,11 +339,7 @@ void World::Draw()
     int texture_id = TextureLoader::LoadTexture("Textures/Stars/shiny_yellow_star-min.png", spriteWidth);
 #else
     //    int texture_id = TextureLoader::LoadTexture("../Assets/Textures/BillboardTest.bmp", spriteWidth);
-<<<<<<< HEAD
-    int texture_id = TextureLoader::LoadTexture("../Textures/Stars/shiny_yellow_star-min.png", spriteWidth);
-=======
     int texture_id = TextureLoader::LoadTexture("../Assets/Textures/Stars/shiny_yellow_star-min.png", spriteWidth);
->>>>>>> #1-stars-generator
 #endif
     
     star = new Star(texture_id);
