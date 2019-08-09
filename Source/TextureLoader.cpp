@@ -37,6 +37,7 @@ int TextureLoader::LoadTexture(const char * imagepath, int& spriteWidth)
     int width = FreeImage_GetWidth(image32bits);
     int height = FreeImage_GetHeight(image32bits);
 	spriteWidth = width;
+
     // This will upload the texture to the GPU memory
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height,
                  0, GL_BGRA, GL_UNSIGNED_BYTE, (void*)FreeImage_GetBits(image32bits));

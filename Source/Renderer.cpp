@@ -61,11 +61,7 @@ void Renderer::Initialize()
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
     
-    
     CheckForErrors();
-    
-
-    
     
 	// Loading Shaders
 #if defined(PLATFORM_OSX)
@@ -94,9 +90,12 @@ void Renderer::Initialize()
                 LoadShaders(shaderPathPrefix + "Stars.vertexshader",
                             shaderPathPrefix + "Stars.fragmentshader")
                                );
-    
-	sCurrentShader = 0;
+	sShaderProgramID.push_back(
+				LoadShaders(shaderPathPrefix + "Skybox.vertexshader",
+							shaderPathPrefix + "Skybox.fragmentshader")
+							   );
 
+	sCurrentShader = 0;
 }
 
 void Renderer::Shutdown()
@@ -123,7 +122,7 @@ void Renderer::BeginFrame()
 void Renderer::EndFrame()
 {
 	// Swap buffers
-	glfwSwapBuffers(spWindow);
+	//glfwSwapBuffers(spWindow);
     
     CheckForErrors();
 }

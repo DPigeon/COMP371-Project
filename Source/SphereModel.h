@@ -32,6 +32,7 @@ private:
         glm::vec3 color;
     };
 
+    glm::vec3 mColor;
     unsigned int mVAO;
     unsigned int mVBO;
     unsigned int numOfVertices;

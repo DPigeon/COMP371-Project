@@ -37,6 +37,10 @@ public:
     AnimationKey* FindAnimationKey(ci_string keyName);
 
     const Camera* GetCurrentCamera() const;
+	void SetCurrentCamera(int cameraNumber);
+
+	bool GetLoadingState();
+	void SetLoadingState(bool state);
     
 private:
     static World* instance;
@@ -48,8 +52,20 @@ private:
     std::vector<BSpline*> mSpline;
 	std::vector<BSplineCamera*> mSplineCamera;
     std::vector<Model*> generatePlanets();
+    /**
+     * Checks if the randomly generated planet could possibly overlap with any of
+     * the generated planets
+     *
+     * @param planetRandomPoint The point to compare with all the others
+     * @param planetPositions The list of points used to compare
+     *
+     * @return bool If the point would overlap or not
+     */
+    bool planetHasSpace(glm::vec3 planetRandomPoint, std::vector<glm::vec3> planetPositions);
 	unsigned int mCurrentCamera;
     void generateStars();
+	bool isLoading;
 };
 
 float randomFloat(float min, float max);
+glm::vec3 randomSphericalCoordinatesToCartesian(float radius, glm::vec3 initialCenter);

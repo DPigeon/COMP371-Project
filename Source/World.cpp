@@ -25,6 +25,7 @@
 
 #include "BSpline.h"
 #include "BSplineCamera.h"
+#include "Skybox.h"
 
 #include "Star.h"
 
@@ -34,24 +35,56 @@ using namespace glm;
 World* World::instance;
 Star* star;
 
+Skybox skybox;
 
 // Light Coefficients
 const vec3 lightColor(1.0f, 1.0f, 1.0f);
 const float lightKc = 0.05f;
 const float lightKl = 0.02f;
 const float lightKq = 0.002f;
-const vec4 lightPosition(3.0f, 0.0f, 20.0f, 1.0f);
 
+// Negative to ensure light points towards the correct quadrant
+// Lights half of the planet towards the sun
+const vec4 lightPosition(-10.0f, -10.0f, -10.0f, 1.0f); 
+
+// TODO: These should be parameters set in the menu
+const int NUMBER_OF_PLANETS = 10;
+const float PLANET_SCALING_MIN_SIZE = 4.0f;
+const float PLANET_SCALING_MAX_SIZE = 8.0f;
 
 World::World()
 {
     instance = this;
+    isLoading = true; // Initialize loading state
     
     // Setup Camera
-    mCamera.push_back(new FirstPersonCamera(vec3(3.0f, 5.0f, 20.0f)));
+    mCamera.push_back(new FirstPersonCamera(vec3(3.0f, 5.0f, 20.0f)));	
     mCamera.push_back(new StaticCamera(vec3(3.0f, 30.0f, 5.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f)));
     mCamera.push_back(new StaticCamera(vec3(0.5f,  0.5f, 5.0f), vec3(0.0f, 0.5f, 0.0f), vec3(0.0f, 1.0f, 0.0f)));
-    mCurrentCamera = 0;
+
+    mCurrentCamera = 2; // Putting this as the current camera so that we load splines automatically
+
+    //mCurrentCamera = 0;
+
+	std::vector<std::string> skyboxFaces;
+	// MUST BE IN THIS ORDER: RIGHT LEFT UP DOWN BACK FRONT
+#if defined(PLATFORM_OSX)
+    skyboxFaces.push_back("Textures/Skybox/starfield_rt.tga");
+    skyboxFaces.push_back("Textures/Skybox/starfield_lf.tga");
+    skyboxFaces.push_back("Textures/Skybox/starfield_up.tga");
+    skyboxFaces.push_back("Textures/Skybox/starfield_dn.tga");
+    skyboxFaces.push_back("Textures/Skybox/starfield_bk.tga");
+    skyboxFaces.push_back("Textures/Skybox/starfield_ft.tga");
+#else
+    skyboxFaces.push_back("../Assets/Textures/Skybox/starfield_rt.tga");
+    skyboxFaces.push_back("../Assets/Textures/Skybox/starfield_lf.tga");
+    skyboxFaces.push_back("../Assets/Textures/Skybox/starfield_up.tga");
+    skyboxFaces.push_back("../Assets/Textures/Skybox/starfield_dn.tga");
+    skyboxFaces.push_back("../Assets/Textures/Skybox/starfield_bk.tga");
+    skyboxFaces.push_back("../Assets/Textures/Skybox/starfield_ft.tga");
+#endif
+  
+	skybox = Skybox(skyboxFaces);
 }
 
 World::~World()
@@ -159,7 +192,9 @@ void World::Draw()
 {
     
     Renderer::BeginFrame();
-    
+	
+	skybox.Draw();
+  
     glUseProgram(Renderer::GetShaderProgramID());
     
     unsigned int prevShader = Renderer::GetCurrentShader();
@@ -177,6 +212,7 @@ void World::Draw()
     GLuint LightAttenuationID = glGetUniformLocation(Renderer::GetShaderProgramID(), "lightAttenuation");
     
     GLuint MaterialID = glGetUniformLocation(Renderer::GetShaderProgramID(), "materialCoefficients");
+    GLuint ModelColorID = glGetUniformLocation(Renderer::GetShaderProgramID(), "modelColor");
     
     // Draw the Vertex Buffer
     // Note this draws a unit Sphere
@@ -203,12 +239,15 @@ void World::Draw()
         if ((*it)->GetMaterialCoefficients().length() > 0){
             MaterialID = glGetUniformLocation(Renderer::GetShaderProgramID(), "materialCoefficients");
             glUniformMatrix4fv(WorldMatrixID, 1, GL_FALSE, &((*it)->GetWorldMatrix())[0][0]);
-            float ka = 0.9f;
-            float kd = 0.5f;
-            float ks = 1.0f;
-            float n = 50.0f;
+
+            // Get material coefficients set in the model
+            float ka = (*it)->GetMaterialCoefficients().x;
+            float kd = (*it)->GetMaterialCoefficients().y;
+            float ks = (*it)->GetMaterialCoefficients().z;
+            float n = (*it)->GetMaterialCoefficients().w;
             
             glUniform4f(MaterialID, ka, kd, ks, n);
+            glUniform3f(ModelColorID, (*it)->GetColor().x, (*it)->GetColor().y, (*it)->GetColor().z);
         }
         (*it)->Draw();
     }
@@ -219,6 +258,8 @@ void World::Draw()
     
     //Draw the BSpline between all the planets here
 	for (vector<BSpline*>::iterator it = mSpline.begin(); it < mSpline.end(); ++it) {
+		glPushMatrix();
+		glPushAttrib(GL_ALL_ATTRIB_BITS);
 		MaterialID = glGetUniformLocation(Renderer::GetShaderProgramID(), "materialCoefficients");
 
 		glUniformMatrix4fv(WorldMatrixID, 1, GL_FALSE, &((*it)->GetWorldMatrix())[0][0]);
@@ -226,9 +267,14 @@ void World::Draw()
 		float kd = 0.5f;
 		float ks = 1.0f;
 		float n = 50.0f;
-
 		glUniform4f(MaterialID, ka, kd, ks, n);
+
+        // Set color of spline here
+        glUniform3f(ModelColorID, 0.0f, 0.0f, 1.0f);
+
 		(*it)->ConstructTracks(mSplineCamera.front()->GetExtrapolatedPoints());
+		glPopAttrib();
+		glPopMatrix();
 	}
 
     Renderer::CheckForErrors();
@@ -279,7 +325,7 @@ void World::LoadScene(const char * scene_path)
                 cube->Load(iss);
                 mModel.push_back(cube);
             }
-            else if( result == "sphere" )
+            else if (result == "sphere")
             {
                 PlanetModel* sphere = new PlanetModel();
                 sphere->Load(iss);
@@ -304,7 +350,10 @@ void World::LoadScene(const char * scene_path)
 				mModel.insert(mModel.begin(), planets.begin(), planets.end());
 
 				for (std::vector<Model*>::iterator it = planets.begin(); it < planets.end(); ++it) {
-					planetTour->AddControlPoint(glm::vec3((*it)->GetPosition()));
+                    float scaling = glm::length((*it)->GetScaling()); // This is also the new radius since our initial radius is always 1.0f
+                    float buffer = 0.1f; // Make sure we are half a planets initial diameter away
+                    glm::vec3 newPosition  = randomSphericalCoordinatesToCartesian(scaling + buffer, (*it)->GetPosition());
+                    planetTour->AddControlPoint(newPosition);
 				}
 
 				planetTour->CreateVertexBuffer();
@@ -334,19 +383,72 @@ void World::LoadScene(const char * scene_path)
     }
 }
 
+glm::vec3 randomSphericalCoordinatesToCartesian(float radius, glm::vec3 initialCenter){
+    float theta = randomFloat(0, 180.0f);
+    float phi = randomFloat(0, 360.0f);
+    float x = radius * glm::cos(phi) * glm::sin(theta) + initialCenter.x;
+    float y = radius * glm::sin(phi) * glm::cos(theta) + initialCenter.y;
+    float z = radius * glm::cos(theta) + initialCenter.z;
+    return glm::vec3(x, y, z);
+}
+
 std::vector<Model*> World::generatePlanets(){
     std::vector<Model*> planetList;
-    //Temporary number here
-    for (int i = 0; i < 8; i++) {
-        PlanetModel* randomSphere = new PlanetModel();
-        randomSphere->SetPosition(vec3(randomFloat(0, 100.0f),randomFloat(10.0f, 100.0f),randomFloat(0.0f, 100.0f)));
-        float planetScalingConstant = randomFloat(0.5f, 4.0f);
-        randomSphere->SetScaling(vec3(planetScalingConstant,planetScalingConstant,planetScalingConstant));
-        planetList.push_back(randomSphere);
+    std::vector<vec3> planetPositions;
+
+    for (int i = 0; i < NUMBER_OF_PLANETS; i++) {
+        PlanetModel* randomPlanet = new PlanetModel();
+        
+        // Position
+        vec3 planetRandomPoint;
+        do {
+            planetRandomPoint = vec3(randomFloat(0, 100.0f), randomFloat(10.0f, 100.0f), randomFloat(0.0f, 100.0f));
+        } while(!planetHasSpace(planetRandomPoint, planetPositions));
+        planetPositions.push_back(planetRandomPoint);
+        randomPlanet->SetPosition(planetRandomPoint);
+        float planetScalingConstant = randomFloat(PLANET_SCALING_MIN_SIZE, PLANET_SCALING_MAX_SIZE);
+        randomPlanet->SetScaling(vec3(planetScalingConstant, planetScalingConstant, planetScalingConstant));
+        
+        // Color
+        float red = randomFloat(0.0f, 1.0f);
+        float green = randomFloat(0.0f, 1.0f);
+        float blue = randomFloat(0.0f, 1.0f);
+        randomPlanet->SetColor(vec3(red, green, blue));
+        
+        // Ambient set to 0.5 to better see the effect of lighting
+        // Shininess is set super high to remove the point light effect
+        randomPlanet->SetMaterialCoefficients(vec4(0.5f, 0.5f, 1.0f, 100000.0f));
+
+        planetList.push_back(randomPlanet);
     }
+  
+    PlanetModel* sun = new PlanetModel();
+    sun->SetPosition(vec3(0.0f, 0.0f, 0.0f)); // Sun placed on origin
+    sun->SetScaling(vec3(10.0f,10.0f,10.0f));
+    sun->SetColor(vec3(0.988f, 0.831f, 0.251f));
+
+    // Sun is unaffected by lighting
+    sun->SetMaterialCoefficients(vec4(1.0f, 0.0f, 0.0f, 1.0f));
+
+    planetList.push_back(sun);
+
+    // Sorts the planets by their position vector magnitude
+    std::sort(planetList.begin(), planetList.end(), [ ]( const Model* p1, const Model* p2) {
+        return glm::length(p1->GetPosition()) < glm::length(p2->GetPosition());
+    });
+  
     return planetList;
 }
 
+bool World::planetHasSpace(vec3 planetRandomPoint, std::vector<vec3> planetPositions) {
+    for (auto position : planetPositions) {
+        // The planets have to have at least the max size of a planet in between them
+        if (glm::distance(planetRandomPoint, position) < PLANET_SCALING_MAX_SIZE * 2.0) {
+            return false;
+        }
+    }
+    return true;
+}
 
 float randomFloat(float min, float max)
 {
@@ -388,4 +490,16 @@ AnimationKey* World::FindAnimationKey(ci_string keyName)
 const Camera* World::GetCurrentCamera() const
 {
     return mCamera[mCurrentCamera];
+}
+
+void World::SetCurrentCamera(int cameraNumber) {
+	mCurrentCamera = cameraNumber;
+}
+
+bool World::GetLoadingState() {
+	return isLoading;
+}
+
+void World::SetLoadingState(bool state) {
+	isLoading = state;
 }
