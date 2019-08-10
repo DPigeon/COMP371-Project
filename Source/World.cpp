@@ -13,7 +13,7 @@
 
 #include "StaticCamera.h"
 #include "FirstPersonCamera.h"
-
+#include "ObjectDescription.h"
 
 #include "CubeModel.h"
 #include "SphereModel.h"
@@ -306,6 +306,8 @@ void World::Draw()
     glEnable(GL_VERTEX_PROGRAM_POINT_SIZE); //Enable changing size of point sprites
     star -> Draw();
     glDisable(GL_BLEND);
+
+	ObjectDescription::RayPickObject(View);
     
     // Restore previous shader
     Renderer::SetShader((ShaderType) prevShader);
@@ -429,6 +431,7 @@ std::vector<Model*> World::generatePlanets(){
         randomTries = 0;
         
         if (positionIsValid) {
+			cout << planetRandomPoint.x << endl;
             planetPositions.push_back(planetRandomPoint);
             randomPlanet->SetPosition(planetRandomPoint);
             float planetScalingConstant = randomFloat(PLANET_SCALING_MIN_SIZE, PLANET_SCALING_MAX_SIZE);
