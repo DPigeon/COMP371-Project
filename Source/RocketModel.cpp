@@ -20,21 +20,17 @@ RocketModel::RocketModel() : Model()
 {
         //Setup models
     #if defined(PLATFORM_OSX)
-        std::string cubePath = "/Users/michel/disposable/COMP371-Project/Assets/Models/rocket.obj";
-//        int texture_id = TextureLoader::LoadTexture("Textures/mat.png", spritewidth);
+        std::string rocketPath = "/Users/michel/disposable/COMP371-Project/Assets/Models/rocket.obj";
     #else
-        std::string cubePath = "../Assets/Models/cube.obj";
-        std::string heraclesPath = "../Assets/Models/heracles.obj";
+        std::string rocketPath = "../Assets/Models/rocket.obj";
+    
     #endif
+
+    int rocketVertices;
+    GLuint rocketVAO = World::GetInstance()->setupModelEBO(rocketPath , rocketVertices ); //Only one letter to
     
-        //TODO 1 load the more interesting model: "heracles.obj"
-        //TODO 3 load the models as EBOs instead of only VBOs
-    
-    int cubeVertices;
-    GLuint cubeVAO = World::GetInstance()->setupModelEBO(cubePath , cubeVertices ); //Only one letter to
-    
-    activeVAOVertices = cubeVertices;
-    activeVAO = cubeVAO;
+    activeVAOVertices = rocketVertices;
+    activeVAO = rocketVAO;
 }
 
 void RocketModel::Update(float dt)
