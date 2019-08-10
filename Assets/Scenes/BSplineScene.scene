@@ -5,8 +5,18 @@ position = -3.0 1.0 0.0
 rotation =  1.0f 0.0f 0.0f 180.0f
 
 [AnimationKey]
-name     = "KeyUp"
+name     = "KeyUp1"
 position = 0.0 3.0 0.0
+rotation =  1.0f 0.0f 0.0f 150.0f
+
+[AnimationKey]
+name     = "KeyUp2"
+position = 0.0 16.0 0.0
+rotation =  1.0f 0.0f 0.0f 150.0f
+
+[AnimationKey]
+name     = "KeyUp3"
+position = 0.0 19.0 0.0
 rotation =  1.0f 0.0f 0.0f 150.0f
 
 [AnimationKey]
@@ -16,9 +26,11 @@ rotation =  1.0f 0.0f 0.0f 150.0f
 
 [Animation]
 name     = "UpAndDown"
-key      = "KeyUp"        time = 0.0f
-key      = "KeyDown"      time = 2.0f
-key      = "KeyForth"     time = 4.0f
+key      = "KeyUp1"        time = 0.0f
+key      = "KeyUp2"        time = 2.0f
+key      = "KeyUp3"        time = 4.0f
+key      = "KeyDown"        time = 6.0f
+
 
 
 [AnimationKey]
@@ -115,14 +127,6 @@ fadeOutTime = 0.7
 totalLifetime = 2.0
 totalLifetimeRandomness = 0.3
 
-[Cube]
-name     = "Cube"
-scaling  = 1.0 1.0 1.0
-position = 0.0 1.0 0.0
-rotation = 0.0 0.0 1.0 180
-animation = "UpAndDown"
-particleEmitter = "Fountain"
-
 
 [ParticleDescriptor]
 name        = "Smoke"
@@ -142,5 +146,32 @@ fadeInTime = 0.7
 fadeOutTime = 3.5
 totalLifetime = 5.5
 totalLifetimeRandomness = 0.0
+
+[ParticleDescriptor]
+name        = "Explosion"
+velocity = 0.0 5.0 0.0
+velocityAngleRandomness = 4.0
+acceleration = 0.0 0.15 0.0
+initialRotationAngle = 0.0
+initialRotationAngleRandomness = 360.0
+initialSize = 0.5 0.5
+initialSizeRandomness = 0.02 0.02
+sizeGrowthVelocity = 1.2 1.2
+initialColor = 1.0 0.0 0.0 0.5
+midColor = 1.0 1.0 0.0 1.0
+endColor = 0.8 0.8 0.8 0.01
+emissionRate = 5.0
+fadeInTime = 0.7
+fadeOutTime = 3.5
+totalLifetime = 5.5
+totalLifetimeRandomness = 0.0
+
+[Sphere]
+name     = "Sphere"
+scaling  = 0.2 0.2 0.2
+position = 0.0 1.0 0.0
+rotation = 0.0 0.0 1.0 180
+animation = "UpAndDown"
+particleEmitter = "Smoke"
 
 
