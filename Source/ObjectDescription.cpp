@@ -35,13 +35,33 @@ void ObjectDescription::RayPickObject(mat4 viewMatrix) {
 
 		// View Space
 		vec3 WorldRay = vec3(inverse(viewMatrix) * ClipRay);
-		vec3 normalizedWorldRay = normalize(WorldRay);
-		cout << normalizedWorldRay.x << endl;
+		vec3 normalizedWorldRay = normalize(WorldRay); // Distance of the point from the origin
 
-		// Next step: Use the world ray traced to point to objects now
+		// Next step: Use the world ray traced to point to objects now (planets)
+
+		// return intersectRayPlanet(vec3 worldRay)
 	}
 }
 
-ObjectDescription::~ObjectDescription() {
+float ObjectDescription::intersectRayPlanetPoint(vec3 worldRay, vec3 planetPosition, float planetRadius) {
+	// Quadratic equation of the form t^2 + 2Bt + C = 0
+	// Two intersection roots are t1 = -B - sqrt(B^2 - 4C), t2 = -B + sqrt(B^2 - 4C)
+	// Origin is at (0, 0, 0) since we normalized the world ray vector already
 
+	float tIntersectPoint1 = 0.0f;
+	float tIntersectPoint2 = 0.0f;
+	float b = (worldRay.x * (-planetPosition.x) + worldRay.y * (-planetPosition.y) + worldRay.z * (-planetPosition.z));
+	float c = pow((-planetPosition.x), 2) + pow((-planetPosition.y), 2) + pow((planetPosition.z), 2) - pow((planetRadius), 2);
+
+	tIntersectPoint1 = -b - sqrt(pow(b, 2) - 4 * c);
+	tIntersectPoint2 = -b + sqrt(pow(b, 2) - 4 * c);
+
+	// Smallest positive t value gives nearest point of intersection
+	if (tIntersectPoint1 > 0 && tIntersectPoint1 < tIntersectPoint2)
+		return tIntersectPoint1;
+	else
+		return tIntersectPoint2;
+}
+
+ObjectDescription::~ObjectDescription() {
 }

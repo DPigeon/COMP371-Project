@@ -431,7 +431,6 @@ std::vector<Model*> World::generatePlanets(){
         randomTries = 0;
         
         if (positionIsValid) {
-			cout << planetRandomPoint.x << endl;
             planetPositions.push_back(planetRandomPoint);
             randomPlanet->SetPosition(planetRandomPoint);
             float planetScalingConstant = randomFloat(PLANET_SCALING_MIN_SIZE, PLANET_SCALING_MAX_SIZE);
