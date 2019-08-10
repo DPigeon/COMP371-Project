@@ -32,6 +32,9 @@ public:
 	static float GetMouseMotionX();
 	static float GetMouseMotionY();
 
+	static float GetScreenWidth();
+	static float GetScreenHeight();
+
 	static void EnableMouseCursor();
 	static void DisableMouseCursor();
     static float GetRandomFloat(float min, float max);
@@ -51,6 +54,8 @@ private:
 
 	// Window
 	static GLFWwindow* spWindow;
+	static float screenWidth;
+	static float screenHeight;
 
     bool isLoading;
 };

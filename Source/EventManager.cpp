@@ -60,6 +60,10 @@ float  EventManager::sMouseDeltaX = 0.0f;
 double EventManager::sLastMousePositionY = 0.0f;
 float  EventManager::sMouseDeltaY = 0.0f;
 
+// Screen dimensions
+float EventManager::screenWidth = 1024;
+float EventManager::screenHeight = 768;
+
 // Window
 GLFWwindow* EventManager::spWindow = nullptr;
 
@@ -263,6 +267,14 @@ float EventManager::GetMouseMotionX()
 float EventManager::GetMouseMotionY()
 {
 	return sMouseDeltaY;
+}
+
+float EventManager::GetScreenWidth() {
+	return screenWidth;
+}
+
+float EventManager::GetScreenHeight() {
+	return screenHeight;
 }
 
 void EventManager::EnableMouseCursor()

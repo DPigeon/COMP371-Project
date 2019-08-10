@@ -21,8 +21,8 @@ void ObjectDescription::RayPickObject(mat4 viewMatrix) {
 		// Viewport coordinates
 		float x = EventManager::GetMouseMotionX();
 		float y = EventManager::GetMouseMotionY();
-		float width = 1024;
-		float height = 768;
+		float width = EventManager::GetScreenWidth();
+		float height = EventManager::GetScreenHeight();
 
 		// NDC coordinates (-1, 1 in x, y, z, w)
 		float ndcX = (2.0f * x) / width - 1.0f;
