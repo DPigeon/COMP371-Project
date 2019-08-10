@@ -14,7 +14,7 @@ using namespace glm;
 ObjectDescription::ObjectDescription() {
 }
 
-void ObjectDescription::RayPickObject(mat4 viewMatrix) {
+void ObjectDescription::RayPickObject(mat4 viewMatrix, vec3 planetPosition, float planetRadius) {
 	if (glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_LEFT)) {
 		// Go from viewport ---> world space to click on things from screen space ---> world space
 
@@ -39,7 +39,11 @@ void ObjectDescription::RayPickObject(mat4 viewMatrix) {
 
 		// Next step: Use the world ray traced to point to objects now (planets)
 
-		// return intersectRayPlanet(vec3 worldRay)
+		float intersectionPoint = intersectRayPlanetPoint(normalizedWorldRay, planetPosition, planetRadius);
+
+		// Recall that a point P given on a ray is P = O + tD where P is the point, O origin, t intersection point & D is the ray direction vector
+		vec3 positionWorldSpace = intersectionPoint * normalizedWorldRay;
+		cout << positionWorldSpace.x << endl;
 	}
 }
 
@@ -51,7 +55,7 @@ float ObjectDescription::intersectRayPlanetPoint(vec3 worldRay, vec3 planetPosit
 	float tIntersectPoint1 = 0.0f;
 	float tIntersectPoint2 = 0.0f;
 	float b = (worldRay.x * (-planetPosition.x) + worldRay.y * (-planetPosition.y) + worldRay.z * (-planetPosition.z));
-	float c = pow((-planetPosition.x), 2) + pow((-planetPosition.y), 2) + pow((planetPosition.z), 2) - pow((planetRadius), 2);
+	float c = (pow((-planetPosition.x), 2) + pow((-planetPosition.y), 2) + pow((planetPosition.z), 2) - pow((planetRadius), 2));
 
 	tIntersectPoint1 = -b - sqrt(pow(b, 2) - 4 * c);
 	tIntersectPoint2 = -b + sqrt(pow(b, 2) - 4 * c);

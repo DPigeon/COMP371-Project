@@ -307,7 +307,7 @@ void World::Draw()
     star -> Draw();
     glDisable(GL_BLEND);
 
-	ObjectDescription::RayPickObject(View);
+	//ObjectDescription::RayPickObject(View);
     
     // Restore previous shader
     Renderer::SetShader((ShaderType) prevShader);
