@@ -55,6 +55,7 @@ private:
 	std::vector<BSplineCamera*> mSplineCamera;
     int mNumberOfPlanetsGenerated;
     std::vector<Model*> generatePlanets();
+	std::vector<Model*> planets;
     /**
      * Checks if the randomly generated planet could possibly overlap with any of
      * the generated planets

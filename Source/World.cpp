@@ -306,9 +306,11 @@ void World::Draw()
     glEnable(GL_VERTEX_PROGRAM_POINT_SIZE); //Enable changing size of point sprites
     star -> Draw();
     glDisable(GL_BLEND);
-
-	//ObjectDescription::RayPickObject(View);
     
+	for (std::vector<Model*>::iterator it = planets.begin(); it < planets.end(); ++it) {
+		ObjectDescription::RayPickObject(View, (*it)->GetPosition(), (*it)->GetScaling());
+	}
+
     // Restore previous shader
     Renderer::SetShader((ShaderType) prevShader);
     
@@ -365,7 +367,7 @@ void World::LoadScene(const char * scene_path)
 			else if (result == "spline")
 			{
 				BSpline* planetTour = new BSpline();
-				std::vector<Model*> planets = generatePlanets();
+				planets = generatePlanets();
                 mNumberOfPlanetsGenerated = (int)planets.size() - 1; // Remove the sun from the count!!
 				mModel.insert(mModel.begin(), planets.begin(), planets.end());
 
