@@ -126,7 +126,7 @@
     <ClCompile Include="..\Source\BSpline.cpp" />
     <ClCompile Include="..\Source\BSplineCamera.cpp" />
     <ClCompile Include="..\Source\Camera.cpp" />
-    <ClCompile Include="..\Source\CubeModel.cpp" />
+    <ClCompile Include="..\Source\Projectile.cpp" />
     <ClCompile Include="..\Source\EventManager.cpp" />
     <ClCompile Include="..\Source\FirstPersonCamera.cpp" />
     <ClCompile Include="..\Source\LoadingScreen.cpp" />
@@ -153,7 +153,7 @@
     <ClInclude Include="..\Source\BSpline.h" />
     <ClInclude Include="..\Source\BSplineCamera.h" />
     <ClInclude Include="..\Source\Camera.h" />
-    <ClInclude Include="..\Source\CubeModel.h" />
+    <ClInclude Include="..\Source\Projectile.h" />
     <ClInclude Include="..\Source\EventManager.h" />
     <ClInclude Include="..\Source\FirstPersonCamera.h" />
     <ClInclude Include="..\Source\LoadingScreen.h" />

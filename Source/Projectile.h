@@ -11,11 +11,11 @@
 
 #include "Model.h"
 
-class CubeModel : public Model
+class Projectile : public Model
 {
 public:
-	CubeModel(glm::vec3 size = glm::vec3(1.0f, 1.0f, 1.0f));
-	virtual ~CubeModel();
+	Projectile(glm::vec3 size = glm::vec3(1.0f, 1.0f, 1.0f));
+	virtual ~Projectile();
 
 	virtual void Update(float dt);
 	virtual void Draw();
@@ -34,4 +34,5 @@ private:
 
 	unsigned int mVAO;
 	unsigned int mVBO;
+    unsigned int numOfVertices;
 };

@@ -14,9 +14,8 @@
 #include "StaticCamera.h"
 #include "FirstPersonCamera.h"
 
-
-#include "CubeModel.h"
 #include "SphereModel.h"
+#include "Projectile.h"
 #include "Animation.h"
 #include <GLFW/glfw3.h>
 #include "EventManager.h"
@@ -28,13 +27,15 @@
 #include "Star.h"
 #include "TextureLoader.h"
 
+#include <list>
+
 using namespace std;
 using namespace glm;
 
 World* World::instance;
 Star* star;
 Skybox skybox;
-
+list<Projectile*> projectileList;
 
 // TODO: These should be parameters set in the menu
 const int NUMBER_OF_PLANETS = 10;
@@ -188,6 +189,27 @@ void World::Update(float dt)
         (*it)->Update(dt);
     }
     
+    float lastFrameTime = (float)glfwGetTime();
+    int lastMouseLeftState = GLFW_RELEASE;
+    double lastMousePosX, lastMousePosY;
+    glfwGetCursorPos(EventManager::GetWindow(), &lastMousePosX, &lastMousePosY);
+    
+    Projectile* projectile = new Projectile();
+
+    if (lastMouseLeftState == GLFW_RELEASE && glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+    {
+        const float projectileSpeed = 25.0f;
+        projectile->SetPosition(mCamera[mCurrentCamera]->GetPosition() + vec3(0.0f, 0.02f, 0.0f)); // adjust to rocket's position
+        projectile->SetVelocity(projectileSpeed * mCamera[mCurrentCamera]->GetLookAt()); 
+        projectileList.push_back(projectile);
+    }
+    lastMouseLeftState = glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_LEFT);
+    
+    for (list<Projectile*>::iterator it = projectileList.begin(); it != projectileList.end(); ++it)
+    {
+        (*it)->Update(dt);
+    }
+
 }
 
 void World::Draw()
@@ -237,7 +259,16 @@ void World::Draw()
     
     mat4 ViewProjection = mCamera[mCurrentCamera]->GetViewProjectionMatrix();
     glUniformMatrix4fv(ViewProjMatrixID,  1, GL_FALSE, &ViewProjection[0][0]);
-    
+
+    // Draw projectiles before other models
+    for (list<Projectile*>::iterator it = projectileList.begin(); it != projectileList.end(); ++it)
+    {
+        glUniform3f(ModelColorID, 0.0f, 0.0f, 1.0f);
+        glUniform4f(MaterialID, 1.0f, 0.0f, 0.0f, 1.0f);
+        (*it)->SetScaling(vec3(0.05f, 0.05f, 0.05f)); // TO FIX
+        (*it)->Draw();
+    }
+
     // Draw models
     for (vector<Model*>::iterator it = mModel.begin(); it < mModel.end(); ++it)
     {
@@ -335,12 +366,12 @@ void World::LoadScene(const char * scene_path)
         ci_string result;
         if( std::getline( iss, result, ']') )
         {
-            if( result == "cube" )
+            if( result == "projectile" )
             {
                 // Box attributes
-                CubeModel* cube = new CubeModel();
-                cube->Load(iss);
-                mModel.push_back(cube);
+                Projectile* projectile = new Projectile();
+                projectile->Load(iss);
+                mModel.push_back(projectile);
             }
             else if (result == "sphere")
             {
