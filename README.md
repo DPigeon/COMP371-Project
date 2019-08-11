@@ -2,7 +2,8 @@
 
 ## Area51 Guide Tour Roller Coaster
 
-The goal of this project is to build a roller coaster with a world around it.
+The goal of this project was to build a roller coaster with a world around it.
+Made by DPigeon, eyitsKevin, almiche, dubemarcantoine, PinMeister & bit172.
 
 ## Setup
 
@@ -20,7 +21,7 @@ Then, ... (mac user to this part please)
 
 ### Library Required
 
-Some libraries are required to run this project properly:
+Some libraries are required to run this project properly (already installed):
 
 - FreeImage 3170
 - Glew 2.1.0
@@ -30,6 +31,6 @@ Some libraries are required to run this project properly:
 
 ### Packages Required
 
-We require some packages such as:
+We require some packages already installed such as:
 
 - ImGui 1.72b

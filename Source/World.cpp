@@ -308,7 +308,7 @@ void World::Draw()
     glDisable(GL_BLEND);
     
 	for (std::vector<Model*>::iterator it = planets.begin(); it < planets.end(); ++it) {
-		ObjectDescription::RayPickObject(View, (*it)->GetPosition(), (*it)->GetScaling());
+		cout << ObjectDescription::RayPickObject(View, (*it)->GetPosition(), (*it)->GetScaling()) << endl;
 	}
 
     // Restore previous shader
