@@ -39,6 +39,7 @@ using namespace glm;
 World* World::instance;
 Star* star;
 Skybox skybox;
+RocketModel* rocket;
 
 
 // TODO: These should be parameters set in the menu
@@ -59,7 +60,7 @@ const float lightKq = 0.002f;
 // Lights half of the planet towards the sun
 const vec4 lightPosition(-10.0f, -10.0f, -10.0f, 1.0f);
 
- char cwd[256];
+GLuint texture_id, texture_id2, texture[2];
 
 World::World()
 {
@@ -90,8 +91,32 @@ World::World()
     skyboxFaces.push_back("../Assets/Textures/Skybox/starfield_bk.tga");
     skyboxFaces.push_back("../Assets/Textures/Skybox/starfield_ft.tga");
 #endif
-  
+    
+    int spriteWidth;
+
+#if defined(PLATFORM_OSX)
+    //        int texture_id = TextureLoader::LoadTexture("Textures/BillboardTest.bmp", spriteWidth);
+     texture_id = TextureLoader::LoadTexture("Textures/Stars/shiny_yellow_star-min.png", spriteWidth);
+     texture_id2 = TextureLoader::LoadTexture("Textures/mat.png", spriteWidth);
+    
+#else
+    texture_id = TextureLoader::LoadTexture("../Assets/Textures/mat.png", spriteWidth);
+#endif
+    
+
 	skybox = Skybox(skyboxFaces);
+    glGenTextures(2, texture);
+
+    texture[0] = texture_id;
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+
+    texture[1] = texture_id2;
+    glBindTexture(GL_TEXTURE_2D, texture[1]);
+
+    star = new Star(texture[0]);
+    rocket = new RocketModel(texture[1]);
+    
+
 }
 
 World::~World()
@@ -161,6 +186,14 @@ void World::Update(float dt)
             mCurrentCamera = 3;
         }
         Renderer::SetShader(SHADER_STARS);
+    }
+    else if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_5 ) == GLFW_PRESS)
+    {
+        if (mCamera.size() > 4)
+        {
+            mCurrentCamera = 4;
+        }
+        Renderer::SetShader(SHADER_MODEL);
     }
 
     
@@ -290,50 +323,36 @@ void World::Draw()
 		(*it)->ConstructTracks(mSplineCamera.front()->GetExtrapolatedPoints());
 	}
     
-    int spriteWidth;
-    
-#if defined(PLATFORM_OSX)
-    //        int texture_id = TextureLoader::LoadTexture("Textures/BillboardTest.bmp", spriteWidth);
-    int texture_id = TextureLoader::LoadTexture("Textures/Stars/shiny_yellow_star-min.png", spriteWidth);
-#else
-    //    int texture_id = TextureLoader::LoadTexture("../Assets/Textures/BillboardTest.bmp", spriteWidth);
-    int texture_id = TextureLoader::LoadTexture("../Assets/Textures/Stars/shiny_yellow_star-min.png", spriteWidth);
-#endif
-    
-    star = new Star(texture_id);
-    
     Renderer::SetShader(SHADER_STARS);
     glUseProgram(Renderer::GetShaderProgramID());
-    
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
     glEnable(GL_BLEND); //Enable transparency blending
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); //Define transparency blending
     glEnable(GL_POINT_SPRITE); //Enable use of point sprites
     glEnable(GL_VERTEX_PROGRAM_POINT_SIZE); //Enable changing size of point sprites
     star -> Draw();
     glDisable(GL_BLEND);
-    
-    // Restore previous shader
-#if defined(PLATFORM_OSX)
-    //        int texture_id = TextureLoader::LoadTexture("Textures/BillboardTest.bmp", spriteWidth);
-    texture_id = TextureLoader::LoadTexture("Textures/mat.png", spriteWidth);
-#else
-   texture_id = TextureLoader::LoadTexture("../Assets/Textures/mat.png", spriteWidth);
-#endif
-    
-    Renderer::SetShader(SHADER_TEXTURE);
+
+    Renderer::SetShader(SHADER_MODEL);
     glUseProgram(Renderer::GetShaderProgramID());
-    
-//    glEnable(GL_BLEND); //Enable transparency blending
-//    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); //Define transparency blending
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture[1]);
     glEnable(GL_POINT_SPRITE); //Enable use of point sprites
-//    glEnable(GL_VERTEX_PROGRAM_POINT_SIZE); //Enable changing size of point sprites
-    
+
     rocket->Draw();
-    
+
     Renderer::SetShader((ShaderType) prevShader);
     glUseProgram(Renderer::GetShaderProgramID());
     Renderer::CheckForErrors();
     
+    glUniformMatrix4fv(ViewMatrixID,  1, GL_FALSE,  &View[0][0]);
+    
+    glUniformMatrix4fv(ProjMatrixID,  1, GL_FALSE, &Projection[0][0]);
+    
+    glUniformMatrix4fv(ViewProjMatrixID,  1, GL_FALSE, &ViewProjection[0][0]);
+
     
     Renderer::EndFrame();
 }
@@ -351,8 +370,6 @@ void World::LoadScene(const char * scene_path)
         getchar();
         exit(-1);
     }
-    
-    World::rocket = new RocketModel();
     
     ci_string item;
     while( std::getline( input, item, '[' ) )

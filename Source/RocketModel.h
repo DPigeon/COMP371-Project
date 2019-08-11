@@ -16,6 +16,8 @@ class RocketModel : public Model
 {
 public:
 	RocketModel();
+    RocketModel(int texture_id);
+
     virtual ~RocketModel(void);
     
     virtual void Update(float dt);

@@ -33,6 +33,23 @@ RocketModel::RocketModel() : Model()
     activeVAO = rocketVAO;
 }
 
+RocketModel::RocketModel(int texture) : Model()
+{
+    //Setup models
+#if defined(PLATFORM_OSX)
+    std::string rocketPath = "/Users/michel/disposable/COMP371-Project/Assets/Models/rocket.obj";
+#else
+    std::string rocketPath = "../Assets/Models/rocket.obj";
+#endif
+    
+    int rocketVertices;
+    GLuint rocketVAO = World::GetInstance()->setupModelEBO(rocketPath , rocketVertices ); //Only one letter to
+    
+    glBindTexture(GL_TEXTURE_2D, texture);
+    activeVAOVertices = rocketVertices;
+    activeVAO = rocketVAO;
+}
+
 void RocketModel::Update(float dt)
 {
     Model::Update(dt);
