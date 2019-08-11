@@ -29,7 +29,9 @@ name     = "UpAndDown"
 key      = "KeyUp1"        time = 0.0f
 key      = "KeyUp2"        time = 2.0f
 key      = "KeyUp3"        time = 4.0f
-key      = "KeyDown"        time = 6.0f
+key      = "KeyUp3"        time = 6.0f
+key      = "KeyUp3"        time = 8.0f
+key      = "KeyDown"        time = 12.0f
 
 
 
@@ -149,29 +151,23 @@ totalLifetimeRandomness = 0.0
 
 [ParticleDescriptor]
 name        = "Explosion"
-velocity = 0.0 5.0 0.0
-velocityAngleRandomness = 4.0
-acceleration = 0.0 0.15 0.0
+velocity = 0.0 15.0 0.0
+velocityAngleRandomness = 360.0
+acceleration = 0.0 -9.8 0.0
 initialRotationAngle = 0.0
 initialRotationAngleRandomness = 360.0
 initialSize = 0.5 0.5
 initialSizeRandomness = 0.02 0.02
-sizeGrowthVelocity = 1.2 1.2
+sizeGrowthVelocity = 1.2 2.2
 initialColor = 1.0 0.0 0.0 0.5
 midColor = 1.0 1.0 0.0 1.0
 endColor = 0.8 0.8 0.8 0.01
-emissionRate = 5.0
-fadeInTime = 0.7
-fadeOutTime = 3.5
-totalLifetime = 5.5
-totalLifetimeRandomness = 0.0
+emissionRate = 8.0
+fadeInTime = 0.01
+fadeOutTime = 0.2
+totalLifetime = 0.7
+totalLifetimeRandomness = 0.7
 
-[Sphere]
-name     = "Sphere"
-scaling  = 0.2 0.2 0.2
-position = 0.0 1.0 0.0
-rotation = 0.0 0.0 1.0 180
-animation = "UpAndDown"
-particleEmitter = "Smoke"
+
 
 

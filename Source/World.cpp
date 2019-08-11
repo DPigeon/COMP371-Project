@@ -92,7 +92,7 @@ World::World()
     int size;
 #if defined(PLATFORM_OSX)
     //    int billboardTextureID = TextureLoader::LoadTexture("/Users/kevinluu/Google Drive/Concordia/Semester 7 - Summer 2019/COMP 371/Assignment/A1/Framework/Assets/Textures/BillboardTest.bmp");
-    int billboardTextureID = TextureLoader::LoadTexture("Textures/Area51_Logo.png", size);
+    int billboardTextureID = TextureLoader::LoadTexture("Textures/ParticleAtlas.png", size);
 #else
     //    int billboardTextureID = TextureLoader::LoadTexture("../Assets/Textures/BillboardTest.bmp");
     int billboardTextureID = TextureLoader::LoadTexture("../Assets/Textures/Particle.png");
@@ -200,11 +200,20 @@ void World::Update(float dt)
     // Spacebar to change the shader
     if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_0 ) == GLFW_PRESS)
     {
-        Renderer::SetShader(SHADER_PHONG);
+        mCamera[mCurrentCamera]->GetPosition();
+        ParticleDescriptor* desc = mParticleDescriptorList.at(2);
+        ParticleEmitter* emitter = new ParticleEmitter(vec3(0)       , NULL);
+        
+        ParticleSystem* ps = new ParticleSystem(emitter, desc);
+        AddParticleSystem(ps);
     }
     else if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_9 ) == GLFW_PRESS)
     {
-        Renderer::SetShader(SHADER_SOLID_COLOR);
+
+        for (vector<ParticleSystem*>::iterator it = mParticleSystemList.begin(); it != mParticleSystemList.end(); ++it)
+        {
+            RemoveParticleSystem(*it);
+        }
     }
     
     // Update animation and keys
