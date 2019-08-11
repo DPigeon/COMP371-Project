@@ -323,10 +323,10 @@ void World::Draw()
     Renderer::SetShader(SHADER_TEXTURE);
     glUseProgram(Renderer::GetShaderProgramID());
     
-//    glEnable(GL_BLEND); //Enable transparency blending
-//    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); //Define transparency blending
+    glDisable(GL_BLEND); //Enable transparency blending
+    //    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); //Define transparency blending
     glEnable(GL_POINT_SPRITE); //Enable use of point sprites
-//    glEnable(GL_VERTEX_PROGRAM_POINT_SIZE); //Enable changing size of point sprites
+    glDisable(GL_VERTEX_PROGRAM_POINT_SIZE); //Enable changing size of point sprites
     
     rocket->Draw();
     
@@ -334,6 +334,23 @@ void World::Draw()
     glUseProgram(Renderer::GetShaderProgramID());
     Renderer::CheckForErrors();
     
+    glUniformMatrix4fv(ViewMatrixID,  1, GL_FALSE,  &View[0][0]);
+    
+    glUniformMatrix4fv(ProjMatrixID,  1, GL_FALSE, &Projection[0][0]);
+    
+    glUniformMatrix4fv(ViewProjMatrixID,  1, GL_FALSE, &ViewProjection[0][0]);
+    
+////    glEnable(GL_BLEND); //Enable transparency blending
+////    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); //Define transparency blending
+//    glEnable(GL_POINT_SPRITE); //Enable use of point sprites
+////    glEnable(GL_VERTEX_PROGRAM_POINT_SIZE); //Enable changing size of point sprites
+//    
+//    rocket->Draw();
+//    
+//    Renderer::SetShader((ShaderType) prevShader);
+//    glUseProgram(Renderer::GetShaderProgramID());
+//    Renderer::CheckForErrors();
+//    
     
     Renderer::EndFrame();
 }

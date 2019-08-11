@@ -43,10 +43,10 @@ GLuint randVAO(int& vertexCount, std::vector<float>& angles)
     for (int i = 0; i != vertexCount; ++i)
     {
         //Create a random position
-        glm::vec3 randomPosition((float)rando(), (float)rando(), (float)rando());
-        randomPosition /= (rando.max() / areaWidth);
-        randomPosition -= glm::vec3(areaWidth / 2.0f, areaWidth / 2.0f, 0.0f);
-        randomPosition.z *= -1.0f;
+        glm::vec3 randomPosition = glm::vec3(randomFloat(20.0f, 100.0f), randomFloat(20.0f, 100.0f), randomFloat(20.0f, 100.0f));
+//        randomPosition /= (rando.max() / areaWidth);
+//        randomPosition -= glm::vec3(areaWidth / 2.0f, areaWidth / 2.0f, 0.0f);
+//        randomPosition.z *= -1.0f;
         
         //Create a random angle
         float randomAngle = rando() / (rando.max() / 360.0f);
