@@ -352,7 +352,6 @@ void World::Draw()
     glUniformMatrix4fv(ProjMatrixID,  1, GL_FALSE, &Projection[0][0]);
     
     glUniformMatrix4fv(ViewProjMatrixID,  1, GL_FALSE, &ViewProjection[0][0]);
-
     
     Renderer::EndFrame();
 }
