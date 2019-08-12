@@ -233,6 +233,14 @@ void EventManager::Update()
 	}
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	glfwSwapBuffers(spWindow);
+
+    if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_SPACE) == GLFW_PRESS)
+    {
+#if !defined(PLATFORM_OSX)
+        engine->play2D("../Audio/aaj_0022_Lazer_Gun_02_SFX.ogg");
+#endif
+    }
+
 }
 
 float EventManager::GetFrameTime()

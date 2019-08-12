@@ -14,9 +14,8 @@
 #include "StaticCamera.h"
 #include "FirstPersonCamera.h"
 
-
-#include "CubeModel.h"
 #include "SphereModel.h"
+#include "Projectile.h"
 #include "RocketModel.h"
 #include "Animation.h"
 #include <GLFW/glfw3.h>
@@ -32,7 +31,6 @@
 #include "OBJloaderV2.h"  //For loading .obj files using a polygon list format
 
 #include <glm/gtc/matrix_transform.hpp>
-
 #include "list"
 
 #define PI 3.14159265
@@ -43,8 +41,8 @@ using namespace glm;
 World* World::instance;
 Star* star;
 Skybox skybox;
+list<Projectile*> projectileList;
 RocketModel* rocket;
-
 
 // TODO: These should be parameters set in the menu
 const int NUMBER_OF_PLANETS = 10;
@@ -99,12 +97,12 @@ World::World()
     int spriteWidth;
 
 #if defined(PLATFORM_OSX)
-    //        int texture_id = TextureLoader::LoadTexture("Textures/BillboardTest.bmp", spriteWidth);
-     texture_id = TextureLoader::LoadTexture("Textures/Stars/shiny_yellow_star-min.png", spriteWidth);
-     texture_id2 = TextureLoader::LoadTexture("Textures/mat.png", spriteWidth);
-    
+    // int texture_id = TextureLoader::LoadTexture("Textures/BillboardTest.bmp", spriteWidth);
+    texture_id = TextureLoader::LoadTexture("Textures/Stars/shiny_yellow_star-min.png", spriteWidth);
+    texture_id2 = TextureLoader::LoadTexture("Textures/mat.png", spriteWidth);
 #else
-    texture_id = TextureLoader::LoadTexture("../Assets/Textures/mat.png", spriteWidth);
+    texture_id = TextureLoader::LoadTexture("../Assets/Textures/Stars/shiny_yellow_star-min.png", spriteWidth);
+    texture_id2 = TextureLoader::LoadTexture("../Assets/Textures/mat.png", spriteWidth);
 #endif
     
 
@@ -167,6 +165,7 @@ void World::Update(float dt)
     if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_1 ) == GLFW_PRESS)
     {
         mCurrentCamera = 0;
+		Renderer::SetShader(SHADER_PHONG);
     }
     else if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_2 ) == GLFW_PRESS)
     {
@@ -230,6 +229,21 @@ void World::Update(float dt)
         (*it)->Update(dt);
     }
     
+    Projectile* projectile = new Projectile();
+
+    if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_SPACE) == GLFW_PRESS)
+    {
+        const float projectileSpeed = 25.0f;
+        projectile->SetPosition(mCamera[mCurrentCamera]->GetPosition() + vec3(0.0f, 0.02f, 0.0f)); // adjust to rocket's position
+        projectile->SetVelocity(projectileSpeed * mCamera[mCurrentCamera]->GetLookAt()); 
+        projectileList.push_back(projectile);
+    }
+
+    for (list<Projectile*>::iterator it = projectileList.begin(); it != projectileList.end(); ++it)
+    {
+        (*it)->Update(dt);
+    }
+
     rocket->Update(dt);
     
 }
@@ -281,7 +295,16 @@ void World::Draw()
     
     mat4 ViewProjection = mCamera[mCurrentCamera]->GetViewProjectionMatrix();
     glUniformMatrix4fv(ViewProjMatrixID,  1, GL_FALSE, &ViewProjection[0][0]);
-    
+
+    // Draw projectiles before other models
+    for (list<Projectile*>::iterator it = projectileList.begin(); it != projectileList.end(); ++it)
+    {
+        glUniform3f(ModelColorID, 0.0f, 0.0f, 1.0f);
+        glUniform4f(MaterialID, 1.0f, 0.0f, 0.0f, 1.0f);
+        (*it)->SetScaling(vec3(0.05f, 0.05f, 0.05f)); // TO FIX
+        (*it)->Draw();
+    }
+
     // Draw models
     for (vector<Model*>::iterator it = mModel.begin(); it < mModel.end(); ++it)
     {
@@ -382,12 +405,12 @@ void World::LoadScene(const char * scene_path)
         ci_string result;
         if( std::getline( iss, result, ']') )
         {
-            if( result == "cube" )
+            if( result == "projectile" )
             {
                 // Box attributes
-                CubeModel* cube = new CubeModel();
-                cube->Load(iss);
-                mModel.push_back(cube);
+                Projectile* projectile = new Projectile();
+                projectile->Load(iss);
+                mModel.push_back(projectile);
             }
             else if (result == "sphere")
             {
@@ -503,7 +526,7 @@ std::vector<Model*> World::generatePlanets(){
     // Sun is unaffected by lighting
     sun->SetMaterialCoefficients(vec4(1.0f, 0.0f, 0.0f, 1.0f));
 
-    //planetList.push_back(sun);
+    planetList.push_back(sun);
 
     // Sort planets by magnitude to start from close to far
     std::sort(planetList.begin(), planetList.end(), [ ]( const Model* p1, const Model* p2) {

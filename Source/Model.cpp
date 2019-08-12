@@ -181,3 +181,8 @@ void Model::SetColor(glm::vec3 color)
 {
     mColor = color;
 }
+
+void Model::SetVelocity(glm::vec3 velocity)
+{
+    mVelocity = velocity;
+}
