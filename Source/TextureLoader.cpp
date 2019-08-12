@@ -76,6 +76,6 @@ int TextureLoader::LoadTexture(const char * imagepath)
     // Free images
     FreeImage_Unload(image);
     FreeImage_Unload(image32bits);
- 
+    
     return texture;
 }
