@@ -86,7 +86,7 @@ float ObjectDescription::intersectRayPlanetPoint(vec3 worldRay, vec3 cameraPosit
 	}
 	else cout << "Imaginary: not good" << endl;
 
-	cout <<"b: "<< b <<"c: "<<c<< endl;
+	//cout <<"b: "<< b <<"c: "<<c<< endl;
 
 	// Smallest positive t value gives nearest point of intersection
 	if (tIntersectPoint1 > 0 && tIntersectPoint1 < tIntersectPoint2)
