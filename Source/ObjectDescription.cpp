@@ -42,8 +42,8 @@ bool ObjectDescription::RayPickObject(mat4 viewMatrix, vec3 cameraPosition, vec3
 
 		float intersectionPoint = intersectRayPlanetPoint(normalizedWorldRay, cameraPosition, planetPosition, radius); // t
 
-		// Recall that a point P given on a ray is P = O + tD where P is the point, O origin, t intersection point & D is the ray direction vector
-		vec3 positionWorldSpace = intersectionPoint * normalizedWorldRay; // P 
+		// Recall that a point P given on a ray is P = O + tD where P is the point, O origin is the camera position, t intersection point & D is the ray direction vector
+		vec3 positionWorldSpace = cameraPosition + intersectionPoint * normalizedWorldRay; // P 
 		vec3 edgePoint = vec3(planetPosition.x + radius, planetPosition.y + radius, planetPosition.z + radius); // A Point 
 		
 		//cout << "P: " << length(positionWorldSpace) << "t: " << intersectionPoint << endl;
@@ -78,8 +78,13 @@ float ObjectDescription::intersectRayPlanetPoint(vec3 worldRay, vec3 cameraPosit
 	float b = (worldRay.x * (cameraPosition.x - planetPosition.x) + worldRay.y * (cameraPosition.y - planetPosition.y) + worldRay.z * (cameraPosition.z - planetPosition.z));
 	float c = pow((cameraPosition.x - planetPosition.x), 2) + pow((cameraPosition.y - planetPosition.y), 2) + pow((cameraPosition.z - planetPosition.z), 2) - pow((planetRadius), 2);
 
-	tIntersectPoint1 = -b - sqrt(pow(b, 2) - 4 * c);
-	tIntersectPoint2 = -b + sqrt(pow(b, 2) - 4 * c);
+	float coefficient = pow(b, 2) - 4 * c;
+
+	if (coefficient > 0) {
+		tIntersectPoint1 = -b - sqrt(coefficient);
+		tIntersectPoint2 = -b + sqrt(coefficient);
+	}
+	else cout << "Imaginary: not good" << endl;
 
 	cout <<"b: "<< b <<"c: "<<c<< endl;
 
