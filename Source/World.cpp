@@ -310,7 +310,11 @@ void World::Draw()
 	for (std::vector<Model*>::iterator it = planets.begin(); it < planets.end(); ++it) {
 		if (it == planets.begin()) continue; // Skip the first one (Sun)
 		// Will have to look at mCurrentCamera for other modes
-		vec3 cameraPosition = mSplineCamera.front()->GetPosition();
+		vec3 cameraPosition;
+		if (mCurrentCamera = 2) // Tracks camera
+			cameraPosition = mSplineCamera.front()->GetPosition();
+		else // other cameras
+			cameraPosition = GetCurrentCamera()->GetPosition();
 		ObjectDescription::RayPickObject(View, cameraPosition, (*it)->GetPosition(), (*it)->GetScaling().z);
 	}
 

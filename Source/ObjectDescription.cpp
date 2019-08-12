@@ -68,6 +68,11 @@ float ObjectDescription::intersectRayPlanetPoint(vec3 worldRay, vec3 cameraPosit
 	// Two intersection roots are t1 = -B - sqrt(B^2 - 4C), t2 = -B + sqrt(B^2 - 4C)
 	// Origin is the camera position
 
+	/*cout << worldRay.y << endl;
+	cout << cameraPosition.y << endl;
+	cout << planetPosition.y << endl;
+	cout << planetRadius << endl;*/
+
 	float tIntersectPoint1 = 0.0f;
 	float tIntersectPoint2 = 0.0f;
 	float b = (worldRay.x * (cameraPosition.x - planetPosition.x) + worldRay.y * (cameraPosition.y - planetPosition.y) + worldRay.z * (cameraPosition.z - planetPosition.z));
