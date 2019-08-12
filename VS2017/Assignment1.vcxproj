@@ -109,6 +109,8 @@
     <None Include="..\Assets\Scenes\CoordinateSystem.scene" />
     <None Include="..\Assets\Scenes\StaticScene.scene" />
     <None Include="..\Assets\Shaders\BlueColor.fragmentshader" />
+    <None Include="..\Assets\Shaders\modelLoader.fragmentshader" />
+    <None Include="..\Assets\Shaders\modelLoader.vertexshader" />
     <None Include="..\Assets\Shaders\Phong.fragmentshader" />
     <None Include="..\Assets\Shaders\Phong.vertexshader" />
     <None Include="..\Assets\Shaders\Skybox.fragmentshader" />
@@ -140,6 +142,7 @@
     <ClCompile Include="..\Source\Packages\imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="..\Source\Packages\imgui\imgui_widgets.cpp" />
     <ClCompile Include="..\Source\Renderer.cpp" />
+    <ClCompile Include="..\Source\RocketModel.cpp" />
     <ClCompile Include="..\Source\Skybox.cpp" />
     <ClCompile Include="..\Source\SphereModel.cpp" />
     <ClCompile Include="..\Source\Star.cpp" />
@@ -153,6 +156,8 @@
     <ClInclude Include="..\Source\BSpline.h" />
     <ClInclude Include="..\Source\BSplineCamera.h" />
     <ClInclude Include="..\Source\Camera.h" />
+    <ClInclude Include="..\Source\OBJloader.h" />
+    <ClInclude Include="..\Source\OBJloaderV2.h" />
     <ClInclude Include="..\Source\Projectile.h" />
     <ClInclude Include="..\Source\EventManager.h" />
     <ClInclude Include="..\Source\FirstPersonCamera.h" />
@@ -169,6 +174,7 @@
     <ClInclude Include="..\Source\Packages\imgui\imstb_truetype.h" />
     <ClInclude Include="..\Source\ParsingHelper.h" />
     <ClInclude Include="..\Source\Renderer.h" />
+    <ClInclude Include="..\Source\RocketModel.h" />
     <ClInclude Include="..\Source\Skybox.h" />
     <ClInclude Include="..\Source\SphereModel.h" />
     <ClInclude Include="..\Source\Star.h" />

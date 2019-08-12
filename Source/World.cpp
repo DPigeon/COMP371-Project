@@ -227,22 +227,16 @@ void World::Update(float dt)
         (*it)->Update(dt);
     }
     
-    float lastFrameTime = (float)glfwGetTime();
-    int lastMouseLeftState = GLFW_RELEASE;
-    double lastMousePosX, lastMousePosY;
-    glfwGetCursorPos(EventManager::GetWindow(), &lastMousePosX, &lastMousePosY);
-    
     Projectile* projectile = new Projectile();
 
-    if (lastMouseLeftState == GLFW_RELEASE && glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+    if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_SPACE) == GLFW_PRESS)
     {
         const float projectileSpeed = 25.0f;
         projectile->SetPosition(mCamera[mCurrentCamera]->GetPosition() + vec3(0.0f, 0.02f, 0.0f)); // adjust to rocket's position
         projectile->SetVelocity(projectileSpeed * mCamera[mCurrentCamera]->GetLookAt()); 
         projectileList.push_back(projectile);
     }
-    lastMouseLeftState = glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_LEFT);
-    
+
     for (list<Projectile*>::iterator it = projectileList.begin(); it != projectileList.end(); ++it)
     {
         (*it)->Update(dt);
@@ -530,7 +524,7 @@ std::vector<Model*> World::generatePlanets(){
     // Sun is unaffected by lighting
     sun->SetMaterialCoefficients(vec4(1.0f, 0.0f, 0.0f, 1.0f));
 
-    //planetList.push_back(sun);
+    planetList.push_back(sun);
 
     // Sorts the planets by their position vector magnitude
     std::sort(planetList.begin(), planetList.end(), [ ]( const Model* p1, const Model* p2) {
