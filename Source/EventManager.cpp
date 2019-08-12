@@ -248,7 +248,12 @@ float EventManager::GetFrameTime()
 
 bool EventManager::ExitRequested()
 {
-	return glfwGetKey(spWindow, GLFW_KEY_ESCAPE ) == GLFW_PRESS || glfwWindowShouldClose(spWindow);
+    if (glfwGetKey(spWindow, GLFW_KEY_ESCAPE ) == GLFW_PRESS
+            && GetApplicationState() == ApplicationState::RUNNING) {
+        SetApplicationState(ApplicationState::MENU);
+        return false;
+    }
+    return glfwGetKey(spWindow, GLFW_KEY_ESCAPE ) == GLFW_PRESS || glfwWindowShouldClose(spWindow);
 }
 
 GLFWwindow* EventManager::GetWindow()

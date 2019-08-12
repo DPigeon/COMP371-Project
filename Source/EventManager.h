@@ -15,7 +15,8 @@ enum ApplicationState
 {
     LOADING,
     MENU,
-    RUNNING
+    RUNNING,
+    SETTINGS
 };
 
 class EventManager

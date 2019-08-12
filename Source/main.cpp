@@ -58,7 +58,8 @@ int main(int argc, char *argv[])
 
         bool isLoading = world.GetApplicationState() == ApplicationState::LOADING;
 		if (!isLoading) {
-            eventManager.SetApplicationState(ApplicationState::MENU);
+            ApplicationState state = eventManager.GetApplicationState() == ApplicationState::LOADING ? ApplicationState::MENU : eventManager.GetApplicationState();
+            eventManager.SetApplicationState(state);
 		}
 	} while (eventManager.ExitRequested() == false);
 

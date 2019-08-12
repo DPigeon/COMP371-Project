@@ -5,6 +5,7 @@
 //
 
 #include "MenuScreen.h"
+#include "EventManager.h"
 #include "TextureLoader.h"
 
 #include <iostream>
@@ -19,17 +20,19 @@ void MenuScreen::Draw() {
     {
         ImVec2 size = ImVec2(1024.0f, 768.0f);
         ImVec2 position = ImVec2(0.0f, 0.0f);
-        ImVec2 logoSize = ImVec2(600.0f, 300.0f);
-        ImVec2 progressBarPosition = ImVec2(185.0f, 625.0f);
         
         SetNextWindowSize(size);
         SetNextWindowPos(position);
         ImGui::Begin("Menu");
         
-        
-        
-        ImVec2 logoCentered = ImVec2((GetWindowSize().x - logoSize.x) * 0.4f, (GetWindowSize().y - logoSize.y) * 0.4f);
-        SetCursorPos(logoCentered);
+        SetCursorPos(ImVec2(400.0f, 300.0f));
+        if (ImGui::Button("Explore!", ImVec2(150.0f, 50.0f))) {
+            EventManager::SetApplicationState(ApplicationState::RUNNING);
+        }
+        SetCursorPos(ImVec2(400.0f, 400.0f));
+        if (ImGui::Button("Settings", ImVec2(150.0f, 50.0f))) {
+            EventManager::SetApplicationState(ApplicationState::RUNNING);
+        }
         
         ImGui::End();
     }
