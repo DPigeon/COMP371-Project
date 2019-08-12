@@ -527,18 +527,17 @@ std::vector<Model*> World::generatePlanets(){
     sortedPlanets.push_back(previousPlanet);
     sortedPlanets.push_back(currentPlanet);
     vec3 previousVector = currentPlanet->GetPosition() - previousPlanet->GetPosition();
-    // Add all the planets from temp to the sortedPlanets vector in a way that the trajectory between planets is smoother
     while (tempPlanetList.size() != 0) {
         bool foundMatch = false;
         for (int i=0; i<tempPlanetList.size(); ++i) {
             Model* nextPlanet = *std::next(tempPlanetList.begin(), i);
             if (currentPlanet != nextPlanet) {
-                // Basic vector operations to find next trajectory and the degree between previous and next
                 vec3 nextVector = nextPlanet->GetPosition() - currentPlanet->GetPosition();
+                
                 float thetaBetweenVectors = glm::dot(previousVector, nextVector) / (glm::length(previousVector) * glm::length(nextVector));
+                
                 float degreeBetweenVectors = std::acos(thetaBetweenVectors) * 180 / PI;
                 
-                // The angle between the previous vector trajectory and the next has to be between 55 and 125 degrees
                 if (degreeBetweenVectors >= 55 && degreeBetweenVectors <= 125) {
                     sortedPlanets.push_back(nextPlanet);
                     tempPlanetList.remove(nextPlanet);
