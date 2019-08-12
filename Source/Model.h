@@ -46,6 +46,9 @@ public:
     glm::vec3 GetColor() const { return mColor; }
     glm::vec3 GetVelocity() const { return mVelocity; }
     
+    bool operator == (const Model& model) const { return mPosition == model.GetPosition(); }
+    bool operator != (const Model& model) const { return !operator==(model); }
+    
 protected:
     virtual bool ParseLine(const std::vector<ci_string> &token) = 0;
     

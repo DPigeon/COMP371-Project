@@ -31,8 +31,9 @@
 #include "OBJloaderV2.h"  //For loading .obj files using a polygon list format
 
 #include <glm/gtc/matrix_transform.hpp>
+#include "list"
 
-#include <list>
+#define PI 3.14159265
 
 using namespace std;
 using namespace glm;
@@ -527,12 +528,68 @@ std::vector<Model*> World::generatePlanets(){
 
     planetList.push_back(sun);
 
-    // Sorts the planets by their position vector magnitude
+    // Sort planets by magnitude to start from close to far
     std::sort(planetList.begin(), planetList.end(), [ ]( const Model* p1, const Model* p2) {
         return glm::length(p1->GetPosition()) < glm::length(p2->GetPosition());
     });
-  
-    return planetList;
+    
+    // TODO: remove, used for debugging
+    std::for_each(planetList.begin(), planetList.end(), [](Model* m){
+        std::cout << "vector: (" << m->GetPosition().x << ", " << m->GetPosition().y << ", " << m->GetPosition().z << ")" << std::endl;
+    });
+    
+    // Add all the planets in a temporary list. Skip first 2 planets because we always start with them as our first vector trajectory.
+    std::list<Model*> tempPlanetList;
+    std::for_each(planetList.begin()+2, planetList.end(), [&tempPlanetList](Model* m){
+        tempPlanetList.push_back(m);
+    });
+    
+    std::vector<Model*> sortedPlanets;
+    Model* previousPlanet = planetList.at(0);
+    Model* currentPlanet = planetList.at(1);
+    sortedPlanets.push_back(previousPlanet);
+    sortedPlanets.push_back(currentPlanet);
+    vec3 previousVector = currentPlanet->GetPosition() - previousPlanet->GetPosition();
+    // Add all the planets from temp to the sortedPlanets vector in a way that the trajectory between planets is smoother
+    while (tempPlanetList.size() != 0) {
+        bool foundMatch = false;
+        for (int i=0; i<tempPlanetList.size(); ++i) {
+            Model* nextPlanet = *std::next(tempPlanetList.begin(), i);
+            if (currentPlanet != nextPlanet) {
+                // Basic vector operations to find next trajectory and the degree between previous and next
+                vec3 nextVector = nextPlanet->GetPosition() - currentPlanet->GetPosition();
+                float thetaBetweenVectors = glm::dot(previousVector, nextVector) / (glm::length(previousVector) * glm::length(nextVector));
+                float degreeBetweenVectors = std::acos(thetaBetweenVectors) * 180 / PI;
+                
+                // The angle between the previous vector trajectory and the next has to be between 55 and 125 degrees
+                if (degreeBetweenVectors >= 55 && degreeBetweenVectors <= 125) {
+                    sortedPlanets.push_back(nextPlanet);
+                    tempPlanetList.remove(nextPlanet);
+                    previousVector = nextVector;
+                    currentPlanet = nextPlanet;
+                    foundMatch = true;
+                    break;
+                }
+            }
+        }
+        // If no path could be found, just go to the next planet. We could also expand the angles to accept more to find the optimal one, but it's more resource intensive and it's already sub-par.
+        if (!foundMatch) {
+            std::cout << "not optimal found" << std::endl;
+            Model* nextPlanet = *std::next(tempPlanetList.begin(), 0);
+            
+            vec3 nextVector = nextPlanet->GetPosition() - currentPlanet->GetPosition();
+
+            sortedPlanets.push_back(nextPlanet);
+            tempPlanetList.remove(nextPlanet);
+            previousVector = nextVector;
+            currentPlanet = nextPlanet;
+        }
+    }
+    // TODO: remove, used for debugging
+    std::for_each(sortedPlanets.begin(), sortedPlanets.end(), [](Model* m){
+        std::cout << "vector: (" << m->GetPosition().x << ", " << m->GetPosition().y << ", " << m->GetPosition().z << ")" << std::endl;
+    });
+    return sortedPlanets;
 }
 
 bool World::planetHasSpace(vec3 planetRandomPoint, std::vector<vec3> planetPositions) {
