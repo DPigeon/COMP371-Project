@@ -96,12 +96,12 @@ World::World()
     int spriteWidth;
 
 #if defined(PLATFORM_OSX)
-    //        int texture_id = TextureLoader::LoadTexture("Textures/BillboardTest.bmp", spriteWidth);
-     texture_id = TextureLoader::LoadTexture("Textures/Stars/shiny_yellow_star-min.png", spriteWidth);
-     texture_id2 = TextureLoader::LoadTexture("Textures/mat.png", spriteWidth);
-    
+    // int texture_id = TextureLoader::LoadTexture("Textures/BillboardTest.bmp", spriteWidth);
+    texture_id = TextureLoader::LoadTexture("Textures/Stars/shiny_yellow_star-min.png", spriteWidth);
+    texture_id2 = TextureLoader::LoadTexture("Textures/mat.png", spriteWidth);
 #else
-    texture_id = TextureLoader::LoadTexture("../Assets/Textures/mat.png", spriteWidth);
+    texture_id = TextureLoader::LoadTexture("../Assets/Textures/Stars/shiny_yellow_star-min.png", spriteWidth);
+    texture_id2 = TextureLoader::LoadTexture("../Assets/Textures/mat.png", spriteWidth);
 #endif
     
 
