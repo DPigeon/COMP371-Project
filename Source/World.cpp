@@ -308,7 +308,10 @@ void World::Draw()
     glDisable(GL_BLEND);
     
 	for (std::vector<Model*>::iterator it = planets.begin(); it < planets.end(); ++it) {
-		cout << ObjectDescription::RayPickObject(View, (*it)->GetPosition(), (*it)->GetScaling()) << endl;
+		if (it == planets.begin()) continue; // Skip the first one (Sun)
+		// Will have to look at mCurrentCamera for other modes
+		vec3 cameraPosition = mSplineCamera.front()->GetPosition();
+		ObjectDescription::RayPickObject(View, cameraPosition, (*it)->GetPosition(), (*it)->GetScaling().z);
 	}
 
     // Restore previous shader

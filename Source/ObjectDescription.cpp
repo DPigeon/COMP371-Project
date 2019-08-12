@@ -14,7 +14,7 @@ using namespace glm;
 ObjectDescription::ObjectDescription() {
 }
 
-bool ObjectDescription::RayPickObject(mat4 viewMatrix, vec3 planetPosition, vec3 planetScaling) {
+bool ObjectDescription::RayPickObject(mat4 viewMatrix, vec3 cameraPosition, vec3 planetPosition, float radius) {
 	if (glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_LEFT)) {
 		// Go from viewport ---> world space to click on things from screen space ---> world space
 
@@ -37,17 +37,14 @@ bool ObjectDescription::RayPickObject(mat4 viewMatrix, vec3 planetPosition, vec3
 		vec3 WorldRay = vec3(inverse(viewMatrix) * ClipRay);
 		vec3 normalizedWorldRay = normalize(WorldRay); // Distance of the point from the origin
 
-		// Next step: Use the world ray traced to point to objects now (planets)
+		// Sun always at the origin so we can easily find it with rays
+		// Now we gotta find other planets and randomly generate names for them
 
-		// planet->GetScaling / 2 is radius and planet->GetPosition is position
-
-		vec3 edgePoint = planetPosition * planetScaling;
-		vec3 edgeRadius = vec3(edgePoint.x / 2, edgePoint.y / 2, edgePoint.z / 2);
-		float planetRadius = length(planetPosition - edgeRadius);
-		float intersectionPoint = intersectRayPlanetPoint(normalizedWorldRay, planetPosition, planetRadius); // t
+		float intersectionPoint = intersectRayPlanetPoint(normalizedWorldRay, cameraPosition, planetPosition, radius); // t
 
 		// Recall that a point P given on a ray is P = O + tD where P is the point, O origin, t intersection point & D is the ray direction vector
 		vec3 positionWorldSpace = intersectionPoint * normalizedWorldRay; // P 
+		vec3 edgePoint = vec3(planetPosition.x + radius, planetPosition.y + radius, planetPosition.z + radius); // A Point 
 		
 		//cout << "P: " << length(positionWorldSpace) << "t: " << intersectionPoint << endl;
 		bool f;
@@ -56,28 +53,30 @@ bool ObjectDescription::RayPickObject(mat4 viewMatrix, vec3 planetPosition, vec3
 		else
 			f = false;
 
-		ofstream extrapolatePoints;
+		/*ofstream extrapolatePoints;
 		extrapolatePoints.open("RayIntersections.txt", ios::app);
 		extrapolatePoints << f;
 		extrapolatePoints << endl;
-		extrapolatePoints.close();
+		extrapolatePoints.close();*/
 
 		return false;
 	}
 }
 
-float ObjectDescription::intersectRayPlanetPoint(vec3 worldRay, vec3 planetPosition, float planetRadius) {
+float ObjectDescription::intersectRayPlanetPoint(vec3 worldRay, vec3 cameraPosition, vec3 planetPosition, float planetRadius) {
 	// Quadratic equation of the form t^2 + 2Bt + C = 0
 	// Two intersection roots are t1 = -B - sqrt(B^2 - 4C), t2 = -B + sqrt(B^2 - 4C)
-	// Origin is at (0, 0, 0) since we normalized the world ray vector already
+	// Origin is the camera position
 
 	float tIntersectPoint1 = 0.0f;
 	float tIntersectPoint2 = 0.0f;
-	float b = (worldRay.x * (-planetPosition.x) + worldRay.y * (-planetPosition.y) + worldRay.z * (-planetPosition.z));
-	float c = (pow((-planetPosition.x), 2) + pow((-planetPosition.y), 2) + pow((planetPosition.z), 2) - pow((planetRadius), 2));
+	float b = (worldRay.x * (cameraPosition.x - planetPosition.x) + worldRay.y * (cameraPosition.y - planetPosition.y) + worldRay.z * (cameraPosition.z - planetPosition.z));
+	float c = pow((cameraPosition.x - planetPosition.x), 2) + pow((cameraPosition.y - planetPosition.y), 2) + pow((cameraPosition.z - planetPosition.z), 2) - pow((planetRadius), 2);
 
 	tIntersectPoint1 = -b - sqrt(pow(b, 2) - 4 * c);
 	tIntersectPoint2 = -b + sqrt(pow(b, 2) - 4 * c);
+
+	cout <<"b: "<< b <<"c: "<<c<< endl;
 
 	// Smallest positive t value gives nearest point of intersection
 	if (tIntersectPoint1 > 0 && tIntersectPoint1 < tIntersectPoint2)
