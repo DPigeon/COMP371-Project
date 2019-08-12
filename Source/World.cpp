@@ -164,6 +164,7 @@ void World::Update(float dt)
     if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_1 ) == GLFW_PRESS)
     {
         mCurrentCamera = 0;
+		Renderer::SetShader(SHADER_PHONG);
     }
     else if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_2 ) == GLFW_PRESS)
     {

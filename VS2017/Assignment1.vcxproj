@@ -119,6 +119,8 @@
     <None Include="..\Assets\Shaders\SolidColor.vertexshader" />
     <None Include="..\Assets\Shaders\SplineTracks.fragmentshader" />
     <None Include="..\Assets\Shaders\SplineTracks.vertexshader" />
+    <None Include="..\Assets\Shaders\Stars.fragmentshader" />
+    <None Include="..\Assets\Shaders\Stars.vertexshader" />
     <None Include="..\Assets\Shaders\Texture.fragmentshader" />
     <None Include="..\Assets\Shaders\Texture.vertexshader" />
   </ItemGroup>
