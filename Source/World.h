@@ -13,6 +13,7 @@
 #include "ParsingHelper.h"
 #include <vector>
 #include "BSpline.h"
+#include "EventManager.h"
 
 class Camera;
 class Model;
@@ -39,8 +40,8 @@ public:
     const Camera* GetCurrentCamera() const;
 	void SetCurrentCamera(int cameraNumber);
 
-	bool GetLoadingState();
-	void SetLoadingState(bool state);
+	ApplicationState GetApplicationState();
+	void SetApplicationState(ApplicationState state);
     int NumberOfPlanetsToGenerate();
     int NumberOfPlanetsGenerated() { return mNumberOfPlanetsGenerated; }
     
@@ -66,7 +67,7 @@ private:
      */
     bool planetHasSpace(glm::vec3 planetRandomPoint, std::vector<glm::vec3> planetPositions);
 	unsigned int mCurrentCamera;
-	bool isLoading;
+	ApplicationState applicationState;
 };
 
 float randomFloat(float min, float max);

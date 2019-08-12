@@ -63,7 +63,7 @@ const vec4 lightPosition(-10.0f, -10.0f, -10.0f, 1.0f);
 World::World()
 {
     instance = this;
-    isLoading = true; // Initialize loading state
+    applicationState = ApplicationState::LOADING; // Initialize loading state
     
     // Setup Camera
     mCamera.push_back(new FirstPersonCamera(vec3(3.0f, 5.0f, 20.0f)));	
@@ -582,12 +582,12 @@ void World::SetCurrentCamera(int cameraNumber) {
 	mCurrentCamera = cameraNumber;
 }
 
-bool World::GetLoadingState() {
-	return isLoading;
+ApplicationState World::GetApplicationState() {
+	return applicationState;
 }
 
-void World::SetLoadingState(bool state) {
-	isLoading = state;
+void World::SetApplicationState(ApplicationState state) {
+	applicationState = state;
 }
 
 int World::NumberOfPlanetsToGenerate() {

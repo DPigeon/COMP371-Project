@@ -10,6 +10,7 @@
 #include "EventManager.h"
 #include "Renderer.h"
 #include "LoadingScreen.h"
+#include "MenuScreen.h"
 #include "AppInfoWindow.h"
 
 #include <imgui/imgui.h>
@@ -71,7 +72,7 @@ GLFWwindow* EventManager::spWindow = nullptr;
 
 EventManager::EventManager() {
 	instance = this;
-	isLoading = true;
+    applicationState = ApplicationState::LOADING;
 }
 
 EventManager::~EventManager() {
@@ -164,12 +165,12 @@ void EventManager::Initialize()
 	
 }
 
-void EventManager::SetLoadingState(bool state) {
-	GetInstance()->isLoading = state;
+void EventManager::SetApplicationState(ApplicationState state) {
+	GetInstance()->applicationState = state;
 }
 
-bool EventManager::GetLoadingState() {
-	return GetInstance()->isLoading;
+ApplicationState EventManager::GetApplicationState() {
+	return GetInstance()->applicationState;
 }
 
 void EventManager::Shutdown()
@@ -210,14 +211,19 @@ void EventManager::Update()
 	sLastFrameTime = currentTime;
 
 	// Draw the Loading Screen
-	if (GetLoadingState()) {
+    if (GetApplicationState() == ApplicationState::LOADING) {
 		Renderer::SetShader(SHADER_PHONG);
 		if (!devMode)
 			LoadingScreen::Draw();
 	}
+    
+    // Draw the main menu if menu state
+    if (GetApplicationState() == ApplicationState::MENU) {
+        MenuScreen::Draw();
+    }
 	
-	// Draw FPS window when done loading
-	if (!GetLoadingState())
+	// Draw FPS window when running the app
+    if (GetApplicationState() == ApplicationState::RUNNING)
 		AppInfoWindow::Draw();
 
 	// Rendering ImGui
@@ -227,7 +233,7 @@ void EventManager::Update()
 	int display_w, display_h;
 	glfwGetFramebufferSize(spWindow, &display_w, &display_h);
 	glViewport(0, 0, display_w, display_h);
-	if (GetLoadingState() && !devMode) {
+    if (GetApplicationState() == ApplicationState::LOADING && !devMode) {
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 	}

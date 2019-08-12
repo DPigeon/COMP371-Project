@@ -11,6 +11,13 @@
 
 struct GLFWwindow;
 
+enum ApplicationState
+{
+    LOADING,
+    MENU,
+    RUNNING
+};
+
 class EventManager
 {
 public:
@@ -18,8 +25,8 @@ public:
 	~EventManager();
 	static void Initialize();
 	static void Shutdown();
-	static void SetLoadingState(bool state);
-	static bool GetLoadingState();
+	static void SetApplicationState(ApplicationState state);
+	static ApplicationState GetApplicationState();
 
 	static void Update();
 
@@ -52,5 +59,5 @@ private:
 	// Window
 	static GLFWwindow* spWindow;
 
-    bool isLoading;
+    ApplicationState applicationState;
 };
