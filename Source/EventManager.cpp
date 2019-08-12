@@ -48,7 +48,7 @@ EventManager* EventManager::instance;
 
 /* True if you don't want to see the loading screen */
 /* False if you want to see the loading screen */
-bool devMode = false;
+bool devMode = true;
 					
 // Time
 double EventManager::sLastFrameTime = glfwGetTime();

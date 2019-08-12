@@ -9,10 +9,13 @@
 
 #pragma once
 
+#define GLEW_STATIC 1
+#include <GL/glew.h>
 
 #include "ParsingHelper.h"
 #include <vector>
 #include "BSpline.h"
+#include "RocketModel.h"
 
 class Camera;
 class Model;
@@ -35,6 +38,7 @@ public:
 	void LoadScene(const char * scene_path);
     Animation* FindAnimation(ci_string animName);
     AnimationKey* FindAnimationKey(ci_string keyName);
+    GLuint setupModelEBO(std::string path, int& vertexCount);
 
     const Camera* GetCurrentCamera() const;
 	void SetCurrentCamera(int cameraNumber);
@@ -43,6 +47,7 @@ public:
 	void SetLoadingState(bool state);
     int NumberOfPlanetsToGenerate();
     int NumberOfPlanetsGenerated() { return mNumberOfPlanetsGenerated; }
+    RocketModel* rocket;
     
 private:
     static World* instance;

@@ -1,0 +1,10 @@
+#version 330 core
+out vec4 FragColor;
+uniform sampler2D tex;
+uniform mat4 textureRotation;
+
+void main()
+{
+   vec2 texCoord = (textureRotation * vec4(gl_PointCoord, 0, 1)).xy;
+   FragColor = texture(tex, texCoord);
+}
