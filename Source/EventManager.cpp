@@ -233,6 +233,19 @@ void EventManager::Update()
 	}
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	glfwSwapBuffers(spWindow);
+
+    float lastFrameTime = (float)glfwGetTime();
+    int lastMouseLeftState = GLFW_RELEASE;
+    double lastMousePosX, lastMousePosY;
+    glfwGetCursorPos(EventManager::GetWindow(), &lastMousePosX, &lastMousePosY);
+
+    if (lastMouseLeftState == GLFW_RELEASE && glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+    {
+#if !defined(PLATFORM_OSX)
+        engine->play2D("../Audio/aaj_0022_Lazer_Gun_02_SFX.ogg");
+#endif
+    }
+    lastMouseLeftState = glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_LEFT);
 }
 
 float EventManager::GetFrameTime()
