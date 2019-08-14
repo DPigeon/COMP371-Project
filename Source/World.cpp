@@ -14,7 +14,6 @@
 #include "StaticCamera.h"
 #include "FirstPersonCamera.h"
 #include "ObjectDescription.h"
-#include "CubeModel.h"
 #include "SphereModel.h"
 #include "Projectile.h"
 #include "RocketModel.h"
