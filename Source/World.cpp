@@ -315,7 +315,7 @@ void World::Draw()
 			cameraPosition = mSplineCamera.front()->GetPosition();
 		else // other cameras
 			cameraPosition = GetCurrentCamera()->GetPosition();
-		ObjectDescription::RayPickObject(View, cameraPosition, (*it)->GetPosition(), (*it)->GetScaling().z);
+		ObjectDescription::RayPickObject(Projection, View, cameraPosition, (*it)->GetPosition(), (*it)->GetScaling().z);
 	}
 
     // Restore previous shader

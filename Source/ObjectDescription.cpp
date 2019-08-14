@@ -14,7 +14,7 @@ using namespace glm;
 ObjectDescription::ObjectDescription() {
 }
 
-bool ObjectDescription::RayPickObject(mat4 viewMatrix, vec3 cameraPosition, vec3 planetPosition, float radius) {
+bool ObjectDescription::RayPickObject(mat4 projectionMatrix, mat4 viewMatrix, vec3 cameraPosition, vec3 planetPosition, float radius) {
 	if (glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_LEFT)) {
 		// Go from viewport ---> world space to click on things from screen space ---> world space
 
@@ -31,10 +31,14 @@ bool ObjectDescription::RayPickObject(mat4 viewMatrix, vec3 cameraPosition, vec3
 		vec3 NCDRay = vec3(ndcX, ndcY, ndcZ);
 
 		// Clip Space
-		vec4 ClipRay = vec4(NCDRay.x, NCDRay.y, -1.0, 1.0);
+		vec4 ClipRay = vec4(NCDRay.x, NCDRay.y, -1.0f, 1.0f);
 
 		// View Space
-		vec3 WorldRay = vec3(inverse(viewMatrix) * ClipRay);
+		vec4 ViewRay = inverse(projectionMatrix) * ClipRay;
+		ViewRay = vec4(ViewRay.x, ViewRay.y, -1.0f, 0.0f);
+
+		// World Space
+		vec3 WorldRay = vec3(inverse(viewMatrix) * ViewRay);
 		vec3 normalizedWorldRay = normalize(WorldRay); // Distance of the point from the origin
 
 		// Sun always at the origin so we can easily find it with rays
@@ -84,9 +88,10 @@ float ObjectDescription::intersectRayPlanetPoint(vec3 worldRay, vec3 cameraPosit
 		tIntersectPoint1 = -b - sqrt(coefficient);
 		tIntersectPoint2 = -b + sqrt(coefficient);
 	}
-	else cout << "Imaginary: not good" << endl;
+	else //cout << "Imaginary: not good" << endl;
+		tIntersectPoint1 = 0;
 
-	//cout <<"b: "<< b <<"c: "<<c<< endl;
+	cout <<"b: "<< b <<"c: "<<c<< endl;
 
 	// Smallest positive t value gives nearest point of intersection
 	if (tIntersectPoint1 > 0 && tIntersectPoint1 < tIntersectPoint2)

@@ -21,7 +21,7 @@ class ObjectDescription
 {
 public:
 	ObjectDescription();
-	static bool RayPickObject(mat4 viewMatrix, vec3 cameraPosition, vec3 planetPosition, float radius);
+	static bool RayPickObject(mat4 projectionMatrix, mat4 viewMatrix, vec3 cameraPosition, vec3 planetPosition, float radius);
 	static float intersectRayPlanetPoint(vec3 worldRay, vec3 cameraPosition, vec3 planetPosition, float radius);
 	~ObjectDescription();
 
