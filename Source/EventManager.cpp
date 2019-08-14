@@ -48,7 +48,7 @@ EventManager* EventManager::instance;
 
 /* True if you don't want to see the loading screen */
 /* False if you want to see the loading screen */
-bool devMode = false;
+bool devMode = true;
 					
 // Time
 double EventManager::sLastFrameTime = glfwGetTime();
@@ -245,6 +245,14 @@ void EventManager::Update()
 	}
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	glfwSwapBuffers(spWindow);
+
+    if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_SPACE) == GLFW_PRESS)
+    {
+#if !defined(PLATFORM_OSX)
+        engine->play2D("../Audio/aaj_0022_Lazer_Gun_02_SFX.ogg");
+#endif
+    }
+
 }
 
 float EventManager::GetFrameTime()

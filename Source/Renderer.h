@@ -12,11 +12,12 @@
 struct GLFWwindow;
 
 // Include GLEW - OpenGL Extension Wrangler
-#define GLEW_STATIC 1
-#include <GL/glew.h>
+
 
 #include <vector>
 #include <glm/glm.hpp>
+#define GLEW_STATIC 1
+#include <GL/glew.h>
 
 
 enum ShaderType
@@ -27,6 +28,9 @@ enum ShaderType
     SHADER_PHONG,
 	SHADER_SKYBOX,
     SHADER_STARS,
+    SHADER_PLANET,
+    SHADER_MODEL,
+    SHADER_TEXTURE,
 	NUM_SHADERS
 };
 

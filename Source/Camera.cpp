@@ -39,3 +39,7 @@ mat4 Camera::GetProjectionMatrix() const
 void Camera::SetPosition(vec3 position){
     mPosition = position;
 }
+
+void Camera::SetLookAt(vec3 lookAt) {
+    mLookAt = lookAt;
+}
