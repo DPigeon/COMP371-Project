@@ -311,7 +311,9 @@ void World::Draw()
 		if (it == planets.begin()) continue; // Skip the first one (Sun)
 		// Will have to look at mCurrentCamera for other modes
 		vec3 cameraPosition;
-		if (mCurrentCamera = 2) // Tracks camera
+		int currentCamera;
+		currentCamera = mCurrentCamera;
+		if (currentCamera == 2) // Tracks camera
 			cameraPosition = mSplineCamera.front()->GetPosition();
 		else // Other cameras
 			cameraPosition = GetCurrentCamera()->GetPosition();
