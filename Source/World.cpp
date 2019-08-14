@@ -313,9 +313,12 @@ void World::Draw()
 		vec3 cameraPosition;
 		if (mCurrentCamera = 2) // Tracks camera
 			cameraPosition = mSplineCamera.front()->GetPosition();
-		else // other cameras
+		else // Other cameras
 			cameraPosition = GetCurrentCamera()->GetPosition();
-		ObjectDescription::RayPickObject(Projection, View, cameraPosition, (*it)->GetPosition(), (*it)->GetScaling().z);
+		bool clickedPlanet = ObjectDescription::RayPickObject(Projection, View, cameraPosition, (*it)->GetPosition(), (*it)->GetScaling().z);
+		if (clickedPlanet)
+			planetClickedMessage = "This is a planet !"; // Did not have time to finish with this feature. 
+
 	}
 
     // Restore previous shader
@@ -539,6 +542,14 @@ bool World::GetLoadingState() {
 
 void World::SetLoadingState(bool state) {
 	isLoading = state;
+}
+
+string World::GetPlanetClicked() {
+	return planetClickedMessage;
+}
+
+void World::SetPlanetClicked(string message) {
+	planetClickedMessage = message;
 }
 
 int World::NumberOfPlanetsToGenerate() {

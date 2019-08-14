@@ -41,6 +41,8 @@ public:
 
 	bool GetLoadingState();
 	void SetLoadingState(bool state);
+	std::string GetPlanetClicked();
+	void SetPlanetClicked(std::string message);
     int NumberOfPlanetsToGenerate();
     int NumberOfPlanetsGenerated() { return mNumberOfPlanetsGenerated; }
     
@@ -68,6 +70,7 @@ private:
     bool planetHasSpace(glm::vec3 planetRandomPoint, std::vector<glm::vec3> planetPositions);
 	unsigned int mCurrentCamera;
 	bool isLoading;
+	std::string planetClickedMessage;
 };
 
 float randomFloat(float min, float max);

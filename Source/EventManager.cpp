@@ -48,7 +48,7 @@ EventManager* EventManager::instance;
 
 /* True if you don't want to see the loading screen */
 /* False if you want to see the loading screen */
-bool devMode = true;
+bool devMode = false;
 					
 // Time
 double EventManager::sLastFrameTime = glfwGetTime();
@@ -176,6 +176,14 @@ bool EventManager::GetLoadingState() {
 	return GetInstance()->isLoading;
 }
 
+void EventManager::SetPlanetClicked(string message) {
+	GetInstance()->planetClickedMessage = message;
+}
+
+string EventManager::GetPlanetClickedMessage() {
+	return GetInstance()->planetClickedMessage;
+}
+
 void EventManager::Shutdown()
 {
 	// Close OpenGL window and terminate GLFW
@@ -222,7 +230,7 @@ void EventManager::Update()
 	
 	// Draw FPS window when done loading
 	if (!GetLoadingState())
-		AppInfoWindow::Draw();
+		AppInfoWindow::Draw(GetPlanetClickedMessage());
 
 	// Rendering ImGui
 	ImGui::Render();

@@ -56,10 +56,18 @@ int main(int argc, char *argv[])
 		// Draw World
 		world.Draw();
 
+		// Loading Screen
 		bool isLoading = world.GetLoadingState();
 		if (!isLoading) {
 			eventManager.SetLoadingState(false);
 		}
+
+		// Planet Description
+		std::string message = world.GetPlanetClicked();
+		if (message != "") {
+			eventManager.SetPlanetClicked(message);
+		}
+
 	} while (eventManager.ExitRequested() == false);
 
 	Renderer::Shutdown();

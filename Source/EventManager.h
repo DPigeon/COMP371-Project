@@ -9,6 +9,8 @@
 
 #pragma once
 
+#include <string>
+
 struct GLFWwindow;
 
 class EventManager
@@ -20,6 +22,8 @@ public:
 	static void Shutdown();
 	static void SetLoadingState(bool state);
 	static bool GetLoadingState();
+	static void SetPlanetClicked(std::string message);
+	static std::string GetPlanetClickedMessage();
 
 	static void Update();
 
@@ -58,4 +62,5 @@ private:
 	static float screenHeight;
 
     bool isLoading;
+	std::string planetClickedMessage;
 };
