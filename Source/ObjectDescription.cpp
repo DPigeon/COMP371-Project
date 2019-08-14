@@ -15,10 +15,16 @@ using namespace glm;
 ObjectDescription::ObjectDescription() {
 }
 
+string ObjectDescription::RandomPlanetName() {
+	std::string planets[] = {"Earth", "HyperX", "Zedae", "Mars", "Anyoteda", "Mexa", "Woka"};
+	int randomNumber = rand() % 7;
+	return planets[randomNumber];
+}
+
 bool ObjectDescription::RayPickObject(mat4 projectionMatrix, mat4 viewMatrix, vec3 cameraPosition, vec3 planetPosition, float radius) {
 	if (glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_LEFT)) {
 		// Was almost done with this feature but could not finish on time.
-		World::GetInstance()->SetPlanetClicked("Earth"); // For now, if you click anywhere you get a random planet name
+		World::GetInstance()->SetPlanetClicked(RandomPlanetName()); // For now, if you click anywhere you get a random planet name
 
 		// Go from viewport ---> world space to click on things from screen space ---> world space
 
