@@ -60,6 +60,10 @@ float  EventManager::sMouseDeltaX = 0.0f;
 double EventManager::sLastMousePositionY = 0.0f;
 float  EventManager::sMouseDeltaY = 0.0f;
 
+// Screen dimensions
+float EventManager::screenWidth = 1024;
+float EventManager::screenHeight = 768;
+
 // Window
 GLFWwindow* EventManager::spWindow = nullptr;
 
@@ -172,6 +176,14 @@ bool EventManager::GetLoadingState() {
 	return GetInstance()->isLoading;
 }
 
+void EventManager::SetPlanetClicked(string message) {
+	GetInstance()->planetClickedMessage = message;
+}
+
+string EventManager::GetPlanetClickedMessage() {
+	return GetInstance()->planetClickedMessage;
+}
+
 void EventManager::Shutdown()
 {
 	// Close OpenGL window and terminate GLFW
@@ -218,7 +230,7 @@ void EventManager::Update()
 	
 	// Draw FPS window when done loading
 	if (!GetLoadingState())
-		AppInfoWindow::Draw();
+		AppInfoWindow::Draw(GetPlanetClickedMessage());
 
 	// Rendering ImGui
 	ImGui::Render();
@@ -271,6 +283,14 @@ float EventManager::GetMouseMotionX()
 float EventManager::GetMouseMotionY()
 {
 	return sMouseDeltaY;
+}
+
+float EventManager::GetScreenWidth() {
+	return screenWidth;
+}
+
+float EventManager::GetScreenHeight() {
+	return screenHeight;
 }
 
 void EventManager::EnableMouseCursor()

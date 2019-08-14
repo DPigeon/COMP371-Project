@@ -13,7 +13,8 @@
 
 #include "StaticCamera.h"
 #include "FirstPersonCamera.h"
-
+#include "ObjectDescription.h"
+#include "CubeModel.h"
 #include "SphereModel.h"
 #include "Projectile.h"
 #include "RocketModel.h"
@@ -360,6 +361,23 @@ void World::Draw()
     glEnable(GL_VERTEX_PROGRAM_POINT_SIZE); //Enable changing size of point sprites
     star -> Draw();
     glDisable(GL_BLEND);
+    
+	for (std::vector<Model*>::iterator it = planets.begin(); it < planets.end(); ++it) {
+		if (it == planets.begin()) continue; // Skip the first one (Sun)
+		// Will have to look at mCurrentCamera for other modes
+		vec3 cameraPosition;
+		int currentCamera;
+		currentCamera = mCurrentCamera;
+		if (currentCamera == 2) // Tracks camera
+			cameraPosition = mSplineCamera.front()->GetPosition();
+		else // Other cameras
+			cameraPosition = GetCurrentCamera()->GetPosition();
+		bool clickedPlanet = ObjectDescription::RayPickObject(Projection, View, cameraPosition, (*it)->GetPosition(), (*it)->GetScaling().z);
+		if (clickedPlanet)
+			planetClickedMessage = "This is a planet !"; // Did not have time to finish with this feature. 
+	}
+
+    // Restore previous shader
 
     Renderer::SetShader(SHADER_MODEL);
     glUseProgram(Renderer::GetShaderProgramID());
@@ -433,7 +451,7 @@ void World::LoadScene(const char * scene_path)
 			else if (result == "spline")
 			{
 				BSpline* planetTour = new BSpline();
-				std::vector<Model*> planets = generatePlanets();
+				planets = generatePlanets();
                 mNumberOfPlanetsGenerated = (int)planets.size() - 1; // Remove the sun from the count!!
 				mModel.insert(mModel.begin(), planets.begin(), planets.end());
 
@@ -654,6 +672,14 @@ bool World::GetLoadingState() {
 
 void World::SetLoadingState(bool state) {
 	isLoading = state;
+}
+
+string World::GetPlanetClicked() {
+	return planetClickedMessage;
+}
+
+void World::SetPlanetClicked(string message) {
+	planetClickedMessage = message;
 }
 
 int World::NumberOfPlanetsToGenerate() {

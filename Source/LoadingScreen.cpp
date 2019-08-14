@@ -1,7 +1,9 @@
 //
-// COMP 371 Project
+//  ObjectDescription.h
+//  Area51
 //
-// Created by David-Etienne Pigeon on 8/6/2019.
+//  Created by David-Etienne Pigeon on 2019-08-06.
+//  Copyright © 2019 Concordia. All rights reserved.
 //
 
 #include "LoadingScreen.h"
