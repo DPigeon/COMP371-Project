@@ -161,7 +161,6 @@ void World::Update(float dt)
         }
         Renderer::SetShader(SHADER_STARS);
     }
-
     
     // Spacebar to change the shader
     if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_0 ) == GLFW_PRESS)
