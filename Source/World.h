@@ -9,11 +9,14 @@
 
 #pragma once
 
+#define GLEW_STATIC 1
+#include <GL/glew.h>
 
 #include "ParsingHelper.h"
 #include <vector>
 #include "BSpline.h"
 #include "EventManager.h"
+#include "RocketModel.h"
 
 class Camera;
 class Model;
@@ -36,14 +39,20 @@ public:
 	void LoadScene(const char * scene_path);
     Animation* FindAnimation(ci_string animName);
     AnimationKey* FindAnimationKey(ci_string keyName);
+    GLuint setupModelEBO(std::string path, int& vertexCount);
 
     const Camera* GetCurrentCamera() const;
 	void SetCurrentCamera(int cameraNumber);
 
 	ApplicationState GetApplicationState();
 	void SetApplicationState(ApplicationState state);
+	bool GetLoadingState();
+	void SetLoadingState(bool state);
+	std::string GetPlanetClicked();
+	void SetPlanetClicked(std::string message);
     int NumberOfPlanetsToGenerate();
     int NumberOfPlanetsGenerated() { return mNumberOfPlanetsGenerated; }
+    RocketModel* rocket;
     
 private:
     static World* instance;
@@ -56,6 +65,7 @@ private:
 	std::vector<BSplineCamera*> mSplineCamera;
     int mNumberOfPlanetsGenerated;
     std::vector<Model*> generatePlanets();
+	std::vector<Model*> planets;
     /**
      * Checks if the randomly generated planet could possibly overlap with any of
      * the generated planets
@@ -68,6 +78,8 @@ private:
     bool planetHasSpace(glm::vec3 planetRandomPoint, std::vector<glm::vec3> planetPositions);
 	unsigned int mCurrentCamera;
 	ApplicationState applicationState;
+	bool isLoading;
+	std::string planetClickedMessage;
 };
 
 float randomFloat(float min, float max);

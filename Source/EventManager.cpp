@@ -61,6 +61,10 @@ float  EventManager::sMouseDeltaX = 0.0f;
 double EventManager::sLastMousePositionY = 0.0f;
 float  EventManager::sMouseDeltaY = 0.0f;
 
+// Screen dimensions
+float EventManager::screenWidth = 1024;
+float EventManager::screenHeight = 768;
+
 // Window
 GLFWwindow* EventManager::spWindow = nullptr;
 
@@ -173,6 +177,14 @@ ApplicationState EventManager::GetApplicationState() {
 	return GetInstance()->applicationState;
 }
 
+void EventManager::SetPlanetClicked(string message) {
+	GetInstance()->planetClickedMessage = message;
+}
+
+string EventManager::GetPlanetClickedMessage() {
+	return GetInstance()->planetClickedMessage;
+}
+
 void EventManager::Shutdown()
 {
 	// Close OpenGL window and terminate GLFW
@@ -225,6 +237,9 @@ void EventManager::Update()
 	// Draw FPS window when running the app
     if (GetApplicationState() == ApplicationState::RUNNING)
 		AppInfoWindow::Draw();
+	// Draw FPS window when done loading
+	if (!GetLoadingState())
+		AppInfoWindow::Draw(GetPlanetClickedMessage());
 
 	// Rendering ImGui
 	ImGui::Render();
@@ -239,6 +254,14 @@ void EventManager::Update()
 	}
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	glfwSwapBuffers(spWindow);
+
+    if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_SPACE) == GLFW_PRESS)
+    {
+#if !defined(PLATFORM_OSX)
+        engine->play2D("../Audio/aaj_0022_Lazer_Gun_02_SFX.ogg");
+#endif
+    }
+
 }
 
 float EventManager::GetFrameTime()
@@ -273,6 +296,14 @@ float EventManager::GetMouseMotionX()
 float EventManager::GetMouseMotionY()
 {
 	return sMouseDeltaY;
+}
+
+float EventManager::GetScreenWidth() {
+	return screenWidth;
+}
+
+float EventManager::GetScreenHeight() {
+	return screenHeight;
 }
 
 void EventManager::EnableMouseCursor()
