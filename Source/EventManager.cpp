@@ -11,6 +11,7 @@
 #include "Renderer.h"
 #include "LoadingScreen.h"
 #include "MenuScreen.h"
+#include "SettingsScreen.h"
 #include "AppInfoWindow.h"
 
 #include <imgui/imgui.h>
@@ -220,6 +221,11 @@ void EventManager::Update()
     // Draw the main menu if menu state
     if (GetApplicationState() == ApplicationState::MENU) {
         MenuScreen::Draw();
+    }
+    
+    // Draw the settings screen
+    if (GetApplicationState() == ApplicationState::SETTINGS) {
+        SettingsScreen::Draw();
     }
 	
 	// Draw FPS window when running the app
