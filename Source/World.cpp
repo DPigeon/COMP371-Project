@@ -13,10 +13,10 @@
 
 #include "StaticCamera.h"
 #include "FirstPersonCamera.h"
-
-
-#include "CubeModel.h"
+#include "ObjectDescription.h"
 #include "SphereModel.h"
+#include "Projectile.h"
+#include "RocketModel.h"
 #include "Animation.h"
 #include <GLFW/glfw3.h>
 #include "EventManager.h"
@@ -27,6 +27,13 @@
 
 #include "Star.h"
 #include "TextureLoader.h"
+#include "OBJloader.h"  //For loading .obj files
+#include "OBJloaderV2.h"  //For loading .obj files using a polygon list format
+
+#include <glm/gtc/matrix_transform.hpp>
+#include "list"
+
+#define PI 3.14159265
 
 #include "list"
 
@@ -38,7 +45,8 @@ using namespace glm;
 World* World::instance;
 Star* star;
 Skybox skybox;
-
+list<Projectile*> projectileList;
+RocketModel* rocket;
 
 // TODO: These should be parameters set in the menu
 const int NUMBER_OF_PLANETS = 10;
@@ -58,7 +66,7 @@ const float lightKq = 0.002f;
 // Lights half of the planet towards the sun
 const vec4 lightPosition(-10.0f, -10.0f, -10.0f, 1.0f);
 
- char cwd[256];
+GLuint texture_id, texture_id2, texture[2];
 
 World::World()
 {
@@ -67,7 +75,7 @@ World::World()
     
     // Setup Camera
     mCamera.push_back(new FirstPersonCamera(vec3(3.0f, 5.0f, 20.0f)));	
-    mCamera.push_back(new StaticCamera(vec3(3.0f, 30.0f, 5.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f)));
+    mCamera.push_back(new StaticCamera(vec3(3.0f, 5.0f, 20.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f)));
     mCamera.push_back(new StaticCamera(vec3(0.5f,  0.5f, 5.0f), vec3(0.0f, 0.5f, 0.0f), vec3(0.0f, 1.0f, 0.0f)));
 
     mCurrentCamera = 2; // Putting this as the current camera so that we load splines automatically
@@ -89,8 +97,32 @@ World::World()
     skyboxFaces.push_back("../Assets/Textures/Skybox/starfield_bk.tga");
     skyboxFaces.push_back("../Assets/Textures/Skybox/starfield_ft.tga");
 #endif
-  
+    
+    int spriteWidth;
+
+#if defined(PLATFORM_OSX)
+    // int texture_id = TextureLoader::LoadTexture("Textures/BillboardTest.bmp", spriteWidth);
+    texture_id = TextureLoader::LoadTexture("Textures/Stars/shiny_yellow_star-min.png", spriteWidth);
+    texture_id2 = TextureLoader::LoadTexture("Textures/mat.png", spriteWidth);
+#else
+    texture_id = TextureLoader::LoadTexture("../Assets/Textures/Stars/shiny_yellow_star-min.png", spriteWidth);
+    texture_id2 = TextureLoader::LoadTexture("../Assets/Textures/mat.png", spriteWidth);
+#endif
+    
+
 	skybox = Skybox(skyboxFaces);
+    glGenTextures(2, texture);
+
+    texture[0] = texture_id;
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+
+    texture[1] = texture_id2;
+    glBindTexture(GL_TEXTURE_2D, texture[1]);
+
+    star = new Star(texture[0]);
+    rocket = new RocketModel(texture[1]);
+    
+
 }
 
 World::~World()
@@ -137,6 +169,7 @@ void World::Update(float dt)
     if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_1 ) == GLFW_PRESS)
     {
         mCurrentCamera = 0;
+		Renderer::SetShader(SHADER_PHONG);
     }
     else if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_2 ) == GLFW_PRESS)
     {
@@ -160,6 +193,14 @@ void World::Update(float dt)
             mCurrentCamera = 3;
         }
         Renderer::SetShader(SHADER_STARS);
+    }
+    else if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_5 ) == GLFW_PRESS)
+    {
+        if (mCamera.size() > 4)
+        {
+            mCurrentCamera = 4;
+        }
+        Renderer::SetShader(SHADER_MODEL);
     }
     
     // Spacebar to change the shader
@@ -190,6 +231,23 @@ void World::Update(float dt)
     {
         (*it)->Update(dt);
     }
+    
+    Projectile* projectile = new Projectile();
+
+    if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_SPACE) == GLFW_PRESS)
+    {
+        const float projectileSpeed = 25.0f;
+        projectile->SetPosition(mCamera[mCurrentCamera]->GetPosition() + vec3(0.0f, 0.02f, 0.0f)); // adjust to rocket's position
+        projectile->SetVelocity(projectileSpeed * mCamera[mCurrentCamera]->GetLookAt()); 
+        projectileList.push_back(projectile);
+    }
+
+    for (list<Projectile*>::iterator it = projectileList.begin(); it != projectileList.end(); ++it)
+    {
+        (*it)->Update(dt);
+    }
+
+    rocket->Update(dt);
     
 }
 
@@ -240,7 +298,16 @@ void World::Draw()
     
     mat4 ViewProjection = mCamera[mCurrentCamera]->GetViewProjectionMatrix();
     glUniformMatrix4fv(ViewProjMatrixID,  1, GL_FALSE, &ViewProjection[0][0]);
-    
+
+    // Draw projectiles before other models
+    for (list<Projectile*>::iterator it = projectileList.begin(); it != projectileList.end(); ++it)
+    {
+        glUniform3f(ModelColorID, 0.0f, 0.0f, 1.0f);
+        glUniform4f(MaterialID, 1.0f, 0.0f, 0.0f, 1.0f);
+        (*it)->SetScaling(vec3(0.05f, 0.05f, 0.05f)); // TO FIX
+        (*it)->Draw();
+    }
+
     // Draw models
     for (vector<Model*>::iterator it = mModel.begin(); it < mModel.end(); ++it)
     {
@@ -285,24 +352,11 @@ void World::Draw()
 
 		(*it)->ConstructTracks(mSplineCamera.front()->GetExtrapolatedPoints());
 	}
-
-    Renderer::CheckForErrors();
-    
-    int spriteWidth;
-    
-#if defined(PLATFORM_OSX)
-    //        int texture_id = TextureLoader::LoadTexture("Textures/BillboardTest.bmp", spriteWidth);
-    int texture_id = TextureLoader::LoadTexture("Textures/Stars/shiny_yellow_star-min.png", spriteWidth);
-#else
-    //    int texture_id = TextureLoader::LoadTexture("../Assets/Textures/BillboardTest.bmp", spriteWidth);
-    int texture_id = TextureLoader::LoadTexture("../Assets/Textures/Stars/shiny_yellow_star-min.png", spriteWidth);
-#endif
-    
-    star = new Star(texture_id);
     
     Renderer::SetShader(SHADER_STARS);
     glUseProgram(Renderer::GetShaderProgramID());
-    
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
     glEnable(GL_BLEND); //Enable transparency blending
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); //Define transparency blending
     glEnable(GL_POINT_SPRITE); //Enable use of point sprites
@@ -310,8 +364,41 @@ void World::Draw()
     star -> Draw();
     glDisable(GL_BLEND);
     
+	for (std::vector<Model*>::iterator it = planets.begin(); it < planets.end(); ++it) {
+		if (it == planets.begin()) continue; // Skip the first one (Sun)
+		// Will have to look at mCurrentCamera for other modes
+		vec3 cameraPosition;
+		int currentCamera;
+		currentCamera = mCurrentCamera;
+		if (currentCamera == 2) // Tracks camera
+			cameraPosition = mSplineCamera.front()->GetPosition();
+		else // Other cameras
+			cameraPosition = GetCurrentCamera()->GetPosition();
+		bool clickedPlanet = ObjectDescription::RayPickObject(Projection, View, cameraPosition, (*it)->GetPosition(), (*it)->GetScaling().z);
+		if (clickedPlanet)
+			planetClickedMessage = "This is a planet !"; // Did not have time to finish with this feature. 
+	}
+
     // Restore previous shader
+
+    Renderer::SetShader(SHADER_MODEL);
+    glUseProgram(Renderer::GetShaderProgramID());
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture[1]);
+    glEnable(GL_POINT_SPRITE); //Enable use of point sprites
+
+    rocket->Draw();
+
     Renderer::SetShader((ShaderType) prevShader);
+    glUseProgram(Renderer::GetShaderProgramID());
+    Renderer::CheckForErrors();
+    
+    glUniformMatrix4fv(ViewMatrixID,  1, GL_FALSE,  &View[0][0]);
+    
+    glUniformMatrix4fv(ProjMatrixID,  1, GL_FALSE, &Projection[0][0]);
+    
+    glUniformMatrix4fv(ViewProjMatrixID,  1, GL_FALSE, &ViewProjection[0][0]);
     
     Renderer::EndFrame();
 }
@@ -338,12 +425,12 @@ void World::LoadScene(const char * scene_path)
         ci_string result;
         if( std::getline( iss, result, ']') )
         {
-            if( result == "cube" )
+            if( result == "projectile" )
             {
                 // Box attributes
-                CubeModel* cube = new CubeModel();
-                cube->Load(iss);
-                mModel.push_back(cube);
+                Projectile* projectile = new Projectile();
+                projectile->Load(iss);
+                mModel.push_back(projectile);
             }
             else if (result == "sphere")
             {
@@ -366,7 +453,7 @@ void World::LoadScene(const char * scene_path)
 			else if (result == "spline")
 			{
 				BSpline* planetTour = new BSpline();
-				std::vector<Model*> planets = generatePlanets();
+				planets = generatePlanets();
                 mNumberOfPlanetsGenerated = (int)planets.size() - 1; // Remove the sun from the count!!
 				mModel.insert(mModel.begin(), planets.begin(), planets.end());
 
@@ -384,7 +471,7 @@ void World::LoadScene(const char * scene_path)
 				mCamera.pop_back();
 
 				// Add camera to traverse the spline
-				BSplineCamera* SplineCamera = new BSplineCamera(planetTour, 1.0f); // 10.0 before
+				BSplineCamera* SplineCamera = new BSplineCamera(planetTour, 0.1f); // 10.0 before
 				mCamera.push_back(SplineCamera);
 				mSplineCamera.push_back(SplineCamera);
 			}
@@ -589,6 +676,66 @@ void World::SetApplicationState(ApplicationState state) {
 	applicationState = state;
 }
 
+string World::GetPlanetClicked() {
+	return planetClickedMessage;
+}
+
+void World::SetPlanetClicked(string message) {
+	planetClickedMessage = message;
+}
+
 int World::NumberOfPlanetsToGenerate() {
     return NUMBER_OF_PLANETS;
+}
+
+//Sets up a model using an Element Buffer Object to refer to vertex data
+GLuint World::setupModelEBO(string path, int& vertexCount)
+{
+    vector<int> vertexIndices; //The contiguous sets of three indices of vertices, normals and UVs, used to make a triangle
+    vector<glm::vec3> vertices;
+    vector<glm::vec3> normals;
+    vector<glm::vec2> UVs;
+    
+    //read the vertices from the cube.obj file
+    //We won't be needing the normals or UVs for this program
+    loadOBJ2(path.c_str(), vertexIndices, vertices, normals, UVs);
+    
+    GLuint VAO;
+    glGenVertexArrays(1, &VAO);
+    glBindVertexArray(VAO); //Becomes active VAO
+    // Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s).
+    
+    //Vertex VBO setup
+    GLuint vertices_VBO;
+    glGenBuffers(1, &vertices_VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, vertices_VBO);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices.front(), GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+    glEnableVertexAttribArray(0);
+    
+    //Normals VBO setup
+    GLuint normals_VBO;
+    glGenBuffers(1, &normals_VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, normals_VBO);
+    glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), &normals.front(), GL_STATIC_DRAW);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+    glEnableVertexAttribArray(1);
+    
+    //UVs VBO setup
+    GLuint uvs_VBO;
+    glGenBuffers(1, &uvs_VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, uvs_VBO);
+    glBufferData(GL_ARRAY_BUFFER, UVs.size() * sizeof(glm::vec2), &UVs.front(), GL_STATIC_DRAW);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (GLvoid*)0);
+    glEnableVertexAttribArray(2);
+    
+    //EBO setup
+    GLuint EBO;
+    glGenBuffers(1, &EBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, vertexIndices.size() * sizeof(int), &vertexIndices.front(), GL_STATIC_DRAW);
+    
+    glBindVertexArray(0); // Unbind VAO (it's always a good thing to unbind any buffer/array to prevent strange bugs), remember: do NOT unbind the EBO, keep it bound to this VAO
+    vertexCount = vertexIndices.size();
+    return VAO;
 }

@@ -35,6 +35,7 @@ public:
     void SetRotation(glm::vec3 axis, float angleDegrees);
     void SetMaterialCoefficients(glm::vec4 coefficients);
     void SetColor(glm::vec3 color);
+    void SetVelocity(glm::vec3 velocity);
     
     glm::vec3 GetPosition() const        { return mPosition; }
     glm::vec3 GetScaling() const        { return mScaling; }
@@ -43,6 +44,10 @@ public:
     ci_string GetName()                 { return mName; }
     glm::vec4 GetMaterialCoefficients() {return mMaterialCoefficients; }
     glm::vec3 GetColor() const { return mColor; }
+    glm::vec3 GetVelocity() const { return mVelocity; }
+    
+    bool operator == (const Model& model) const { return mPosition == model.GetPosition(); }
+    bool operator != (const Model& model) const { return !operator==(model); }
     
     bool operator == (const Model& model) const { return mPosition == model.GetPosition(); }
     bool operator != (const Model& model) const { return !operator==(model); }
@@ -57,6 +62,7 @@ protected:
     glm::vec4 mMaterialCoefficients;
     float     mRotationAngleInDegrees;
     glm::vec3 mColor;
+    glm::vec3 mVelocity;
     
     // Makes the model follow a list of Animation Keys so it's world transform changes over time
     Animation* mAnimation;

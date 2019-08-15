@@ -9,6 +9,8 @@
 
 #pragma once
 
+#include <string>
+
 struct GLFWwindow;
 
 enum ApplicationState
@@ -29,6 +31,10 @@ public:
 	static void Shutdown();
 	static void SetApplicationState(ApplicationState state);
 	static ApplicationState GetApplicationState();
+	static void SetLoadingState(bool state);
+	static bool GetLoadingState();
+	static void SetPlanetClicked(std::string message);
+	static std::string GetPlanetClickedMessage();
 
 	static void Update();
 
@@ -40,6 +46,9 @@ public:
 
 	static float GetMouseMotionX();
 	static float GetMouseMotionY();
+
+	static float GetScreenWidth();
+	static float GetScreenHeight();
 
 	static void EnableMouseCursor();
 	static void DisableMouseCursor();
@@ -60,6 +69,10 @@ private:
 
 	// Window
 	static GLFWwindow* spWindow;
+	static float screenWidth;
+	static float screenHeight;
 
     ApplicationState applicationState;
+    bool isLoading;
+	std::string planetClickedMessage;
 };

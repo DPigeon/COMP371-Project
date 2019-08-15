@@ -94,7 +94,15 @@ void Renderer::Initialize()
                                LoadShaders(shaderPathPrefix + "Stars.vertexshader",
                                            shaderPathPrefix + "Stars.fragmentshader")
                                );
-
+	sShaderProgramID.push_back(
+				LoadShaders(shaderPathPrefix + "modelLoader.vertexshader",
+							shaderPathPrefix + "modelLoader.fragmentshader")
+				);
+    sShaderProgramID.push_back(
+                               LoadShaders(shaderPathPrefix + "TextureLoader.vertexshader",
+                                           shaderPathPrefix + "TextureLoader.fragmentshader")
+                               );
+				
 	sCurrentShader = 0;
 }
 

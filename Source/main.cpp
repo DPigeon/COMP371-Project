@@ -57,10 +57,18 @@ int main(int argc, char *argv[])
 		world.Draw();
 
         bool isLoading = world.GetApplicationState() == ApplicationState::LOADING;
+
 		if (!isLoading) {
             ApplicationState state = eventManager.GetApplicationState() == ApplicationState::LOADING ? ApplicationState::MENU : eventManager.GetApplicationState();
             eventManager.SetApplicationState(state);
 		}
+
+		// Planet Description
+		std::string message = world.GetPlanetClicked();
+		if (message != "") {
+			eventManager.SetPlanetClicked(message);
+		}
+
 	} while (eventManager.ExitRequested() == false);
 
 	Renderer::Shutdown();

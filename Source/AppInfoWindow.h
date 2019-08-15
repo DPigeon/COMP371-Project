@@ -6,11 +6,13 @@
 #include <imgui/imgui_impl_opengl3.h>
 #include <GL/glew.h>
 
+#include <string>
+
 class AppInfoWindow
 {
 public:
 	AppInfoWindow();
-	static void Draw();
+	static void Draw(std::string message);
 	~AppInfoWindow();
 
 private:

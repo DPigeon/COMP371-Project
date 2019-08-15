@@ -18,9 +18,10 @@
 
 using namespace glm;
 
-FirstPersonCamera::FirstPersonCamera(glm::vec3 position) :  Camera(), mLookAt(0.0f, 0.0f, -1.0f), mHorizontalAngle(90.0f), mVerticalAngle(0.0f), mSpeed(5.0f), mAngularSpeed(2.5f)
+FirstPersonCamera::FirstPersonCamera(glm::vec3 position) :  Camera(), mHorizontalAngle(90.0f), mVerticalAngle(0.0f), mSpeed(5.0f), mAngularSpeed(2.5f)
 {
-    Camera::GetPosition();
+    Camera::SetPosition(position);
+    Camera::SetLookAt(vec3(0.0f, 0.0f, -1.0f));
 }
 
 FirstPersonCamera::~FirstPersonCamera()

@@ -27,8 +27,10 @@
 #include "Camera.h"
 #include "World.h"
 
+
 Star::Star(int texture_id)
 {
+    glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_2D, texture_id);
 }
 //Creates many random points within a cubic area
