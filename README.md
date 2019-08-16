@@ -14,10 +14,12 @@ This should start up the entire project. Then, click on the Build tab and Build 
 Finally, simply run the project by clicking on Local Windows Debugger. Make sure that a
 build and bin folder gets created in the root of the project afterwards.
 
-### IOS
+### MacOS
+1. Open the file /Xcode/Area51.xcodeproj which will load XCode
+2. Add necessary assets in the build phase
+3. Click on the run button at the top left
+4. The program will compile if necessary, then launch
 
-Under the folder Xcode, click on Area51.xcodeproj.
-Then, ... (mac user to this part please)
 
 ### Library Required
 
