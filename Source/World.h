@@ -15,6 +15,7 @@
 #include "ParsingHelper.h"
 #include <vector>
 #include "BSpline.h"
+#include "EventManager.h"
 #include "RocketModel.h"
 
 class Camera;
@@ -43,6 +44,8 @@ public:
     const Camera* GetCurrentCamera() const;
 	void SetCurrentCamera(int cameraNumber);
 
+	ApplicationState GetApplicationState();
+	void SetApplicationState(ApplicationState state);
 	bool GetLoadingState();
 	void SetLoadingState(bool state);
 	std::string GetPlanetClicked();
@@ -74,6 +77,7 @@ private:
      */
     bool planetHasSpace(glm::vec3 planetRandomPoint, std::vector<glm::vec3> planetPositions);
 	unsigned int mCurrentCamera;
+	ApplicationState applicationState;
 	bool isLoading;
 	std::string planetClickedMessage;
 };

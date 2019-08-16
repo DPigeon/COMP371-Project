@@ -25,6 +25,8 @@
 		03FE4EB51B2F8D990020F06F /* (null) in Sources */ = {isa = PBXBuildFile; };
 		03FE4ED41B2FA1210020F06F /* Scenes in CopyFiles */ = {isa = PBXBuildFile; fileRef = 03FE4ED21B2FA1010020F06F /* Scenes */; };
 		03FE4ED51B2FA1210020F06F /* Shaders in CopyFiles */ = {isa = PBXBuildFile; fileRef = 03FE4ED31B2FA1010020F06F /* Shaders */; };
+		129C790D2301C8A700C27D7B /* MenuScreen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 129C790C2301C8A700C27D7B /* MenuScreen.cpp */; };
+		12BC8A7A230506A30068B292 /* SettingsScreen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12BC8A79230506A30068B292 /* SettingsScreen.cpp */; };
 		B9DBF90622FB867300C8BBEF /* Textures in CopyFiles */ = {isa = PBXBuildFile; fileRef = D0CD676222FA4D7600C7CF40 /* Textures */; };
 		B9F97E5C22FD300500D90085 /* Mesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B9F97E3822FD300300D90085 /* Mesh.cpp */; };
 		B9F97E5D22FD300500D90085 /* AppInfoWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B9F97E3922FD300300D90085 /* AppInfoWindow.cpp */; };
@@ -118,6 +120,10 @@
 		03DA72D122B02FC5009C7A21 /* libGLEW.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libGLEW.a; path = "../ThirdParty/glew-2.1.0/lib/osx/libGLEW.a"; sourceTree = "<group>"; };
 		03FE4ED21B2FA1010020F06F /* Scenes */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Scenes; path = ../Assets/Scenes; sourceTree = "<group>"; };
 		03FE4ED31B2FA1010020F06F /* Shaders */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Shaders; path = ../Assets/Shaders; sourceTree = "<group>"; };
+		129C790B2301C87D00C27D7B /* MenuScreen.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MenuScreen.h; sourceTree = "<group>"; };
+		129C790C2301C8A700C27D7B /* MenuScreen.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MenuScreen.cpp; sourceTree = "<group>"; };
+		12BC8A782305067C0068B292 /* SettingsScreen.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsScreen.h; sourceTree = "<group>"; };
+		12BC8A79230506A30068B292 /* SettingsScreen.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SettingsScreen.cpp; sourceTree = "<group>"; };
 		B9F97E3422FD300300D90085 /* Skybox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Skybox.h; sourceTree = "<group>"; };
 		B9F97E3522FD300300D90085 /* World.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = World.h; sourceTree = "<group>"; };
 		B9F97E3622FD300300D90085 /* EventManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventManager.h; sourceTree = "<group>"; };
@@ -371,6 +377,12 @@
 				B9F97E4722FD300400D90085 /* TextureLoader.h */,
 				B9F97E5A22FD300500D90085 /* World.cpp */,
 				B9F97E3522FD300300D90085 /* World.h */,
+				129C790B2301C87D00C27D7B /* MenuScreen.h */,
+				129C790C2301C8A700C27D7B /* MenuScreen.cpp */,
+				12BC8A782305067C0068B292 /* SettingsScreen.h */,
+				12BC8A79230506A30068B292 /* SettingsScreen.cpp */,
+				03FE4ED61B2FA9830020F06F /* Animation.cpp */,
+				03FE4ED71B2FA9830020F06F /* Animation.h */,
 				D090EF6322FC9B7400908074 /* SphereModel.cpp */,
 				D090EF6222FC9B7400908074 /* SphereModel.h */,
 				D090EF5F22FC985000908074 /* FPSWindow.cpp */,
@@ -515,6 +527,7 @@
 				B9F97E6222FD300500D90085 /* FirstPersonCamera.cpp in Sources */,
 				D090EF2922FC8D4100908074 /* imgui.h in Sources */,
 				03FE4EB41B2F8D990020F06F /* (null) in Sources */,
+				129C790D2301C8A700C27D7B /* MenuScreen.cpp in Sources */,
 				03FE4EAD1B2F8D990020F06F /* (null) in Sources */,
 				03FE4EAC1B2F8D990020F06F /* (null) in Sources */,
 				03FE4EAE1B2F8D990020F06F /* (null) in Sources */,
@@ -526,9 +539,10 @@
 				B9F97E5E22FD300500D90085 /* TextureLoader.cpp in Sources */,
 				03FE4EAF1B2F8D990020F06F /* (null) in Sources */,
 				03FE4EAB1B2F8D990020F06F /* (null) in Sources */,
-				03FE4EB41B2F8D990020F06F /* (null) in Sources */,
-				03FE4EAD1B2F8D990020F06F /* (null) in Sources */,
-				03FE4EAC1B2F8D990020F06F /* (null) in Sources */,
+				12BC8A7A230506A30068B292 /* SettingsScreen.cpp in Sources */,
+				03FE4EB41B2F8D990020F06F /* StaticCamera.cpp in Sources */,
+				03FE4EAD1B2F8D990020F06F /* EventManager.cpp in Sources */,
+				03FE4EAC1B2F8D990020F06F /* CubeModel.cpp in Sources */,
 				D0C44A4222EABDB0001DD3E3 /* BSplineCamera.cpp in Sources */,
 				03FE4EAE1B2F8D990020F06F /* (null) in Sources */,
 				03FE4EB51B2F8D990020F06F /* (null) in Sources */,

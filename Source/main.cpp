@@ -56,10 +56,11 @@ int main(int argc, char *argv[])
 		// Draw World
 		world.Draw();
 
-		// Loading Screen
-		bool isLoading = world.GetLoadingState();
+        bool isLoading = world.GetApplicationState() == ApplicationState::LOADING;
+
 		if (!isLoading) {
-			eventManager.SetLoadingState(false);
+            ApplicationState state = eventManager.GetApplicationState() == ApplicationState::LOADING ? ApplicationState::MENU : eventManager.GetApplicationState();
+            eventManager.SetApplicationState(state);
 		}
 
 		// Planet Description

@@ -64,7 +64,8 @@ void BSplineCamera::ExtrapolatePoints(vec3 mPosition) {
 	}
 	else {
 		// Tell the world loading is done
-		World::GetInstance()->SetLoadingState(false);
+        ApplicationState state = World::GetInstance()->GetApplicationState() == ApplicationState::LOADING ? ApplicationState::MENU : World::GetInstance()->GetApplicationState();
+        World::GetInstance()->SetApplicationState(state);
 	}
 
 	/* Used for extrapolation, uncomment if needed */

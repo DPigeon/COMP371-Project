@@ -35,6 +35,10 @@
 
 #define PI 3.14159265
 
+#include "list"
+
+#define PI 3.14159265
+
 using namespace std;
 using namespace glm;
 
@@ -67,7 +71,7 @@ GLuint texture_id, texture_id2, texture[2];
 World::World()
 {
     instance = this;
-    isLoading = true; // Initialize loading state
+    applicationState = ApplicationState::LOADING; // Initialize loading state
     
     // Setup Camera
     mCamera.push_back(new FirstPersonCamera(vec3(3.0f, 5.0f, 20.0f)));	
@@ -198,7 +202,6 @@ void World::Update(float dt)
         }
         Renderer::SetShader(SHADER_MODEL);
     }
-
     
     // Spacebar to change the shader
     if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_0 ) == GLFW_PRESS)
@@ -665,12 +668,12 @@ void World::SetCurrentCamera(int cameraNumber) {
 	mCurrentCamera = cameraNumber;
 }
 
-bool World::GetLoadingState() {
-	return isLoading;
+ApplicationState World::GetApplicationState() {
+	return applicationState;
 }
 
-void World::SetLoadingState(bool state) {
-	isLoading = state;
+void World::SetApplicationState(ApplicationState state) {
+	applicationState = state;
 }
 
 string World::GetPlanetClicked() {

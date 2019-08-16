@@ -13,6 +13,15 @@
 
 struct GLFWwindow;
 
+enum ApplicationState
+{
+    LOADING,
+    MENU,
+    RUNNING,
+    SETTINGS,
+    QUIT
+};
+
 class EventManager
 {
 public:
@@ -20,6 +29,8 @@ public:
 	~EventManager();
 	static void Initialize();
 	static void Shutdown();
+	static void SetApplicationState(ApplicationState state);
+	static ApplicationState GetApplicationState();
 	static void SetLoadingState(bool state);
 	static bool GetLoadingState();
 	static void SetPlanetClicked(std::string message);
@@ -61,6 +72,7 @@ private:
 	static float screenWidth;
 	static float screenHeight;
 
+    ApplicationState applicationState;
     bool isLoading;
 	std::string planetClickedMessage;
 };
