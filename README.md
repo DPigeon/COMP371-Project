@@ -14,10 +14,9 @@ This should start up the entire project. Then, click on the Build tab and Build 
 Finally, simply run the project by clicking on Local Windows Debugger. Make sure that a
 build and bin folder gets created in the root of the project afterwards.
 
-### IOS
+### MacOS
 
-Under the folder Xcode, click on Area51.xcodeproj.
-Then, ... (mac user to this part please)
+Under the folder Xcode, click on Area51.xcodeproj. XCode should now launch with the project already preconfigured. In order to run the app simply click the play button and wait for the compilation to take place. Make sure that a bin and build folder are created just as with the Windows instructions.
 
 ### Library Required
 
