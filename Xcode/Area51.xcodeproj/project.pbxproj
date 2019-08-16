@@ -45,6 +45,9 @@
 		B9F97E6C22FD300500D90085 /* Model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B9F97E5722FD300500D90085 /* Model.cpp */; };
 		B9F97E6D22FD300500D90085 /* World.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B9F97E5A22FD300500D90085 /* World.cpp */; };
 		B9F97E6E22FD300500D90085 /* BSpline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B9F97E5B22FD300500D90085 /* BSpline.cpp */; };
+		D08BEAA423064A1A002849D7 /* CubeModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D08BEAA323064A1A002849D7 /* CubeModel.cpp */; };
+		D08BEAA723064A63002849D7 /* Projectile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D08BEAA523064A63002849D7 /* Projectile.cpp */; };
+		D08BEAAA23064A7F002849D7 /* ObjectDescription.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D08BEAA823064A7F002849D7 /* ObjectDescription.cpp */; };
 		D090EF1C22FC8D4000908074 /* imgui_impl_opengl3.h in Sources */ = {isa = PBXBuildFile; fileRef = D090EF0E22FC8D3D00908074 /* imgui_impl_opengl3.h */; };
 		D090EF1D22FC8D4000908074 /* imgui_impl_glfw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D090EF0F22FC8D3D00908074 /* imgui_impl_glfw.cpp */; };
 		D090EF1E22FC8D4000908074 /* imgui_internal.h in Sources */ = {isa = PBXBuildFile; fileRef = D090EF1022FC8D3D00908074 /* imgui_internal.h */; };
@@ -80,8 +83,6 @@
 		D090EF5C22FC941900908074 /* ik_ISoundStopEventReceiver.h in Sources */ = {isa = PBXBuildFile; fileRef = D090EF4722FC941900908074 /* ik_ISoundStopEventReceiver.h */; };
 		D090EF5D22FC941900908074 /* ik_IAudioStream.h in Sources */ = {isa = PBXBuildFile; fileRef = D090EF4822FC941900908074 /* ik_IAudioStream.h */; };
 		D090EF5E22FC941900908074 /* ik_ISoundMixedOutputReceiver.h in Sources */ = {isa = PBXBuildFile; fileRef = D090EF4922FC941900908074 /* ik_ISoundMixedOutputReceiver.h */; };
-		D090EF6122FC985100908074 /* FPSWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D090EF5F22FC985000908074 /* FPSWindow.cpp */; };
-		D090EF6422FC9B7500908074 /* SphereModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D090EF6322FC9B7400908074 /* SphereModel.cpp */; };
 		D090EF6A22FE0E5800908074 /* TextureLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D090EF6922FE0E5800908074 /* TextureLoader.cpp */; };
 		D0C44A4222EABDB0001DD3E3 /* BSplineCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0C44A4022EABDB0001DD3E3 /* BSplineCamera.cpp */; };
 		D0C44A4522EABE4C001DD3E3 /* BSpline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0C44A4422EABE4C001DD3E3 /* BSpline.cpp */; };
@@ -157,6 +158,12 @@
 		B9F97E5922FD300500D90085 /* Star.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Star.h; sourceTree = "<group>"; };
 		B9F97E5A22FD300500D90085 /* World.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = World.cpp; sourceTree = "<group>"; };
 		B9F97E5B22FD300500D90085 /* BSpline.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BSpline.cpp; sourceTree = "<group>"; };
+		D08BEAA223064A1A002849D7 /* CubeModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CubeModel.h; sourceTree = "<group>"; };
+		D08BEAA323064A1A002849D7 /* CubeModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CubeModel.cpp; sourceTree = "<group>"; };
+		D08BEAA523064A63002849D7 /* Projectile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Projectile.cpp; sourceTree = "<group>"; };
+		D08BEAA623064A63002849D7 /* Projectile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Projectile.h; sourceTree = "<group>"; };
+		D08BEAA823064A7F002849D7 /* ObjectDescription.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ObjectDescription.cpp; sourceTree = "<group>"; };
+		D08BEAA923064A7F002849D7 /* ObjectDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectDescription.h; sourceTree = "<group>"; };
 		D090EF0E22FC8D3D00908074 /* imgui_impl_opengl3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = imgui_impl_opengl3.h; path = ../Source/Packages/imgui/imgui_impl_opengl3.h; sourceTree = "<group>"; };
 		D090EF0F22FC8D3D00908074 /* imgui_impl_glfw.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = imgui_impl_glfw.cpp; path = ../Source/Packages/imgui/imgui_impl_glfw.cpp; sourceTree = "<group>"; };
 		D090EF1022FC8D3D00908074 /* imgui_internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = imgui_internal.h; path = ../Source/Packages/imgui/imgui_internal.h; sourceTree = "<group>"; };
@@ -321,6 +328,8 @@
 				B9F97E5022FD300400D90085 /* Animation.cpp */,
 				B9F97E5422FD300400D90085 /* Animation.h */,
 				B9F97E3922FD300300D90085 /* AppInfoWindow.cpp */,
+				D08BEAA323064A1A002849D7 /* CubeModel.cpp */,
+				D08BEAA223064A1A002849D7 /* CubeModel.h */,
 				B9F97E4222FD300400D90085 /* AppInfoWindow.h */,
 				B9F97E5B22FD300500D90085 /* BSpline.cpp */,
 				B9F97E4322FD300400D90085 /* BSpline.h */,
@@ -335,7 +344,11 @@
 				B9F97E4122FD300300D90085 /* FirstPersonCamera.cpp */,
 				B9F97E4522FD300400D90085 /* FirstPersonCamera.h */,
 				B9F97E4922FD300400D90085 /* LoadingScreen.cpp */,
+				D08BEAA823064A7F002849D7 /* ObjectDescription.cpp */,
+				D08BEAA923064A7F002849D7 /* ObjectDescription.h */,
 				B9F97E5222FD300400D90085 /* LoadingScreen.h */,
+				D08BEAA523064A63002849D7 /* Projectile.cpp */,
+				D08BEAA623064A63002849D7 /* Projectile.h */,
 				B9F97E3F22FD300300D90085 /* main.cpp */,
 				B9F97E3822FD300300D90085 /* Mesh.cpp */,
 				B9F97E4822FD300400D90085 /* Mesh.h */,
@@ -358,48 +371,24 @@
 				B9F97E4722FD300400D90085 /* TextureLoader.h */,
 				B9F97E5A22FD300500D90085 /* World.cpp */,
 				B9F97E3522FD300300D90085 /* World.h */,
-				03FE4ED61B2FA9830020F06F /* Animation.cpp */,
-				03FE4ED71B2FA9830020F06F /* Animation.h */,
 				D090EF6322FC9B7400908074 /* SphereModel.cpp */,
 				D090EF6222FC9B7400908074 /* SphereModel.h */,
-				03FE4E951B2F8D990020F06F /* Camera.cpp */,
-				03FE4E961B2F8D990020F06F /* Camera.h */,
-				03FE4E971B2F8D990020F06F /* CubeModel.cpp */,
-				D090EF0B22FC868500908074 /* LoadingScreen.cpp */,
 				D090EF5F22FC985000908074 /* FPSWindow.cpp */,
 				D090EF6022FC985100908074 /* FPSWindow.h */,
-				D090EF0C22FC868500908074 /* LoadingScreen.h */,
-				03FE4E981B2F8D990020F06F /* CubeModel.h */,
-				03FE4E991B2F8D990020F06F /* EventManager.cpp */,
-				03FE4E9A1B2F8D990020F06F /* EventManager.h */,
-				03FE4E9B1B2F8D990020F06F /* FirstPersonCamera.cpp */,
 				D0C44A4422EABE4C001DD3E3 /* BSpline.cpp */,
 				D0C44A4322EABE4B001DD3E3 /* BSpline.h */,
-				03FE4E9C1B2F8D990020F06F /* FirstPersonCamera.h */,
 				D090EF6922FE0E5800908074 /* TextureLoader.cpp */,
 				D090EF6822FE0E5700908074 /* TextureLoader.h */,
-				03FE4E9D1B2F8D990020F06F /* main.cpp */,
 				D090EF6522FC9B9700908074 /* SphereModel.cpp */,
 				D090EF6622FC9B9700908074 /* SphereModel.h */,
 				D0CD675F22FA4D0B00C7CF40 /* Mesh.cpp */,
 				D0CD676022FA4D0C00C7CF40 /* Mesh.h */,
-				03FE4E9E1B2F8D990020F06F /* Model.cpp */,
 				D0C44A4022EABDB0001DD3E3 /* BSplineCamera.cpp */,
 				D0C44A4122EABDB0001DD3E3 /* BSplineCamera.h */,
-				03FE4E9F1B2F8D990020F06F /* Model.h */,
-				03FE4EA01B2F8D990020F06F /* ParsingHelper.h */,
 				D0CD675D22FA4C6B00C7CF40 /* Skybox.cpp */,
 				D0CD675C22FA4C6A00C7CF40 /* Skybox.h */,
-				03FE4EA31B2F8D990020F06F /* Renderer.cpp */,
-				03FE4EA41B2F8D990020F06F /* Renderer.h */,
 				D0CD675922FA2A0900C7CF40 /* RocketModel.cpp */,
 				D0CD675822FA2A0900C7CF40 /* RocketModel.h */,
-				03FE4EA51B2F8D990020F06F /* SphereModel.cpp */,
-				03FE4EA61B2F8D990020F06F /* SphereModel.h */,
-				03FE4EA71B2F8D990020F06F /* StaticCamera.cpp */,
-				03FE4EA81B2F8D990020F06F /* StaticCamera.h */,
-				03FE4EA91B2F8D990020F06F /* World.cpp */,
-				03FE4EAA1B2F8D990020F06F /* World.h */,
 			);
 			name = Source;
 			path = ../Source;
@@ -502,6 +491,7 @@
 				D090EF5D22FC941900908074 /* ik_IAudioStream.h in Sources */,
 				D090EF5E22FC941900908074 /* ik_ISoundMixedOutputReceiver.h in Sources */,
 				D090EF1C22FC8D4000908074 /* imgui_impl_opengl3.h in Sources */,
+				D08BEAA723064A63002849D7 /* Projectile.cpp in Sources */,
 				B9F97E6422FD300500D90085 /* LoadingScreen.cpp in Sources */,
 				D090EF1D22FC8D4000908074 /* imgui_impl_glfw.cpp in Sources */,
 				D090EF1E22FC8D4000908074 /* imgui_internal.h in Sources */,
@@ -509,6 +499,8 @@
 				B9F97E6D22FD300500D90085 /* World.cpp in Sources */,
 				D090EF1F22FC8D4000908074 /* imgui_demo.cpp in Sources */,
 				D090EF2022FC8D4000908074 /* imstb_rectpack.h in Sources */,
+				D08BEAAA23064A7F002849D7 /* ObjectDescription.cpp in Sources */,
+				D08BEAA423064A1A002849D7 /* CubeModel.cpp in Sources */,
 				D090EF2122FC8D4000908074 /* imgui_widgets.cpp in Sources */,
 				D090EF6A22FE0E5800908074 /* TextureLoader.cpp in Sources */,
 				D090EF2222FC8D4100908074 /* imgui_draw.cpp in Sources */,
@@ -534,22 +526,20 @@
 				B9F97E5E22FD300500D90085 /* TextureLoader.cpp in Sources */,
 				03FE4EAF1B2F8D990020F06F /* (null) in Sources */,
 				03FE4EAB1B2F8D990020F06F /* (null) in Sources */,
-				03FE4EB41B2F8D990020F06F /* StaticCamera.cpp in Sources */,
-				03FE4EAD1B2F8D990020F06F /* EventManager.cpp in Sources */,
-				03FE4EAC1B2F8D990020F06F /* CubeModel.cpp in Sources */,
+				03FE4EB41B2F8D990020F06F /* (null) in Sources */,
+				03FE4EAD1B2F8D990020F06F /* (null) in Sources */,
+				03FE4EAC1B2F8D990020F06F /* (null) in Sources */,
 				D0C44A4222EABDB0001DD3E3 /* BSplineCamera.cpp in Sources */,
-				03FE4EAE1B2F8D990020F06F /* FirstPersonCamera.cpp in Sources */,
-				03FE4EB51B2F8D990020F06F /* World.cpp in Sources */,
-				03FE4EB21B2F8D990020F06F /* Renderer.cpp in Sources */,
+				03FE4EAE1B2F8D990020F06F /* (null) in Sources */,
+				03FE4EB51B2F8D990020F06F /* (null) in Sources */,
+				03FE4EB21B2F8D990020F06F /* (null) in Sources */,
 				D0C44A4522EABE4C001DD3E3 /* BSpline.cpp in Sources */,
 				D0CD676122FA4D0C00C7CF40 /* Mesh.cpp in Sources */,
 				D0CD675E22FA4C6B00C7CF40 /* Skybox.cpp in Sources */,
-				03FE4EB01B2F8D990020F06F /* Model.cpp in Sources */,
-				03FE4EAF1B2F8D990020F06F /* main.cpp in Sources */,
+				03FE4EB01B2F8D990020F06F /* (null) in Sources */,
+				03FE4EAF1B2F8D990020F06F /* (null) in Sources */,
 				D0CD675A22FA2A0900C7CF40 /* RocketModel.cpp in Sources */,
-				03FE4EAB1B2F8D990020F06F /* Camera.cpp in Sources */,
-				D090EF0D22FC868500908074 /* LoadingScreen.cpp in Sources */,
-				03FE4ED81B2FA9830020F06F /* Animation.cpp in Sources */,
+				03FE4EAB1B2F8D990020F06F /* (null) in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

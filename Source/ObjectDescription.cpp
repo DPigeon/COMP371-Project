@@ -3,7 +3,7 @@
 //  Area51
 //
 //  Created by David-Etienne Pigeon on 2019-08-09.
-//  Copyright © 2019 Concordia. All rights reserved.
+//  Copyright ï¿½ 2019 Concordia. All rights reserved.
 //
 
 #include "ObjectDescription.h"
@@ -64,6 +64,7 @@ bool ObjectDescription::RayPickObject(mat4 projectionMatrix, mat4 viewMatrix, ve
 		else
 			return false;
 	}
+    return false;
 }
 
 float ObjectDescription::intersectRayPlanetPoint(vec3 worldRay, vec3 cameraPosition, vec3 planetPosition, float planetRadius) {
