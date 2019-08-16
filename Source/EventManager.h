@@ -31,8 +31,6 @@ public:
 	static void Shutdown();
 	static void SetApplicationState(ApplicationState state);
 	static ApplicationState GetApplicationState();
-	static void SetLoadingState(bool state);
-	static bool GetLoadingState();
 	static void SetPlanetClicked(std::string message);
 	static std::string GetPlanetClickedMessage();
 

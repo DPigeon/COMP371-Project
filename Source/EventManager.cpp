@@ -244,8 +244,8 @@ void EventManager::Update()
     if (GetApplicationState() == ApplicationState::RUNNING)
 		AppInfoWindow::Draw(GetPlanetClickedMessage());
 	// Draw FPS window when done loading
-	if (!GetLoadingState())
-		AppInfoWindow::Draw(GetPlanetClickedMessage());
+    if (GetApplicationState() == ApplicationState::RUNNING)
+        AppInfoWindow::Draw(GetPlanetClickedMessage());
 
 	// Rendering ImGui
 	ImGui::Render();

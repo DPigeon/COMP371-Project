@@ -46,8 +46,6 @@ public:
 
 	ApplicationState GetApplicationState();
 	void SetApplicationState(ApplicationState state);
-	bool GetLoadingState();
-	void SetLoadingState(bool state);
 	std::string GetPlanetClicked();
 	void SetPlanetClicked(std::string message);
     int NumberOfPlanetsToGenerate();
