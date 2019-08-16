@@ -242,7 +242,7 @@ void EventManager::Update()
 	
 	// Draw FPS window when running the app
     if (GetApplicationState() == ApplicationState::RUNNING)
-		AppInfoWindow::Draw();
+		AppInfoWindow::Draw(GetPlanetClickedMessage());
 	// Draw FPS window when done loading
 	if (!GetLoadingState())
 		AppInfoWindow::Draw(GetPlanetClickedMessage());
