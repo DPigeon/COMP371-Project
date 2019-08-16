@@ -17,8 +17,10 @@ build and bin folder gets created in the root of the project afterwards.
 ### MacOS
 1. Open the file /Xcode/Area51.xcodeproj which will load XCode
 2. Add necessary assets in the build phase
-3. Click on the run button at the top left
-4. The program will compile if necessary, then launch
+3. Open file  `Source/RocketModel.cpp` and go to line 23.
+4. Set the `rocketPath` to the path leading to the file `/Assets/Models/rocket.obj` in the project.
+5. Click on the run button at the top left
+6. The program will compile if necessary, then launch
 
 
 ### Library Required
