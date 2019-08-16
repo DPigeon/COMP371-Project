@@ -304,7 +304,7 @@ void World::Draw()
     {
         glUniform3f(ModelColorID, 0.0f, 0.0f, 1.0f);
         glUniform4f(MaterialID, 1.0f, 0.0f, 0.0f, 1.0f);
-        (*it)->SetScaling(vec3(0.05f, 0.05f, 0.05f)); // TO FIX
+        (*it)->SetScaling(vec3(0.05f, 0.05f, 0.05f));
         (*it)->Draw();
     }
 
